@@ -4,12 +4,16 @@ public class GPSCoordinateTranslator{
 	double latDelta;
 	double lngDelta;
 	GPSCoordinateTranslator(GPSCoordinate gpsCoordFrom, GPSCoordinate gpsCoordTo) {
-		this.latDelta = gpsCoordFrom.getLat() - gpsCoordTo.getLat();
-		this.lngDelta = gpsCoordFrom.getLng() - gpsCoordTo.getLng();
+		this.latDelta = gpsCoordTo.getLat() - gpsCoordFrom.getLat();
+		this.lngDelta = gpsCoordTo.getLng() - gpsCoordFrom.getLng();
 	}
 	public GPSCoordinate translate(GPSCoordinate gpsCoord) throws Exception {
 		return new GPSCoordinate(gpsCoord.getLat() + latDelta, gpsCoord.getLng() + lngDelta, gpsCoord.getAlt());
 	}
+	public GPSCoordinate translateBack(GPSCoordinate gpsCoord) throws Exception{
+		return new GPSCoordinate(gpsCoord.getLat() - latDelta, gpsCoord.getLng() - lngDelta, gpsCoord.getAlt());
+	}
+	
 	public double getLatDelta() {
 		return latDelta;
 	}

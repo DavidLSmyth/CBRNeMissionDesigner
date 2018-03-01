@@ -1,6 +1,5 @@
 package work.assignment.grid;
 
-
 public class GPSCoordinateRotator{
 	double angleTheta;
 	GPSCoordinate rotateCoord;
@@ -18,13 +17,21 @@ public class GPSCoordinateRotator{
 			throw new Exception("Must provide an angle of theta within (-360, 360)");
 		}
 	}
-	public GPSCoordinate rotate(GPSCoordinate coord) throws Exception {
+	public GPSCoordinate rotateAnticlockwise(GPSCoordinate coord) throws Exception {
 		//translate by rotateCoord, rotate about origin, translate back
 		GPSCoordinateTranslator t = new GPSCoordinateTranslator(rotateCoord, new GPSCoordinate(0,0));
 		coord = t.translate(coord);
-		coord.setLng((coord.getLng() * Math.cos(angleTheta)) - (coord.getLat() * Math.sin(angleTheta)));
-		coord.setLat((coord.getLng() * Math.sin(angleTheta)) + (coord.getLat() * Math.cos(angleTheta)));
-		return coord;		
+		GPSCoordinate coordCopy = coord.clone();
+		coord.setLng((coordCopy.getLng() * Math.cos(Math.toRadians(angleTheta))) - (coordCopy.getLat() * Math.sin(Math.toRadians(angleTheta))));
+		coord.setLat((coordCopy.getLng() * Math.sin(Math.toRadians(angleTheta))) + (coordCopy.getLat() * Math.cos(Math.toRadians(angleTheta))));
+		return t.translateBack(coord);		
+	}
+	
+	public GPSCoordinate rotateClockwise(GPSCoordinate coord) throws Exception {
+		setTheta(-getTheta());
+		GPSCoordinate returnCoord = rotateAnticlockwise(coord);
+		setTheta(-getTheta());
+		return returnCoord;
 	}
 
 	public double getTheta() {

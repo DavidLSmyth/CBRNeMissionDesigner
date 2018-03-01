@@ -25,6 +25,43 @@ public class GPSCoordinate {
 	}
 	
 	
+	public boolean equals(Object other) {
+		if(other == null) return false;
+		if(other == this) return true;	
+		
+		if(other.getClass() != getClass()) {
+			return false;
+		}
+		else {
+			GPSCoordinate otherCoord = (GPSCoordinate) other;
+			if((getAlt() != null && otherCoord.getAlt() == null) || getAlt() == null && otherCoord.getAlt() != null) {
+				return false;
+			}
+			if(getAlt() == null && otherCoord.getAlt() == null) {
+				return (otherCoord.getLat() - this.getLat() < Math.pow(10, -10)) && (otherCoord.getLng() - this.getLng() < Math.pow(10, -10));
+			}
+			else{
+				return ((otherCoord.getAlt() - this.getAlt() < Math.pow(10, -10)) && (otherCoord.getLat() - this.getLat() < Math.pow(10, -10)) && (otherCoord.getLng() - this.getLng() < Math.pow(10, -10)));
+			}
+		}
+	}
+	
+	public GPSCoordinate clone() {
+		try {
+			return new GPSCoordinate(lat, lng, alt);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			//do nothing; if this object has already been created safely there
+			//should be no issues creating a copy
+			return this;
+		}
+	}
+	
+	public String toString() {
+		return "(" + lat + ", " + lng + ", " + alt + ")";
+	}
+	
+	
 	public double getLatMetresToOther(GPSCoordinate otherCoord) {
 		GPSCoordinateTranslator t = getTranslatorFromThisTo(otherCoord);
 		return t.getLatDeltaMetres();
@@ -40,40 +77,45 @@ public class GPSCoordinate {
 	}
 	
 	public int getQuadrant() {
-		if(lat >= 0 && lng >= 0) {
-			return 0;
+		if(lat >= 0) {
+			if(lng >= 0) return 0;
+			else return 1;
 		}
-		if(lat >= 0 && lng <= 0) {
-			return 1;
-		}
-		if(lat <= 0 && lng <= 0) {
-			return 2;
-		}
-		//lat <= 0 && lng >= 0
 		else {
-			return 3;
+			if(lng <= 0) return 2;
+			else return 3;
 		}
 	}
 	
 	//https://stackoverflow.com/questions/11849636/maximum-lat-and-long-bounds-for-the-world-google-maps-api-latlngbounds
 	
-	private boolean verifyLat(double lat) {
+	public static boolean verifyLat(double lat) {
 		return(lowerLatBound <= lat && lat <= upperLatBound);
 	}
 	
-	private boolean verifyLng(double lng) {
+	public static boolean verifyLng(double lng) {
 		return(lowerLngBound <= lng && lng <= upperLngBound);
 	}
 	
-	private boolean verifyAlt(Double alt) {
-		if(alt == null) {
+	public static boolean verifyAlt(Double altitude) {
+		if(altitude == null) {
+			//null is valid for alt
 			return true;
 		}
 		else {
-			return(lowerAltBound <= alt && alt <= upperAltBound);
+			return(lowerAltBound <= altitude && altitude <= upperAltBound);
 		}
 	}
-
+	
+	public static boolean verifyAlt(Integer altitude) {
+		//need == instead of .equals to avoid null pointer
+		if(altitude == null) {
+			return true;
+		}
+		else {
+			return verifyAlt(Double.valueOf(altitude.doubleValue()));
+		}
+	}
 	
 
 	public double getLat() {
@@ -111,12 +153,22 @@ public class GPSCoordinate {
 	}
 
 
-	public void setAlt(Double alt) {
-		if(verifyAlt(alt)) {
-			this.alt = alt;
+	public void setAlt(Double newAlt) throws Exception {
+		if(newAlt == null || verifyAlt(newAlt)) {
+			this.alt = newAlt;
 		}
 		else {
-			throwRangeException("Altitude", lowerAltBound, upperAltBound);
+			throw throwRangeException("Altitude", lowerAltBound, upperAltBound);
+		}
+	}
+	
+	public void setAlt(Integer newAlt) throws NumberFormatException, Exception {
+		if(newAlt != null) {
+			setAlt(Double.valueOf(newAlt.toString()));
+		}
+		else {
+			Double nullDouble = null;
+			setAlt(nullDouble);
 		}
 	}
 	
@@ -127,7 +179,7 @@ public class GPSCoordinate {
 		return new GPSCoordinateTranslator(this, otherCoord);
 	}
 	
-	public GPSCoordinateRotator getRotatorAboutThis(float angleTheta) throws Exception {
+	public GPSCoordinateRotator getRotatorAboutThis(double angleTheta) throws Exception {
 		//Calculates the rotation matrix and 
 		//returns a rotator object which can rotate other gps points
 		//around this through angle theta
@@ -149,7 +201,7 @@ public class GPSCoordinate {
 	public void reflectLng() {
 		// reflects latitude
 		try {
-			setLat(-getLat());
+			setLng(-getLng());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			// TODO Auto-generated catch block
@@ -163,14 +215,16 @@ public class GPSCoordinate {
 		//returns the angle between the vector defined by current coordinate and 
 		//the origin
 		if(getQuadrant() == 0 || getQuadrant() == 2) {
-			return 90 * getQuadrant() + Math.atan(getLat() / getLng());
+			return 90 * getQuadrant() + Math.toDegrees(Math.atan(Math.abs(getLat() / getLng())));
 		}
 		else {
-			return 90 * (getQuadrant() + 1) - Math.atan(Math.abs(getLat()) / getLng());   
+			System.out.println(Math.abs(getLat()) / Math.abs(getLng()));
+			System.out.println(Math.toDegrees(Math.atan(Math.abs(getLat()) / Math.abs(getLng()))));
+			return 90 * (getQuadrant() + 1) - Math.toDegrees(Math.atan(Math.abs(getLat()) / Math.abs(getLng())));   
 		}
 	}
 	
-	public static double getAngle(GPSCoordinate p1, GPSCoordinate p2, GPSCoordinate p3) throws Exception {
+	public static double getAcuteAngle(GPSCoordinate p1, GPSCoordinate p2, GPSCoordinate p3) throws Exception {
 		//first check p1!=p2, p2!=p3, p1!=p3
 		
 		//Assuming all lats positive/negative and all longs positive/negative
@@ -183,20 +237,59 @@ public class GPSCoordinate {
 		p1 = t.translate(p1);
 		p3 = t.translate(p3);
 		
-		if(p3.getLat() < 0) {
-			p1.reflectLat();
-			p3.reflectLat();
+		//set p3 as the angle closer 0 deg from positive x - axis
+		if(p1.getAngleRelativeToOriginXAxis() < p3.getAngleRelativeToOriginXAxis()) {
+			GPSCoordinate temp = p1.clone();
+			p1 = p3;
+			p3 = temp;
 		}
-		if(p3.getLng() < 0) {
-			p1.reflectLng();
-			p3.reflectLng();
-		}
+		
+//		if(p3.getLat() < 0) {
+//			p1.reflectLat();
+//			p3.reflectLat();
+//		}
+//		if(p3.getLng() < 0) {
+//			p1.reflectLng();
+//			p3.reflectLng();
+//		}
 		//get angle between p3 and x-axis
-		GPSCoordinateRotator r = new GPSCoordinateRotator(p3, Math.atan(p3.getLat()/p3.getLng()));
+		GPSCoordinateRotator r = new GPSCoordinateRotator(p2, p3.getAngleRelativeToOriginXAxis());
+		System.out.println("Theta " + r.getTheta());
 		//rotate p1 by same angle
-		p1 = r.rotate(p1);
+		p1 = r.rotateClockwise(p1);
 		//find angle between p1 and positive x-axis
 		//ensure that p1 is in positive quadrant
-		return p1.getAngleRelativeToOriginXAxis();
+		if(p1.getAngleRelativeToOriginXAxis() > 180) return 360 - p1.getAngleRelativeToOriginXAxis();
+		else return p1.getAngleRelativeToOriginXAxis();
+	}
+
+
+	public static double getLowerLatBound() {
+		return lowerLatBound;
+	}
+
+
+	public static double getUpperLatBound() {
+		return upperLatBound;
+	}
+
+
+	public static double getLowerLngBound() {
+		return lowerLngBound;
+	}
+
+
+	public static double getUpperLngBound() {
+		return upperLngBound;
+	}
+
+
+	public static double getLowerAltBound() {
+		return lowerAltBound;
+	}
+
+
+	public static double getUpperAltBound() {
+		return upperAltBound;
 	}
 }
