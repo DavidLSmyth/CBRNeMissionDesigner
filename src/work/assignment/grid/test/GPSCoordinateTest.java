@@ -39,7 +39,6 @@ class GPSCoordinateTest {
 		NUIGcoord1 = new GPSCoordinate(53.2803630515, -9.0628107958);
 		NUIGcoord2 = new GPSCoordinate(53.2803808514, -9.057081263);
 		NUIGcoord3 = new GPSCoordinate(53.2781415894, -9.0570618034);
-		NUIGcoord4 = new GPSCoordinate(53.2781237886, -9.0627913362);
 		
 		coord0 = new GPSCoordinate(0, 0);
 		coord1 = new GPSCoordinate(1, 2, 20.20);
@@ -91,12 +90,13 @@ class GPSCoordinateTest {
 	@Test
 	void testGetLatMetresToOther() {
 		assertEquals(111000, coord0.getLatMetresToOther(coord1), 111000 * 0.01);
+		assertEquals(300, NUIGcoord0.getLatMetresToOther(NUIGcoord1), 100);
 	}
 
 	@Test
 	void testGetLngMetresToOther() {
 		assertEquals(85000 * 2, coord0.getLngMetresToOther(coord1), 85000 * 0.01);
-		assertEquals(1000, NUIGcoord0.getLngMetresToOther(NUIGcoord0), 1000);
+		assertEquals(500, NUIGcoord0.getLngMetresToOther(NUIGcoord3), 200);
 	}
 
 	@Test
@@ -242,7 +242,8 @@ class GPSCoordinateTest {
 	
 	@Test
 	void testToString() {
-		assertEquals("(0.0, 0.0, null)", coord0.toString());
+		assertEquals("(0.0, 0.0)", coord0.toString());
+		assertEquals("(1.0, 2.0, 20.2)", coord1.toString());
 	}
 	
 	@Test
@@ -253,6 +254,10 @@ class GPSCoordinateTest {
 		assertEquals(c1, c2);
 		assertEquals(c2, c3);
 		assertNotEquals(c1, coord1);
+		assertNotEquals(NUIGcoord0, NUIGcoord1);
+		assertNotEquals(NUIGcoord0, NUIGcoord2);
+		assertNotEquals(NUIGcoord0, NUIGcoord3);
+		assertNotEquals(NUIGcoord2, NUIGcoord3);
 	}
 
 	@Test
@@ -325,7 +330,7 @@ class GPSCoordinateTest {
 	}
 
 	@Test
-	void testGetAngle() {
+	void testGetAcuteAngle() {
 		try {
 			assertEquals(108.4349488, GPSCoordinate.getAcuteAngle(coord2, coord0, coord1), 108 * 0.0000001);
 		} catch (Exception e) {
@@ -338,6 +343,12 @@ class GPSCoordinateTest {
 		}
 		try {
 			assertEquals(161.5650512, GPSCoordinate.getAcuteAngle(coord2, coord0, coord4), 161.5650512 * 0.0000001);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+		}
+		
+		try {
+			assertEquals(90, GPSCoordinate.getAcuteAngle(NUIGcoord0, NUIGcoord1, NUIGcoord2), 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 		}

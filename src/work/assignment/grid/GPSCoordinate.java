@@ -58,7 +58,8 @@ public class GPSCoordinate {
 	}
 	
 	public String toString() {
-		return "(" + lat + ", " + lng + ", " + alt + ")";
+		if(alt != null) return "(" + lat + ", " + lng + ", " + alt + ")";
+		else return "(" + lat + ", " + lng + ")";		
 	}
 	
 	
@@ -213,13 +214,13 @@ public class GPSCoordinate {
 	
 	public double getAngleRelativeToOriginXAxis() {
 		//returns the angle between the vector defined by current coordinate and 
-		//the origin
+		//the positive x-axis, anti-clockwise
 		if(getQuadrant() == 0 || getQuadrant() == 2) {
 			return 90 * getQuadrant() + Math.toDegrees(Math.atan(Math.abs(getLat() / getLng())));
 		}
 		else {
-			System.out.println(Math.abs(getLat()) / Math.abs(getLng()));
-			System.out.println(Math.toDegrees(Math.atan(Math.abs(getLat()) / Math.abs(getLng()))));
+//			System.out.println(Math.abs(getLat()) / Math.abs(getLng()));
+//			System.out.println(Math.toDegrees(Math.atan(Math.abs(getLat()) / Math.abs(getLng()))));
 			return 90 * (getQuadrant() + 1) - Math.toDegrees(Math.atan(Math.abs(getLat()) / Math.abs(getLng())));   
 		}
 	}
@@ -240,27 +241,13 @@ public class GPSCoordinate {
 		//set p3 as the angle closer 0 deg from positive x - axis
 		if(p1.getAngleRelativeToOriginXAxis() < p3.getAngleRelativeToOriginXAxis()) {
 			GPSCoordinate temp = p1.clone();
-			p1 = p3;
-			p3 = temp;
+			p1 = p3.clone();
+			p3 = temp.clone();
 		}
 		
-//		if(p3.getLat() < 0) {
-//			p1.reflectLat();
-//			p3.reflectLat();
-//		}
-//		if(p3.getLng() < 0) {
-//			p1.reflectLng();
-//			p3.reflectLng();
-//		}
-		//get angle between p3 and x-axis
-		GPSCoordinateRotator r = new GPSCoordinateRotator(p2, p3.getAngleRelativeToOriginXAxis());
-		System.out.println("Theta " + r.getTheta());
-		//rotate p1 by same angle
-		p1 = r.rotateClockwise(p1);
-		//find angle between p1 and positive x-axis
-		//ensure that p1 is in positive quadrant
-		if(p1.getAngleRelativeToOriginXAxis() > 180) return 360 - p1.getAngleRelativeToOriginXAxis();
-		else return p1.getAngleRelativeToOriginXAxis();
+		double returnAngle = p1.getAngleRelativeToOriginXAxis() - p3.getAngleRelativeToOriginXAxis();
+		if(returnAngle > 180) return (360 - returnAngle);
+		else return returnAngle;
 	}
 
 

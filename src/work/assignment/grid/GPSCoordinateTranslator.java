@@ -1,8 +1,8 @@
 package work.assignment.grid;
 
 public class GPSCoordinateTranslator{
-	double latDelta;
-	double lngDelta;
+	double latDelta; //degrees
+	double lngDelta; //degrees
 	GPSCoordinateTranslator(GPSCoordinate gpsCoordFrom, GPSCoordinate gpsCoordTo) {
 		this.latDelta = gpsCoordTo.getLat() - gpsCoordFrom.getLat();
 		this.lngDelta = gpsCoordTo.getLng() - gpsCoordFrom.getLng();

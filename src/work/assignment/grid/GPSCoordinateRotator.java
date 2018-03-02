@@ -18,13 +18,16 @@ public class GPSCoordinateRotator{
 		}
 	}
 	public GPSCoordinate rotateAnticlockwise(GPSCoordinate coord) throws Exception {
-		//translate by rotateCoord, rotate about origin, translate back
-		GPSCoordinateTranslator t = new GPSCoordinateTranslator(rotateCoord, new GPSCoordinate(0,0));
-		coord = t.translate(coord);
-		GPSCoordinate coordCopy = coord.clone();
-		coord.setLng((coordCopy.getLng() * Math.cos(Math.toRadians(angleTheta))) - (coordCopy.getLat() * Math.sin(Math.toRadians(angleTheta))));
-		coord.setLat((coordCopy.getLng() * Math.sin(Math.toRadians(angleTheta))) + (coordCopy.getLat() * Math.cos(Math.toRadians(angleTheta))));
-		return t.translateBack(coord);		
+		if(rotateCoord.equals(coord)) return coord;
+		else {
+			//translate by rotateCoord, rotate about origin, translate back
+			GPSCoordinateTranslator t = new GPSCoordinateTranslator(rotateCoord, new GPSCoordinate(0,0));
+			coord = t.translate(coord);
+			GPSCoordinate coordCopy = coord.clone();
+			coord.setLng((coordCopy.getLng() * Math.cos(Math.toRadians(angleTheta))) - (coordCopy.getLat() * Math.sin(Math.toRadians(angleTheta))));
+			coord.setLat((coordCopy.getLng() * Math.sin(Math.toRadians(angleTheta))) + (coordCopy.getLat() * Math.cos(Math.toRadians(angleTheta))));
+			return t.translateBack(coord);
+		}
 	}
 	
 	public GPSCoordinate rotateClockwise(GPSCoordinate coord) throws Exception {
