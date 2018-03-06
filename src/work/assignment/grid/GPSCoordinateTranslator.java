@@ -29,4 +29,8 @@ public class GPSCoordinateTranslator{
 		//calculate max error in this assumption
 		return Math.abs(lngDelta * 85.39 * 1000);
 	}
+	
+	public String toString() {
+		return "Translates by latDelta " + getLatDelta() + ", longDelta " + getLngDelta(); 
+	}
 }

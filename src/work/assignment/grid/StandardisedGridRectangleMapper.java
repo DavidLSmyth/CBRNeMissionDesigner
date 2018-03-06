@@ -6,28 +6,35 @@ public class StandardisedGridRectangleMapper {
 	
 	GPSCoordinateTranslator tran;
 	GPSCoordinateRotator rot;
-	GPSCoordinateReflector ref;
+	//GPSCoordinateReflector ref;
+	GPSGridRectangle originalRect;
 	
-	public StandardisedGridRectangleMapper(GPSGridRectangle r) throws Exception {
-		setTranslate(r.getStandardizedGPSGridTranslator());
-		setRotate(r.getStandardizedGPSGridRotator());
-		setReflect(r.getStandardizedGPSGridReflector());		
+	public StandardisedGridRectangleMapper(GPSGridRectangle unstandardisedGridRectangle) throws Exception {
+		setTranslate(unstandardisedGridRectangle.getStandardizedGPSGridTranslator());
+		setRotate(unstandardisedGridRectangle.getStandardizedGPSGridRotator());
+		System.out.println("Translator: " + tran);
+		System.out.println("Rotator: " + rot);
+		//setReflect(r.getStandardizedGPSGridReflector());
+		this.originalRect = unstandardisedGridRectangle ;
 	}
 	
-	public GPSCoordinate translateToStandard(GPSCoordinate gridCoord) throws Exception {
+	public GPSCoordinate convertToStandard(GPSCoordinate gridCoord) throws Exception {
+		//translates coordinate relative to lowestLong and 
+		//then rotates anticlockwise relative to lowestLat
 		gridCoord = getTranslate().translate(gridCoord);
-		gridCoord = getRotate().rotateAnticlockwise(gridCoord);
-		gridCoord = getReflect().reflectLat(gridCoord);
-		gridCoord = getReflect().reflectLong(gridCoord);
+		gridCoord = getRotate().rotateClockwise(gridCoord);
+//		gridCoord = getReflect().reflectLat(gridCoord);
+//		gridCoord = getReflect().reflectLong(gridCoord);
+		System.out.println(gridCoord);
 		return gridCoord;
 	}
 	
-	public GPSCoordinate translateToOriginal(GPSCoordinate gridCoord) throws Exception {
+	public GPSCoordinate convertToOriginal(GPSCoordinate gridCoord) throws Exception {
 		//re-reflect
-		gridCoord = getReflect().reflectLong(gridCoord);
-		gridCoord = getReflect().reflectLat(gridCoord);
+//		gridCoord = getReflect().reflectLong(gridCoord);
+//		gridCoord = getReflect().reflectLat(gridCoord);
 		//rotate back to original
-		gridCoord = getRotate().rotateClockwise(gridCoord);
+		gridCoord = getRotate().rotateAnticlockwise(gridCoord);
 		//translate back to original
 		gridCoord = getTranslate().translateBack(gridCoord);
 		return gridCoord;
@@ -48,12 +55,17 @@ public class StandardisedGridRectangleMapper {
 	public void setRotate(GPSCoordinateRotator rotate) {
 		this.rot = rotate;
 	}
-
-	public GPSCoordinateReflector getReflect() {
-		return ref;
+	
+	public String toString() {
+		return "Translates to standard by: Lat - " + tran.getLatDelta() + " Long - " + tran.getLngDelta() + 
+				"\n and rotates by and angle of " + rot.getTheta() + " around the point " + rot.getRotateCoord();
 	}
 
-	public void setReflect(GPSCoordinateReflector reflect) {
-		this.ref = reflect;
-	}
+//	public GPSCoordinateReflector getReflect() {
+//		return ref;
+//	}
+//
+//	public void setReflect(GPSCoordinateReflector reflect) {
+//		this.ref = reflect;
+//	}
 }

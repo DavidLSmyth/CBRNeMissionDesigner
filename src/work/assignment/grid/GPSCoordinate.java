@@ -34,14 +34,15 @@ public class GPSCoordinate {
 		}
 		else {
 			GPSCoordinate otherCoord = (GPSCoordinate) other;
+			//return true if the difference is less than ~ 1m
 			if((getAlt() != null && otherCoord.getAlt() == null) || getAlt() == null && otherCoord.getAlt() != null) {
 				return false;
 			}
 			if(getAlt() == null && otherCoord.getAlt() == null) {
-				return (otherCoord.getLat() - this.getLat() < Math.pow(10, -10)) && (otherCoord.getLng() - this.getLng() < Math.pow(10, -10));
+				return (Math.abs(otherCoord.getLat() - this.getLat()) < Math.pow(10, -5)) && (Math.abs(otherCoord.getLng() - this.getLng()) < Math.pow(10, -4));
 			}
 			else{
-				return ((otherCoord.getAlt() - this.getAlt() < Math.pow(10, -10)) && (otherCoord.getLat() - this.getLat() < Math.pow(10, -10)) && (otherCoord.getLng() - this.getLng() < Math.pow(10, -10)));
+				return (Math.abs(otherCoord.getAlt() - this.getAlt()) < Math.pow(10, -4)) && (Math.abs(otherCoord.getLat() - this.getLat()) < Math.pow(10, -5)) && (Math.abs(otherCoord.getLng() - this.getLng()) < Math.pow(10, -4));
 			}
 		}
 	}
@@ -86,6 +87,10 @@ public class GPSCoordinate {
 			if(lng <= 0) return 2;
 			else return 3;
 		}
+	}
+	
+	public double getMetresToOther(GPSCoordinate otherCoord) {
+		return Math.sqrt(Math.pow(getLatMetresToOther(otherCoord), 2) + Math.pow(getLngMetresToOther(otherCoord), 2));
 	}
 	
 	//https://stackoverflow.com/questions/11849636/maximum-lat-and-long-bounds-for-the-world-google-maps-api-latlngbounds
@@ -187,6 +192,18 @@ public class GPSCoordinate {
 		return new GPSCoordinateRotator(this, angleTheta);
 	}
 	
+	public void add(GPSCoordinate otherCoord) throws Exception {
+		setLat(getLat() + otherCoord.getLat());
+		setLng(getLng() + otherCoord.getLng());
+		setAlt(getAlt() + otherCoord.getAlt());
+	}
+	
+	public void subtract(GPSCoordinate otherCoord) throws Exception {
+		setLat(getLat() - otherCoord.getLat());
+		setLng(getLng() - otherCoord.getLng());
+		setAlt(getAlt() - otherCoord.getAlt());
+	}
+	
 	public void reflectLat() {
 		// reflects latitude
 		try {
@@ -214,7 +231,7 @@ public class GPSCoordinate {
 	
 	public double getAngleRelativeToOriginXAxis() {
 		//returns the angle between the vector defined by current coordinate and 
-		//the positive x-axis, anti-clockwise
+		//the positive x-axis, moving clockwise from the coordinate
 		if(getQuadrant() == 0 || getQuadrant() == 2) {
 			return 90 * getQuadrant() + Math.toDegrees(Math.atan(Math.abs(getLat() / getLng())));
 		}
@@ -278,5 +295,13 @@ public class GPSCoordinate {
 
 	public static double getUpperAltBound() {
 		return upperAltBound;
+	}
+	
+	public static double convertMetresLatToDegrees(double metres) {
+		return metres/(111.03 * 1000);
+	}
+	
+	public static double convertMetresLongToDegrees(double metres) {
+		return metres/(85.39 * 1000);
 	}
 }

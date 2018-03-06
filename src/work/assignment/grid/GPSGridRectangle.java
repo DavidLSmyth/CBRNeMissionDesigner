@@ -1,6 +1,8 @@
 package work.assignment.grid;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 //Should this extend from GPS GridQuadrilateral?
 public class GPSGridRectangle {
@@ -9,17 +11,26 @@ public class GPSGridRectangle {
 	//These are marginal better than p1, p2, p3 p4.
 	//Impose some structure
 	
+	//Don't think need a reflector, since rotating lowestLat around lowestLong should always
+	//give correct orientation
+	
 	//The point that contains the lowest long coordinate in the rectangle
-	GPSCoordinate lowestLong;
-	GPSCoordinate highestLong;
-	GPSCoordinate highestLat;
-	GPSCoordinate lowestLat;
+//	GPSCoordinate lowestLong;
+//	GPSCoordinate highestLong;
+//	GPSCoordinate highestLat;
+//	GPSCoordinate lowestLat;
+	
+	GPSCoordinate p1;
+	GPSCoordinate p2;
+	GPSCoordinate p3;
+	GPSCoordinate p4;
+	ArrayList<GPSCoordinate> points;
 	
 	ArrayList<ArrayList<GPSCoordinate>> corners;
 	
-	GPSCoordinateTranslator standardizedGPSGridTranslator;
-	GPSCoordinateRotator standardizedGPSGridRotator;
-	GPSCoordinateReflector standardizedGPSGridReflector;
+//	GPSCoordinateTranslator standardizedGPSGridTranslator;
+//	GPSCoordinateRotator standardizedGPSGridRotator;
+	//GPSCoordinateReflector standardizedGPSGridReflector;
 	//2 different orientations:
 	
 	//   p2
@@ -40,35 +51,64 @@ public class GPSGridRectangle {
 	//     ⬊    /
 	//      p4
 	
-	public GPSGridRectangle(GPSCoordinate p1, GPSCoordinate p2, GPSCoordinate p3, GPSCoordinate p4) throws Exception{
-		//allow a tolerance for the user to pass in  a quadrilateral that isn't a rectangle
-		//need a measure for how close an object is to being rectangle
-		//check how close any 2 angles are to being 90 degrees. Allow 5% tolerance?
-		setLowestLong(p1);
-		setHighestLong(p1);
-		setHighestLat(p1);
-		setLowestLat(p1);
+	protected GPSGridRectangle(GPSCoordinate p1, GPSCoordinate p2, GPSCoordinate p3, GPSCoordinate p4, String subclass) {
 		
-		ArrayList<GPSCoordinate> points = new ArrayList<GPSCoordinate>();
+		this.p1 = p1;
+		this.p2 = p2;
+		this.p3 = p3;
+		this.p4 = p4;
+				
+		points = new ArrayList<GPSCoordinate>();
 		points.add(p1);
 		points.add(p2);
 		points.add(p3);
 		points.add(p4);
+	}
+	
+	public GPSGridRectangle(GPSCoordinate p1, GPSCoordinate p2, GPSCoordinate p3, GPSCoordinate p4) throws Exception{
+		//allow a tolerance for the user to pass in  a quadrilateral that isn't a rectangle
+		//need a measure for how close an object is to being rectangle
+		//check how close any 2 angles are to being 90 degrees. Allow 5% tolerance?
 		
-		for(GPSCoordinate p:points) {
-			if(p.getLat() < lowestLat.getLat()){
-				setLowestLat(p);
-			}
-			if(p.getLat() > highestLat.getLat()){
-				setHighestLat(p);
-			}
-			if(p.getLng() < lowestLong.getLng()){
-				setLowestLong(p);
-			}
-			if(p.getLng() > highestLong.getLng()){
-				setHighestLong(p);
+//		setLowestLong(p1);
+//		setHighestLong(p1);
+//		setHighestLat(p1);
+//		setLowestLat(p1);
+//		this.p1 = p1;
+//		this.p2 = p2;
+//		this.p3 = p3;
+//		this.p4 = p4;
+//		
+//		
+//		points = new ArrayList<GPSCoordinate>();
+//		points.add(p1);
+//		points.add(p2);
+//		points.add(p3);
+//		points.add(p4);
+		
+		this(p1,p2,p3,p4, "Sub");
+			
+		
+		if(verifyPointsPositive() && verifyOriginInRect() && verifyRightAngles()) {
+			throw new Exception("A StandardGPSGridRectangle should have been instantiated");
+		}
+		else {
+			
+			generateCorners();
+			//if standardGPSRectangle, return StandardGPSRectangle
+			
+			//ensure all angles are 90 +- 5
+			//for those that aren't, correct to 90
+			
+			if(!verifyRightAngles()) {
+				throw new Exception("GPSGridRectangle must be provided with coordinates that form 90 degree corners");
 			}
 		}
+//		points.add(p1);
+//		points.add(p2);
+//		points.add(p3);
+//		points.add(p4);
+	
 		//check that each point is unique
 		//2 points are on same latitude - arbitrary which is which here
 		//this also implies that the same point can be highestLong / lowestLong
@@ -79,55 +119,45 @@ public class GPSGridRectangle {
 		
 		//all of lowestLat, highestLat and either lowestLong/highestLong will be the same point
 		//this *should* be case for standardized grid rectangle
-		if(highestLat.equals(lowestLat)) {
-			
-		}
-		if(highestLat.equals(highestLong)) {
-			
-		}
-		if(highestLong.equals(lowestLat)) {
-			
-		}
-
-		//ensure all angles are 90 +- 5
-		//for those that aren't, correct to 90
 		
-		//if(!ensureRectangle()) {
-		//	throw new Exception("GPSGrid rectangular must be provided with rectangular coordinates");
-		//}
+		
+		
+//		standardizedGPSGridTranslator = getStandardizedGPSGridTranslator();
+//		standardizedGPSGridRotator = getStandardizedGPSGridRotator();
+		//standardizedGPSGridReflector = new GPSCoordinateReflector();
+	}
+
+
+	private void generateCorners() {
 		corners= new ArrayList<ArrayList<GPSCoordinate>> ();
 		ArrayList<GPSCoordinate> corner1 = new ArrayList<GPSCoordinate> ();
-		corner1.add(highestLong);
-		corner1.add(highestLat);
-		corner1.add(lowestLong);
+		corner1.add(getHighestLong());
+		corner1.add(getHighestLat());
+		corner1.add(getLowestLong());
 		
 		ArrayList<GPSCoordinate> corner2 = new ArrayList<GPSCoordinate> ();
-		corner2.add(highestLat);
-		corner2.add(lowestLong);
-		corner2.add(lowestLat);
+		corner2.add(getHighestLat());
+		corner2.add(getLowestLong());
+		corner2.add(getLowestLat());
 		
 		ArrayList<GPSCoordinate> corner3 = new ArrayList<GPSCoordinate> ();
-		corner3.add(lowestLong);
-		corner3.add(lowestLat);
-		corner3.add(highestLong);
+		corner3.add(getLowestLong());
+		corner3.add(getLowestLat());
+		corner3.add(getHighestLong());
 		
 		ArrayList<GPSCoordinate> corner4 = new ArrayList<GPSCoordinate> ();
-		corner4.add(lowestLat);
-		corner4.add(highestLong);
-		corner4.add(highestLat);
+		corner4.add(getLowestLat());
+		corner4.add(getHighestLong());
+		corner4.add(getHighestLat());
 		
 		corners.add(corner1);
 		corners.add(corner2);
 		corners.add(corner3);
 		corners.add(corner4);
 		
-		
-		standardizedGPSGridTranslator = getStandardizedGPSGridTranslator();
-		standardizedGPSGridRotator = getStandardizedGPSGridRotator();
-		standardizedGPSGridReflector = new GPSCoordinateReflector();
 	}
 	
-	public boolean ensureRectangle() throws Exception {
+	public boolean verifyRightAngles() throws Exception {
 		//allow 5% error
 		double tolPercentage = 0.05;	
 		for(ArrayList<GPSCoordinate> corner: getCorners()) {
@@ -141,53 +171,53 @@ public class GPSGridRectangle {
 		return true;
 	}
 	
-	public ArrayList<ArrayList<GPSCoordinate>> getCorners() {
+	public ArrayList<ArrayList<GPSCoordinate>> getCorners() throws Exception {
 		return corners;
 	}
 	
 	public double getBoxWidthMetres() {
 		//assuming width longitude - doesn't really matter
-		return highestLong.getLngMetresToOther(lowestLong);
+		return getHighestLong().getLngMetresToOther(getLowestLong());
 	}
 	
 	public double getBoxHeightMetres() {
 		//assuming width longitude - doesn't really matter
-		return highestLat.getLatMetresToOther(lowestLat);
+		return getHighestLat().getLatMetresToOther(getLowestLat());
 	}
 	
 	
 	//method to get the operations needed to get box translated to origin and rotated to all positive
-	public GPSGridRectangle getStandardizedGPSGridRectangle() throws Exception {
+	public StandardGPSGridRectangle getStandardizedGPSGridRectangle() throws Exception {
 		//get new GPSGridRectangle translated back to origin
 		
-		GPSCoordinate lowestLong1 = lowestLong.clone();
-		GPSCoordinate lowestLat1 = lowestLat.clone();
-		GPSCoordinate highestLong1 = highestLong.clone();
-		GPSCoordinate highestLat1 = highestLat.clone();
+		GPSCoordinate lowestLong1 = getLowestLong().clone();
+		GPSCoordinate lowestLat1 = getLowestLat().clone();
+		GPSCoordinate highestLong1 = getHighestLong().clone();
+		GPSCoordinate highestLat1 = getHighestLat().clone();
 		ArrayList<GPSCoordinate> rectanglePoints = new ArrayList<GPSCoordinate>();
 		
 		rectanglePoints.add(lowestLat1);
 		rectanglePoints.add(lowestLong1);		
 		rectanglePoints.add(highestLat1);
 		rectanglePoints.add(highestLong1);
-
+		
 		//pick an arbitrary point to translate back to origin
 		int counter = 0;
 		for(GPSCoordinate c: rectanglePoints) {
 			//translate all points relative to arbitrary points
-			c = standardizedGPSGridTranslator.translate(c);
+			c = getStandardizedGPSGridTranslator().translate(c);
 			//rotate all points onto positive x-axis
-			c = standardizedGPSGridRotator.rotateClockwise(c);
+			c = getStandardizedGPSGridRotator().rotateClockwise(c);
 			//if any lat is negative, need a reflection
-			if(c.getLat() < 0) {
-				standardizedGPSGridReflector.setReflectLat(true);
-				c = standardizedGPSGridReflector.reflectLat(c);
-			}
+//			if(c.getLat() < 0) {
+//				standardizedGPSGridReflector.setReflectLat(true);
+//				c = standardizedGPSGridReflector.reflectLat(c);
+//			}
 			//same for long
-			if(c.getLng() < 0) {
-				standardizedGPSGridReflector.setReflectLng(true);
-				c = standardizedGPSGridReflector.reflectLong(c);
-			}
+//			if(c.getLng() < 0) {
+//				standardizedGPSGridReflector.setReflectLng(true);
+//				c = standardizedGPSGridReflector.reflectLong(c);
+//			}
 			System.out.println("Setting c as: " + c);
 			rectanglePoints.set(counter, c);
 			counter++;
@@ -205,76 +235,133 @@ public class GPSGridRectangle {
 //		lowestLong1 = standardizedGPSGridRotator.rotateClockwise(lowestLong1);
 //		highestLat1 = standardizedGPSGridRotator.rotateClockwise(highestLat1);
 //		highestLong1 = standardizedGPSGridRotator.rotateClockwise(highestLong1);
-		
 		//check whether points need to be reflected
-		
-		
-		return new GPSGridRectangle(rectanglePoints.get(0), rectanglePoints.get(1), rectanglePoints.get(2), rectanglePoints.get(3));
+		return new StandardGPSGridRectangle(rectanglePoints.get(0), rectanglePoints.get(1), rectanglePoints.get(2), rectanglePoints.get(3));
 	}
 	
 	public GPSCoordinateTranslator getStandardizedGPSGridTranslator() throws Exception {
-		return lowestLong.getTranslatorFromThisTo(new GPSCoordinate(0,0));
+		return getLowestLong().getTranslatorFromThisTo(new GPSCoordinate(0,0));
 	}
 	
-	public GPSCoordinateReflector getStandardizedGPSGridReflector() throws Exception {
-		//if any standardized points are negative - return the reflector, 
-		//else return the coord
-		getStandardizedGPSGridRectangle();
-		return standardizedGPSGridReflector;
-	}
+//	public GPSCoordinateReflector getStandardizedGPSGridReflector() throws Exception {
+//		//if any standardized points are negative - return the reflector, 
+//		//else return the coord
+//		GPSCoordinateReflector = 
+//		GPSCoordinateTranslator t = getStandardizedGPSGridTranslator();
+//		GPSCoordinateRotator r = getStandardizedGPSGridRotator();
+//		GPSCoordinate lowestLngTranslated = t.translate(getLowestLong());
+//		GPSCoordinate lowestLatTranslated = t.translate(getLowestLat());
+//		double lowestLatAngle = lowestLatTranslated.getAngleRelativeToOriginXAxis();
+//		System.out.println("lowestLatAngle: " + lowestLatAngle);
+//		GPSCoordinateRotator r = lowestLngTranslated.getRotatorAboutThis(lowestLatAngle);
+//		
+//		return return ;
+//	}
 	
 	public GPSCoordinateRotator getStandardizedGPSGridRotator() throws Exception {
 		//getStandardizedGPSGridTranslator
 		GPSCoordinateTranslator t = getStandardizedGPSGridTranslator();
 		//translate lowestLong back to origin
 		//then get rotator which rotates lowestLat back to x-axis
-		System.out.println(t.translate(lowestLat));
-		return t.translate(lowestLong).getRotatorAboutThis(
-				t.translate(lowestLat).getAngleRelativeToOriginXAxis());
+		System.out.println("lowest lat" + getLowestLat());
+		System.out.println("lowest long " + getLowestLong());
+		System.out.println(t.translate(getLowestLat()));
+		System.out.println(t.translate(getLowestLat()).getAngleRelativeToOriginXAxis());
+		return t.translate(getLowestLong()).getRotatorAboutThis(
+				t.translate(getLowestLat()).getAngleRelativeToOriginXAxis());
 	}
-
+	
 	public GPSCoordinate getLowestLong() {
+		GPSCoordinate lowestLong = p1;
+		for(GPSCoordinate p:points) {
+			if(p.getLng() < lowestLong.getLng()){
+				lowestLong = p;
+			}
+		}
 		return lowestLong;
 	}
 
-	public void setLowestLong(GPSCoordinate lowestLong) {
-		this.lowestLong = lowestLong;
-	}
+//	public void setLowestLong(GPSCoordinate lowestLong) {
+//		this.lowestLong = lowestLong;
+//	}
 
 	public GPSCoordinate getHighestLong() {
+		GPSCoordinate highestLong = p1;
+		for(GPSCoordinate p:points) {
+			if(p.getLng() > highestLong.getLng()){
+				highestLong = p;
+			}
+		}
 		return highestLong;
 	}
 
-	public void setHighestLong(GPSCoordinate highestLong) {
-		this.highestLong = highestLong;
-	}
+//	public void setHighestLong(GPSCoordinate highestLong) {
+//		this.highestLong = highestLong;
+//	}
 
 	public GPSCoordinate getHighestLat() {
+		//return highestLat;
+		GPSCoordinate highestLat = p1;
+		for(GPSCoordinate p:points) {
+			if(p.getLat() > highestLat.getLat()){
+				highestLat = p;
+			}
+		}
 		return highestLat;
 	}
 
-	public void setHighestLat(GPSCoordinate highestLat) {
-		this.highestLat = highestLat;
-	}
+//	public void setHighestLat(GPSCoordinate highestLat) {
+//		this.highestLat = highestLat;
+//	}
 
 	public GPSCoordinate getLowestLat() {
+		//return lowestLat;
+		GPSCoordinate lowestLat = p1;
+		for(GPSCoordinate p:points) {
+			if(p.getLat() < lowestLat.getLat()){
+				lowestLat = p;
+			}
+		}
 		return lowestLat;
 	}
 
-	public void setLowestLat(GPSCoordinate lowestLat) {
-		this.lowestLat = lowestLat;
+//	public void setLowestLat(GPSCoordinate lowestLat) {
+//		this.lowestLat = lowestLat;
+//	}
+	
+//	public Object getMapperToStandardForm() {
+//		//returns an operator which maps GPS points in the rectangle to 
+//		//their position relative to some coordinate
+//		return new StandardisedGridRectangleMapper(this).convertToStandard();
+//		
+//	}
+//
+//	public void getMapperToOriginalForm() {
+//		//returns an operator which maps GPS points in the rectangle to 
+//		//their position relative to some coordinate
+//		
+//	}
+	
+	public String toString() {
+		return "LowestLat: " + getLowestLat() + "\nLowestLong: " + getLowestLong() + "\nHighestLat: " + getHighestLat() + "\nHighestLong: " + getHighestLong(); 
 	}
 	
-	public void getMapperToStandardForm() {
-		//returns an operator which maps GPS points in the rectangle to 
-		//their position relative to some coordinate
-		
+	//private
+	public boolean verifyOriginInRect() throws Exception {
+		GPSCoordinate origin = new GPSCoordinate(0,0);
+		System.out.println("p1: " + p1);
+		System.out.println("p2: " + p2);
+		System.out.println("p3: " + p3);
+		System.out.println("p4: " + p4);
+		if(!p1.equals(origin) && (!p2.equals(origin)) && (!p3.equals(origin)) && (!p4.equals(origin))) return false;
+		else return true;
 	}
-
-	public void getMapperToOriginalForm() {
-		//returns an operator which maps GPS points in the rectangle to 
-		//their position relative to some coordinate
-		
+	//private
+	public boolean verifyPointsPositive() {
+		for(GPSCoordinate p:points) {
+			if((p.getLat() < -Math.pow(10, -4)) || p.getLng() < -Math.pow(10, -4)) return false;
+		}
+		return true;
 	}
 }
 

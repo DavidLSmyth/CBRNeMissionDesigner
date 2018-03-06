@@ -27,7 +27,7 @@ class GPSGridRectangleTest {
 		
 		r1 = new GPSGridRectangle(NUIGcoord0, NUIGcoord1, NUIGcoord2, NUIGcoord3);  
 	}
-
+	
 	@AfterEach
 	void tearDown() throws Exception {
 	}
@@ -45,15 +45,21 @@ class GPSGridRectangleTest {
 	}
 
 	@Test
-	void testEnsureRectangle() throws Exception {
-		assertTrue(r1.ensureRectangle());
+	void testVerifyRightAngles() throws Exception {
+		assertTrue(r1.verifyRightAngles());
 		GPSCoordinate spoof = new GPSCoordinate(55.0, -9);
-		GPSGridRectangle r2 = new GPSGridRectangle(NUIGcoord0,NUIGcoord1,NUIGcoord2, spoof);
-		assertFalse(r2.ensureRectangle());
+		try {
+			GPSGridRectangle r2 = new GPSGridRectangle(NUIGcoord0,NUIGcoord1,NUIGcoord2, spoof);
+		}
+		catch (Exception e) {
+			assertEquals("GPSGridRectangle must be provided with coordinates that form 90 degree corners", e.getMessage());
+		}
+		//assertFalse(r2.verifyRightAngles());
 	}
 
+
 	@Test
-	void testGetCorners() {
+	void testGetCorners() throws Exception {
 		ArrayList<ArrayList<GPSCoordinate>> corners = r1.getCorners();
 		ArrayList<GPSCoordinate> corner1 = new ArrayList<GPSCoordinate>();
 		corner1.add(r1.getHighestLong());

@@ -2,92 +2,53 @@ package work.assignment.grid;
 
 import java.util.ArrayList;
 
+import work.assignment.AgentType;
+
 public class TraversalGrid {
-	int noLngPoints;
-	public int getNoLngPoints() {
-		return noLngPoints;
-	}
-
-	public void setNoLngPoints(int noLngPoints) {
-		this.noLngPoints = noLngPoints;
-	}
-
-	public int getNoLatPoints() {
-		return noLatPoints;
-	}
-
-	public void setNoLatPoints(int noLatPoints) {
-		this.noLatPoints = noLatPoints;
-	}
-
-	int noLatPoints;
-	double lngSpacing; //metres
-	public double getLngSpacing() {
-		return lngSpacing;
-	}
-
-	public void setLngSpacing(double lngSpacing) {
-		this.lngSpacing = lngSpacing;
-	}
-
-	public double getLatSpacing() {
-		return latSpacing;
-	}
-
-	public void setLatSpacing(double latSpacing) {
-		this.latSpacing = latSpacing;
-	}
-
-	double latSpacing; //metres
-	double altitude;
-	public double getAltitude() {
-		return altitude;
-	}
-
-	public void setAltitude(double altitude) {
-		this.altitude = altitude;
-	}
-
-	GPSGridRectangle boundingRectangle;
-
-	ArrayList<GPSCoordinate> gridPoints;
+	//A class which contains a set of GPS Points to be expored
 	
-	public TraversalGrid(GPSGridRectangle r, double lngSpacing, double latSpacing, double altitude) throws Exception {
-		setLngSpacing(lngSpacing);
-		setLatSpacing(latSpacing);
-		setNoLatPoints((int) (r.getBoxWidthMetres() / latSpacing));
-		setNoLngPoints((int) (r.getBoxHeightMetres() / lngSpacing));
-		setBoundingRectangle(r);
-		for(int lngPoint = 0; lngPoint < getNoLngPoints(); lngPoint ++) {
-			for(int latPoint = 0; latPoint < getNoLatPoints(); latPoint++) {
-				gridPoints.set(lngPoint * getNoLatPoints() + lngPoint, new GPSCoordinate(latPoint * getLatSpacing(), lngPoint * getLngSpacing(), altitude));
-			}
+	int noPoints;
+	ArrayList<GPSCoordinate> points;
+	
+	public TraversalGrid() {
+		this(new ArrayList<GPSCoordinate>());
+	}
+	public TraversalGrid(ArrayList<GPSCoordinate> points) {
+		setPoints(points);
+		setNoPoints(points.size());
+	}
+//	
+//	public void addPoint(GPSCoordinate coord) {
+//		points.add(noPoints+1, coord);
+//		setNoPoints(getNoPoints()+1);
+//	}
+//	
+	public static double getCost(GPSCoordinate c1, GPSCoordinate c2, AgentType agentType) {
+		return c1.getMetresToOther(c2);
+	}
+	
+	public static double getPathCost(ArrayList<GPSCoordinate> path, AgentType agentType) {
+		//returns the cost of traversing the path for a given agent
+		double cost = 0;
+		for(int nodeNo = 0; nodeNo < path.size() - 1; nodeNo++) {
+			cost += getCost(path.get(nodeNo), path.get(nodeNo + 1), agentType);
 		}
+		return cost;
 	}
 	
-	public static double getCost(GPSCoordinate c1, GPSCoordinate c2) {
-		//cost of traversal is given as the straight-line distance from 
-		//coordinate1 to coordinate2
-		return Math.sqrt(Math.pow(c1.getLatMetresToOther(c2), 2) + Math.pow(c1.getLngMetresToOther(c2), 2));
-	}
-	
-	public GPSCoordinate getij(int i, int j) {
-		//test this
-		return gridPoints.get(i * getNoLatPoints() + j);
-	}
-	
-	public GPSGridRectangle getBoundingRectangle() {
-		return boundingRectangle;
+	public int getNoPoints() {
+		return noPoints;
 	}
 
-	public void setBoundingRectangle(GPSGridRectangle boundingRectangle) {
-		this.boundingRectangle = boundingRectangle;
-	}
-	public ArrayList<GPSCoordinate> getGridPoints() {
-		return gridPoints;
+	protected void setNoPoints(int noPoints) {
+		this.noPoints = noPoints;
 	}
 
-	public void setGridPoints(ArrayList<GPSCoordinate> gridPoints) {
-		this.gridPoints = gridPoints;
+	public ArrayList<GPSCoordinate> getPoints() {
+		return points;
+	}
+
+	public void setPoints(ArrayList<GPSCoordinate> points) {
+		this.points = points;
 	}
 }

@@ -14,7 +14,7 @@ public class GPSCoordinateRotator{
 			return angleTheta;
 		}
 		else {
-			throw new Exception("Must provide an angle of theta within (-360, 360)");
+			throw new Exception("Must provide an angle of theta within (-360, 360), not " + angleTheta);
 		}
 	}
 	public GPSCoordinate rotateAnticlockwise(GPSCoordinate coord) throws Exception {
@@ -51,6 +51,10 @@ public class GPSCoordinateRotator{
 
 	public void setRotateCoord(GPSCoordinate rotateCoord) {
 		this.rotateCoord = rotateCoord;
+	}
+	
+	public String toString() {
+		return "Rotates by " + getTheta() + " around coordinate " + getRotateCoord(); 
 	}
 	
 	

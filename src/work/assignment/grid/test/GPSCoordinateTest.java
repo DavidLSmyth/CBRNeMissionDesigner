@@ -245,14 +245,20 @@ class GPSCoordinateTest {
 		assertEquals("(0.0, 0.0)", coord0.toString());
 		assertEquals("(1.0, 2.0, 20.2)", coord1.toString());
 	}
-	
+
 	@Test
 	void testEquals() throws Exception {
 		GPSCoordinate c1 = new GPSCoordinate(3.123456789876, 5.9876543212, 3.112233445566);
 		GPSCoordinate c2 = new GPSCoordinate(3.123456789876, 5.9876543212, 3.112233445566);
 		GPSCoordinate c3 = new GPSCoordinate(3.1234567898760000001, 5.9876543212000001, 3.11223344556600001);
+		GPSCoordinate c4 = new GPSCoordinate(3.1234567898760000001, -5.9876543212000001, 3.11223344556600001);
+		GPSCoordinate c5 = new GPSCoordinate(3.123458, -5.98765439, 3.11223344556);
+		GPSCoordinate c6 = new GPSCoordinate(-3.123458, -5.98765439, 3.112233445);
+		GPSCoordinate c7 = new GPSCoordinate(-3.1234582, -5.9876544, 3.11223344);
 		assertEquals(c1, c2);
 		assertEquals(c2, c3);
+		assertEquals(c4, c5);
+		assertEquals(c6, c7);
 		assertNotEquals(c1, coord1);
 		assertNotEquals(NUIGcoord0, NUIGcoord1);
 		assertNotEquals(NUIGcoord0, NUIGcoord2);
@@ -278,7 +284,7 @@ class GPSCoordinateTest {
 		
 		GPSCoordinateRotator r2 = coord11.getRotatorAboutThis(90);
 		GPSCoordinate coord13 = r2.rotateAnticlockwise(coord10);
-		assertEquals(new GPSCoordinate(55, -3, null), coord13);
+		assertEquals(new GPSCoordinate(5, -3, null), coord13);
 		
 		GPSCoordinateRotator r3 = coord11.getRotatorAboutThis(270);
 		GPSCoordinate coord14 = r3.rotateAnticlockwise(coord10);

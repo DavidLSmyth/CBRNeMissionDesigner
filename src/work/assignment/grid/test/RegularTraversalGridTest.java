@@ -1,0 +1,213 @@
+package work.assignment.grid.test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.ArrayList;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import work.assignment.AgentType;
+import work.assignment.grid.GPSCoordinate;
+import work.assignment.grid.GPSGridRectangle;
+import work.assignment.grid.RegularTraversalGrid;
+import work.assignment.grid.StandardGPSGridRectangle;
+import work.assignment.grid.StandardisedGridRectangleMapper;
+
+class RegularTraversalGridTest {
+
+	GPSGridRectangle nuig;
+	StandardGPSGridRectangle standard;
+	
+	StandardisedGridRectangleMapper mapper;
+	
+	GPSCoordinate NUIGcoord0;
+	GPSCoordinate NUIGcoord1;
+	GPSCoordinate NUIGcoord2;
+	GPSCoordinate NUIGcoord3;
+	RegularTraversalGrid g1;
+	RegularTraversalGrid g2;
+	
+	@BeforeEach
+	void setUp() throws Exception {
+		//bottomleft
+		NUIGcoord0 = new GPSCoordinate(53.2781237886, -9.0627913362);
+		//origin
+		NUIGcoord1 = new GPSCoordinate(53.2803630515, -9.0628107958);
+		NUIGcoord2 = new GPSCoordinate(53.2803808514, -9.057081263);
+		NUIGcoord3 = new GPSCoordinate(53.2781415894, -9.0570618034);
+		nuig = new GPSGridRectangle(NUIGcoord0, NUIGcoord1, NUIGcoord2, NUIGcoord3);
+		System.out.println("Box height: " + nuig.getBoxHeightMetres());
+		//250.6016826838075
+		System.out.println("Box width: " + nuig.getBoxWidthMetres());
+		//490.90646103607935
+		mapper = new StandardisedGridRectangleMapper(nuig);
+
+		standard = new StandardGPSGridRectangle(mapper.convertToStandard(NUIGcoord0), 
+				mapper.convertToStandard(NUIGcoord1),
+				mapper.convertToStandard(NUIGcoord2),
+				mapper.convertToStandard(NUIGcoord3)); 
+		System.out.println("standardized box height: " + standard.getBoxHeightMetres());
+		System.out.println("standardized box width: " + standard.getBoxWidthMetres());
+		//20m lat spacing, 25m long spacing
+		g1 = new RegularTraversalGrid(standard, 20, 20, 20);
+		g2 = new RegularTraversalGrid(standard, 50, 50, 20);
+		System.out.println(g1.getBoundingRectangle().getBoxHeightMetres());
+		//636.1431821827633 metres
+		System.out.println(g1.getBoundingRectangle().getBoxWidthMetres());
+		//193.9493914218654 metres
+	}
+	
+	@AfterEach
+	void tearDown() throws Exception {
+	}
+
+	@Test
+	void testRegularTraversalGrid() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testToString() {
+		fail("Not yet implemented");
+	}
+	
+	@Test
+	void generatePoints() throws Exception {
+		System.out.println("Generating points");
+		for(GPSCoordinate p: g2.getPoints()) {
+			System.out.println(mapper.convertToOriginal(p).getLat() + ", " + mapper.convertToOriginal(p).getLng());
+		}
+		System.out.println("Generating unstandardized points");
+		for(GPSCoordinate p: g2.getPoints()) {
+			System.out.println(p.getLat() + ", " + p.getLng());
+		}
+		
+		
+	}
+	
+	@Test
+	void testGetNoLngPoints() {
+			assertEquals(10, g1.getNoLngPoints());
+	}
+
+	@Test
+	void testGetNoLatPoints() {
+		assertEquals(32, g1.getNoLatPoints());
+	}
+
+
+	@Test
+	void testGetLngSpacing() {
+		assertEquals(50, g2.getLngSpacingMetres());
+		assertEquals(20, g1.getLngSpacingMetres());
+		assertEquals(GPSCoordinate.convertMetresLongToDegrees(50), g2.getLngSpacingDegrees());
+		assertEquals(GPSCoordinate.convertMetresLongToDegrees(20), g1.getLngSpacingDegrees());
+	}
+
+	@Test
+	void testGetLatSpacing() {
+		assertEquals(50, g2.getLatSpacingMetres());
+		assertEquals(20, g1.getLatSpacingMetres());
+		assertEquals(GPSCoordinate.convertMetresLatToDegrees(50), g2.getLatSpacingDegrees());
+		assertEquals(GPSCoordinate.convertMetresLatToDegrees(20), g1.getLatSpacingDegrees());
+	}
+	
+	@Test
+	void testGetAltitude() {
+		assertEquals(20, g2.getAltitude());
+	}
+
+//	@Test
+//	void testSetAltitude() {
+//		fail("Not yet implemented");
+//	}
+
+	@Test
+	void testGetLatPointLongPoint() throws Exception {
+		assertEquals(new GPSCoordinate(0, 0, 20.0), g1.getLatPointLngPoint(0,0));
+		assertEquals(new GPSCoordinate(0, g1.getLngSpacingDegrees(), 20.0), g1.getLatPointLngPoint(0, 1));
+		assertEquals(new GPSCoordinate(g1.getLatSpacingDegrees(), 0, 20.0), g1.getLatPointLngPoint(1, 0));
+	}
+	
+	@Test
+	void testGetBottomRight() {
+		
+	}
+	@Test
+	void testGetTopRight() {
+		
+	}
+	@Test
+	void testGetTopLeft() {
+		StandardGPSGridRectangle r = g1.getBoundingRectangle();
+		//assertEquals()
+	}
+	
+	@Test
+	void testGetBoundingRectangle() throws Exception {
+		StandardGPSGridRectangle r = g1.getBoundingRectangle();
+		System.out.println("Bounding rectangle corners: " + r.getCorners());
+		assertEquals(new GPSCoordinate(0, GPSCoordinate.convertMetresLongToDegrees(nuig.getLowestLong().getLngMetresToOther(nuig.getLowestLat()))),
+											r.getBottomRight());
+		assertEquals(r.getBoxHeightMetres(), nuig.getBoxHeightMetres(), 50);
+		assertEquals(r.getBoxWidthMetres(), nuig.getBoxWidthMetres(), 50);
+		
+	}
+
+	@Test
+	void testGetGridPoints() {
+		ArrayList<GPSCoordinate> gpoints = g1.getGridPoints();
+		System.out.println(gpoints);
+	}
+
+	@Test
+	void testTraversalGridIntArrayListOfGPSCoordinate() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testGetCost() {
+		System.out.println(g1.getLatPointLngPoint(0, 0));
+		System.out.println(g1.getLatPointLngPoint(0, 1));
+		System.out.println(g1.getLatPointLngPoint(1, 0));
+		for(int i = 0; i < 35; i++) {
+			System.out.println("getting " + i/g1.getNoLngPoints() + ", " + i % g1.getNoLngPoints());
+			System.out.println(g1.getLatPointLngPoint(i/g1.getNoLngPoints(), i % g1.getNoLngPoints()));
+		}
+		assertEquals(g1.getLngSpacingMetres(), RegularTraversalGrid.getCost(g1.getLatPointLngPoint(0, 0), g1.getLatPointLngPoint(0, 1), AgentType.RAV));
+		assertEquals(g1.getLatSpacingMetres(), RegularTraversalGrid.getCost(g1.getLatPointLngPoint(0, 0), g1.getLatPointLngPoint(1, 0), AgentType.RAV));
+		assertEquals(g1.getLatSpacingMetres() * 2, RegularTraversalGrid.getCost(g1.getLatPointLngPoint(0, 0), g1.getLatPointLngPoint(2, 0), AgentType.RAV));
+		assertEquals(Math.sqrt(Math.pow(2 * g1.getLatSpacingMetres(), 2) + Math.pow(2 * g1.getLngSpacingMetres(), 2)),
+				RegularTraversalGrid.getCost(g1.getLatPointLngPoint(0, 0), g1.getLatPointLngPoint(2, 2), AgentType.RAV));
+	}
+
+	@Test
+	void testGetPathCost() {
+		ArrayList<GPSCoordinate> testPath = new ArrayList<GPSCoordinate>();
+		testPath.add(g1.getLatPointLngPoint(0, 0));
+		testPath.add(g1.getLatPointLngPoint(1, 0));
+		testPath.add(g1.getLatPointLngPoint(5, 0));
+		testPath.add(g1.getLatPointLngPoint(0, 3));
+		testPath.add(g1.getLatPointLngPoint(0, 0));
+		assertEquals(g1.getLatPointLngPoint(0, 0).getMetresToOther(g1.getLatPointLngPoint(1, 0)) + 
+				g1.getLatPointLngPoint(1, 0).getMetresToOther(g1.getLatPointLngPoint(5, 0)) +
+				g1.getLatPointLngPoint(5, 0).getMetresToOther(g1.getLatPointLngPoint(0, 3)) +
+				g1.getLatPointLngPoint(0, 3).getMetresToOther(g1.getLatPointLngPoint(0, 0)),				
+				RegularTraversalGrid.getPathCost(testPath, AgentType.RAV));	
+	}
+
+	@Test
+	void testGetNoPoints() {
+		assertEquals(320, g1.getNoPoints());
+	}
+
+
+
+	@Test
+	void testGetPoints() {
+		fail("Not yet implemented");
+	}
+
+}
