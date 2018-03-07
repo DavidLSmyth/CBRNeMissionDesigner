@@ -25,8 +25,22 @@ class StandardGPSGridRectangleTest {
 	GPSCoordinate NUIGcoord1;
 	GPSCoordinate NUIGcoord2;
 	GPSCoordinate NUIGcoord3;
+	
+	GPSCoordinate NUIGcoord01;
+	GPSCoordinate NUIGcoord11;
+	GPSCoordinate NUIGcoord21;
+	GPSCoordinate NUIGcoord31;
+	
 	StandardGPSGridRectangle nuigTestRect;
+	StandardGPSGridRectangle nuigTestRect1;
 	GPSGridRectangle nuig;
+	GPSGridRectangle nuig1;
+	
+	//write tests for this tomorrow: 
+	//53.27825, -9.05969
+	//53.2815, -9.06215
+	//53.28220, -9.0595
+	//53.279001, -9.0570580
 	
 	@BeforeEach
 	void setUp() throws Exception {
@@ -39,6 +53,11 @@ class StandardGPSGridRectangleTest {
 		//topRight
 		p4 = new GPSCoordinate(0.0500012364, 0.023045);
 		
+//		53.278, -9.0627913362
+//		53.28061, -9.064
+//		53.2815, -9.0582
+//		53.27899, -9.0570618034
+		
 		testRect = new StandardGPSGridRectangle(p1, p3, p2, p4);
 		//lowestLat
 		NUIGcoord0 = new GPSCoordinate(53.2781237886, -9.0627913362);
@@ -49,9 +68,20 @@ class StandardGPSGridRectangleTest {
 		//highestLong
 		NUIGcoord3 = new GPSCoordinate(53.2781415894, -9.0570618034);
 		
+		NUIGcoord01 = new GPSCoordinate(53.2815, -9.06215);
+		//lowestLong
+		NUIGcoord11 = new GPSCoordinate(53.28220, -9.0595);
+		//highestLat
+		NUIGcoord21 = new GPSCoordinate(53.279001, -9.0570580);
+		//highestLong
+		NUIGcoord31 = new GPSCoordinate(53.27825, -9.05969);
 		
 		nuig = new GPSGridRectangle(NUIGcoord0, NUIGcoord1, NUIGcoord2, NUIGcoord3);
+		System.out.println("initialising slanted rect");
+		nuig1 = new GPSGridRectangle(NUIGcoord01, NUIGcoord11, NUIGcoord21, NUIGcoord31);
+		
 		nuigTestRect = nuig.getStandardizedGPSGridRectangle();
+		nuigTestRect1 = nuig1.getStandardizedGPSGridRectangle();
 	}
 
 	@AfterEach
@@ -92,6 +122,7 @@ class StandardGPSGridRectangleTest {
 		catch (Exception e) {
 			assertEquals("Origin must be in rectangle", e.getMessage());
 		}
+		assertTrue(nuigTestRect1.verifyOriginInRect());
 	}
 
 	@Test
@@ -130,6 +161,7 @@ class StandardGPSGridRectangleTest {
 		catch (Exception e) {
 			assertEquals("All angles must be 90 degrees", e.getMessage());
 		}
+		
 	}
 
 }

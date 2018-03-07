@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import work.assignment.grid.GPSCoordinate;
 import work.assignment.grid.GPSCoordinateRotator;
 import work.assignment.grid.GPSCoordinateTranslator;
+import work.assignment.grid.GPSGridRectangle;
 
 class GPSCoordinateTest {
 	
@@ -28,6 +29,12 @@ class GPSCoordinateTest {
 	GPSCoordinate NUIGcoord2;
 	GPSCoordinate NUIGcoord3;
 	GPSCoordinate NUIGcoord4;
+	
+	GPSCoordinate NUIGcoord01;
+	GPSCoordinate NUIGcoord11;
+	GPSCoordinate NUIGcoord21;
+	GPSCoordinate NUIGcoord31;
+	
 	
 	Double nullDouble = null;
 	Integer nullInteger = null;
@@ -45,7 +52,16 @@ class GPSCoordinateTest {
 		coord2 = new GPSCoordinate(1,-1, 30.90);
 		coord3 = new GPSCoordinate(-2,-2, 40.1233);
 		coord4 = new GPSCoordinate(-1,2, 30.5);
-
+		
+		//lowestLong
+		NUIGcoord01 = new GPSCoordinate(53.2815, -9.06215);
+		//highestLat
+		NUIGcoord11 = new GPSCoordinate(53.28220, -9.0595);
+		//highestLong
+		NUIGcoord21 = new GPSCoordinate(53.279001, -9.0570580);
+		//lowestLat
+		NUIGcoord31 = new GPSCoordinate(53.27825, -9.05969);
+		
 	}
 
 	//[[[-9.0627913362,53.2781237886],[-9.0628107958,53.2803630515],[-9.057081263,53.2803808514],[-9.0570618034,53.2781415894],[-9.0627913362,53.2781237886]]]
@@ -91,14 +107,22 @@ class GPSCoordinateTest {
 	void testGetLatMetresToOther() {
 		assertEquals(111000, coord0.getLatMetresToOther(coord1), 111000 * 0.01);
 		assertEquals(300, NUIGcoord0.getLatMetresToOther(NUIGcoord1), 100);
+		assertEquals(70, NUIGcoord01.getLatMetresToOther(NUIGcoord11), 10);
 	}
 
 	@Test
 	void testGetLngMetresToOther() {
 		assertEquals(85000 * 2, coord0.getLngMetresToOther(coord1), 85000 * 0.01);
 		assertEquals(500, NUIGcoord0.getLngMetresToOther(NUIGcoord3), 200);
+		assertEquals(180, NUIGcoord01.getLngMetresToOther(NUIGcoord11), 30);
+		assertEquals(180, NUIGcoord11.getLngMetresToOther(NUIGcoord01), 30);
 	}
 
+	@Test
+	void testGetMetresToOther() {
+		assertEquals(250, NUIGcoord11.getMetresToOther(NUIGcoord01), 20);
+	}
+	
 	@Test
 	void testGetQuadrant() {
 		assertEquals(0, coord1.getQuadrant());

@@ -3,7 +3,7 @@ package work.assignment.grid;
 public class GPSCoordinateRotator{
 	double angleTheta;
 	GPSCoordinate rotateCoord;
-	GPSCoordinateRotator(GPSCoordinate coord, double angleTheta) throws Exception {
+	public GPSCoordinateRotator(GPSCoordinate coord, double angleTheta) throws Exception {
 		//creates a rotator object that can rotate a coordinate around coord by an angle theta
 		this.angleTheta = verifyTheta(angleTheta);
 		this.rotateCoord = coord;
@@ -23,9 +23,15 @@ public class GPSCoordinateRotator{
 			//translate by rotateCoord, rotate about origin, translate back
 			GPSCoordinateTranslator t = new GPSCoordinateTranslator(rotateCoord, new GPSCoordinate(0,0));
 			coord = t.translate(coord);
+			System.out.println("Translated coord to " + coord);
 			GPSCoordinate coordCopy = coord.clone();
-			coord.setLng((coordCopy.getLng() * Math.cos(Math.toRadians(angleTheta))) - (coordCopy.getLat() * Math.sin(Math.toRadians(angleTheta))));
-			coord.setLat((coordCopy.getLng() * Math.sin(Math.toRadians(angleTheta))) + (coordCopy.getLat() * Math.cos(Math.toRadians(angleTheta))));
+			//coord.setLng((coordCopy.getLng() * Math.cos(Math.toRadians(angleTheta))) - (coordCopy.getLat() * Math.sin(Math.toRadians(angleTheta))));
+			//coord.setLat((coordCopy.getLng() * Math.sin(Math.toRadians(angleTheta))) + (coordCopy.getLat() * Math.cos(Math.toRadians(angleTheta))));
+//			coord.setLat(Math.asin(
+//					(Math.cos(getTheta() * Math.sin(coord.getLat())) - 
+//					(Math.cos(coord.getLng()) * Math.sin(getTheta()) * Math.cos(coord.getLat()))
+//					
+//							)));
 			return t.translateBack(coord);
 		}
 	}

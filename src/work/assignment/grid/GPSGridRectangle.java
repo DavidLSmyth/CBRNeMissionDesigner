@@ -90,7 +90,8 @@ public class GPSGridRectangle {
 			
 		
 		if(verifyPointsPositive() && verifyOriginInRect() && verifyRightAngles()) {
-			throw new Exception("A StandardGPSGridRectangle should have been instantiated");
+			//throw new Exception("A StandardGPSGridRectangle should have been instantiated");
+			System.out.println("A standardGPSGridRectangle may be better!");
 		}
 		else {
 			
@@ -158,8 +159,8 @@ public class GPSGridRectangle {
 	}
 	
 	public boolean verifyRightAngles() throws Exception {
-		//allow 5% error
-		double tolPercentage = 0.05;	
+		//allow 3% error
+		double tolPercentage = 0.03;	
 		for(ArrayList<GPSCoordinate> corner: getCorners()) {
 			System.out.println("Angle between GPS Coords: " + corner + GPSCoordinate.getAcuteAngle(corner.get(0), corner.get(1), corner.get(2)));
 			//System.out.println("Angle between GPS Coords: " + corner + GPSCoordinate.getAcuteAngle(corner.get(0), corner.get(2), corner.get(1)));

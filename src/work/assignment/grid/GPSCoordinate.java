@@ -192,16 +192,33 @@ public class GPSCoordinate {
 		return new GPSCoordinateRotator(this, angleTheta);
 	}
 	
-	public void add(GPSCoordinate otherCoord) throws Exception {
-		setLat(getLat() + otherCoord.getLat());
-		setLng(getLng() + otherCoord.getLng());
-		setAlt(getAlt() + otherCoord.getAlt());
+	public GPSCoordinate add(GPSCoordinate otherCoord) throws Exception {
+		GPSCoordinate returnCoord;
+		if(getAlt()!=null && otherCoord.getAlt()!=null) {
+			returnCoord = new GPSCoordinate(0, 0, 0.0);
+			returnCoord.setAlt(getAlt() + otherCoord.getAlt());
+		}
+		else {
+			returnCoord = new GPSCoordinate(0, 0);
+		}
+		returnCoord.setLat(getLat() + otherCoord.getLat());
+		returnCoord.setLng(getLng() + otherCoord.getLng());
+		return returnCoord;
 	}
 	
-	public void subtract(GPSCoordinate otherCoord) throws Exception {
-		setLat(getLat() - otherCoord.getLat());
-		setLng(getLng() - otherCoord.getLng());
-		setAlt(getAlt() - otherCoord.getAlt());
+	public GPSCoordinate subtract(GPSCoordinate otherCoord) throws Exception {
+		GPSCoordinate returnCoord;
+		if(getAlt()!=null && otherCoord.getAlt()!=null) {
+			returnCoord = new GPSCoordinate(0, 0, 0.0);
+			returnCoord.setAlt(getAlt() - otherCoord.getAlt());
+		}	
+		else {
+			returnCoord = new GPSCoordinate(0, 0);
+		}
+		returnCoord.setLat(getLat() - otherCoord.getLat());
+		returnCoord.setLng(getLng() - otherCoord.getLng());
+			
+		return returnCoord;
 	}
 	
 	public void reflectLat() {
@@ -267,7 +284,6 @@ public class GPSCoordinate {
 		else return returnAngle;
 	}
 
-
 	public static double getLowerLatBound() {
 		return lowerLatBound;
 	}
@@ -297,11 +313,5 @@ public class GPSCoordinate {
 		return upperAltBound;
 	}
 	
-	public static double convertMetresLatToDegrees(double metres) {
-		return metres/(111.03 * 1000);
-	}
 	
-	public static double convertMetresLongToDegrees(double metres) {
-		return metres/(85.39 * 1000);
-	}
 }

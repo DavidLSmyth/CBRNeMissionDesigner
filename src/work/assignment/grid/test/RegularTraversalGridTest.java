@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import work.assignment.AgentType;
 import work.assignment.grid.GPSCoordinate;
+import work.assignment.grid.GPSCoordinateUtils;
 import work.assignment.grid.GPSGridRectangle;
 import work.assignment.grid.RegularTraversalGrid;
 import work.assignment.grid.StandardGPSGridRectangle;
@@ -102,7 +103,7 @@ class RegularTraversalGridTest {
 	void testGetLngSpacing() {
 		assertEquals(50, g2.getLngSpacingMetres());
 		assertEquals(20, g1.getLngSpacingMetres());
-		assertEquals(GPSCoordinate.convertMetresLongToDegrees(50), g2.getLngSpacingDegrees());
+		assertEquals(GPSCoordinateUtils.convertMetresLongToDegrees(50, g2.getBoundingRectangle().), g2.getLngSpacingDegrees());
 		assertEquals(GPSCoordinate.convertMetresLongToDegrees(20), g1.getLngSpacingDegrees());
 	}
 
@@ -118,7 +119,6 @@ class RegularTraversalGridTest {
 	void testGetAltitude() {
 		assertEquals(20, g2.getAltitude());
 	}
-
 //	@Test
 //	void testSetAltitude() {
 //		fail("Not yet implemented");
