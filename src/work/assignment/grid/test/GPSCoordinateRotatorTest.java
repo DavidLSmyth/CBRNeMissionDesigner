@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import work.assignment.grid.GPSCoordinate;
 import work.assignment.grid.GPSCoordinateRotator;
-import work.assignment.grid.GPSCoordinateTranslator;
+import work.assignment.grid.GPSCoordinateUtils;
 
 class GPSCoordinateRotatorTest {
 	GPSCoordinate coord0;
@@ -45,15 +45,15 @@ class GPSCoordinateRotatorTest {
 		coord4 = new GPSCoordinate(-1,2, 30.5);
 		
 		//lowestLong
-		NUIGcoord01 = new GPSCoordinate(53.2815, -9.06215);
+		NUIGcoord01 = new GPSCoordinate(53.2815000000, -9.062150000);
 		//highestLat
 		NUIGcoord11 = new GPSCoordinate(53.28220, -9.0595);
 		//highestLong
 		NUIGcoord21 = new GPSCoordinate(53.279001, -9.0570580);
 		//lowestLat
 		NUIGcoord31 = new GPSCoordinate(53.27825, -9.05969);
-		r = new GPSCoordinateRotator(NUIGcoord01, 30);
-		r1 = new GPSCoordinateRotator(NUIGcoord01, 45);
+		//r = new GPSCoordinateRotator(NUIGcoord01, 30);
+		r1 = new GPSCoordinateRotator(NUIGcoord01, 90);
 	}
 
 	@AfterEach
@@ -65,19 +65,34 @@ class GPSCoordinateRotatorTest {
 //		fail("Not yet implemented");
 //	}
 
+//	 def angle_between_points( p0, p1, p2 ):
+//		      a =  math.pow(p1.x-p0.x,2) + math.pow(p1.y-p0.y,2)
+//		      b = math.pow(p1.x-p2.x,2) + math.pow(p1.y-p2.y,2)
+//		      c = math.pow(p2.x-p0.x,2) + math.pow(p2.y-p0.y,2)
+//		      return math.acos((a+b-c)/math.sqrt(4 * a * b))
 	@Test
 	void testRotateAnticlockwise() throws Exception{
-		assertEquals(NUIGcoord11.add(new GPSCoordinate(0.0019934958, 0.00188108332)), r1.rotateAnticlockwise(NUIGcoord11));
+		System.out.println("anticlockwise rotation: " + r1.rotateAnticlockwise(NUIGcoord11));
+		System.out.println("clockwise rotation: " + r1.rotateClockwise(NUIGcoord11));
+		GPSCoordinate antiClockwiseRot = r1.rotateAnticlockwise(NUIGcoord11);
+		System.out.println("acute angle: " + GPSCoordinateUtils.getAcuteAngle(antiClockwiseRot, NUIGcoord01, NUIGcoord11));
+		System.out.println("acute angle1: " + GPSCoordinateUtils.getAcuteAngle(NUIGcoord11, NUIGcoord01, NUIGcoord31));
+		System.out.println("acute angle2: " + GPSCoordinateUtils.getAcuteAngle(NUIGcoord31, NUIGcoord01, NUIGcoord11));
+		System.out.println(antiClockwiseRot.getMetresToOther(NUIGcoord01));
+		System.out.println(NUIGcoord11.getMetresToOther(NUIGcoord01));
+		//assertEquals(NUIGcoord11.add(new GPSCoordinate(0.0019934958, 0.00188108332)), r1.rotateAnticlockwise(NUIGcoord11));
 	}
 
 	@Test
-	void testRotateClockwise() {
-		fail("Not yet implemented");
+	void testRotateClockwise() throws Exception {
+		System.out.println("clockwise rotation: " + r1.rotateClockwise(NUIGcoord11));
+		assertEquals(NUIGcoord11.add(new GPSCoordinate(0.0019934958, 0.00188108332)), r1.rotateClockwise(NUIGcoord11));
 	}
 
 	@Test
 	void testGetTheta() {
-		fail("Not yet implemented");
+		assertEquals(30, r.getTheta());
+		assertEquals(45, r1.getTheta());
 	}
 
 	@Test
@@ -87,7 +102,8 @@ class GPSCoordinateRotatorTest {
 
 	@Test
 	void testGetRotateCoord() {
-		fail("Not yet implemented");
+		assertEquals(NUIGcoord01, r.getRotateCoord());
+		assertEquals(NUIGcoord01, r1.getRotateCoord());
 	}
 
 	@Test

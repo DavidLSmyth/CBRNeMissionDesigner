@@ -1,8 +1,6 @@
 package work.assignment.grid.test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -70,6 +68,7 @@ class GPSCoordinateTranslatorTest {
 	void testTranslate() throws Exception {
 		assertEquals(NUIGcoord11.subtract(NUIGcoord01), t.translate(NUIGcoord11));
 		assertEquals(NUIGcoord21.subtract(NUIGcoord01), t.translate(NUIGcoord21));
+		//assertEquals(NUIGcoord21.subtra)
 	}
 
 	@Test
@@ -77,6 +76,7 @@ class GPSCoordinateTranslatorTest {
 		assertEquals(NUIGcoord11, t.translateBack(t.translate(NUIGcoord11)));
 		assertEquals(NUIGcoord21, t.translateBack(t.translate(NUIGcoord21)));
 		assertEquals(NUIGcoord31, t.translateBack(t.translate(NUIGcoord31)));
+		assertEquals(NUIGcoord21, t1.translateBack(t1.translate(NUIGcoord21)));
 	}
 
 	@Test

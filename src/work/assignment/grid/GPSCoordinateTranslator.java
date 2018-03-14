@@ -12,9 +12,11 @@ public class GPSCoordinateTranslator{
 		this.gpsCoordFrom = gpsCoordFrom;
 		this.gpsCoordTo = gpsCoordTo;
 	}
+	
 	public GPSCoordinate translate(GPSCoordinate gpsCoord) throws Exception {
 		return new GPSCoordinate(gpsCoord.getLat() + latDelta, gpsCoord.getLng() + lngDelta, gpsCoord.getAlt());
 	}
+	
 	public GPSCoordinate translateBack(GPSCoordinate gpsCoord) throws Exception{
 		return new GPSCoordinate(gpsCoord.getLat() - latDelta, gpsCoord.getLng() - lngDelta, gpsCoord.getAlt());
 	}
@@ -22,14 +24,17 @@ public class GPSCoordinateTranslator{
 	public double getLatDelta() {
 		return latDelta;
 	}
+	
 	public double getLngDelta() {
 		return lngDelta;
 	}
+	
 	public double getLatDeltaMetres() {
 		//1 deg lat ~ 111.03 Km in Europe
 		return GPSCoordinateUtils.convertLatDegreeDifferenceToMetres(gpsCoordFrom.getLat(), gpsCoordTo.getLat());
 //				latDelta * 111.32 * 1000);
 	}
+	
 	public double getLngDeltaMetres() {
 		//1 deg long ~ 85.39Km in Europe
 		//calculate max error in this assumption
@@ -37,6 +42,7 @@ public class GPSCoordinateTranslator{
 		//return Math.abs(lngDelta * 85.39 * 1000);
 	}
 	
+	@Override
 	public String toString() {
 		return "Translates by latDelta " + getLatDelta() + ", longDelta " + getLngDelta(); 
 	}

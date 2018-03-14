@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import work.assignment.grid.GPSCoordinate;
-import work.assignment.grid.GPSGridRectangle;
+import work.assignment.grid.rectangle.GPSGridRectangle;
 
 class GPSGridRectangleTest {
 	GPSGridRectangle r1;
@@ -20,12 +20,12 @@ class GPSGridRectangleTest {
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		NUIGcoord0 = new GPSCoordinate(53.2781237886, -9.0627913362);
-		NUIGcoord1 = new GPSCoordinate(53.2803630515, -9.0628107958);
-		NUIGcoord2 = new GPSCoordinate(53.2803808514, -9.057081263);
-		NUIGcoord3 = new GPSCoordinate(53.2781415894, -9.0570618034);
+		NUIGcoord0 = new GPSCoordinate(53.2779115341, -9.0597334278);
+		NUIGcoord1 = new GPSCoordinate(53.2812554869, -9.0627998557);
+		NUIGcoord2 = new GPSCoordinate(53.2823423226, -9.0594844171);
+		NUIGcoord3 = new GPSCoordinate(53.2789984548, -9.0564179892);
 		
-		r1 = new GPSGridRectangle(NUIGcoord0, NUIGcoord1, NUIGcoord2, NUIGcoord3);  
+		//r1 = new GPSGridRectangle(NUIGcoord0, NUIGcoord1, NUIGcoord2, NUIGcoord3);  
 	}
 	
 	@AfterEach

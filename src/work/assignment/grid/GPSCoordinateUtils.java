@@ -55,5 +55,33 @@ public class GPSCoordinateUtils {
 	public static double convertMetresLongToDegrees(double metres, double lat) {
 		return metres/getLenMetresOneDegreeLong(lat);
 	}
+	
+	public static double getAcuteAngle(GPSCoordinate p1, GPSCoordinate p2, GPSCoordinate p3) throws Exception {
+		//first check p1!=p2, p2!=p3, p1!=p3
+		
+		//Assuming all lats positive/negative and all longs positive/negative
+		//angle calculated is /_p1 p2 p3
+		//translate p2 back to 0
+		//rotate p3 to x-axis
+		//find angle between vector p1 and x-axis
+		//first get a translator from p2 back to 0
+		GPSCoordinateTranslator t = p2.getTranslatorFromThisTo(new GPSCoordinate(0,0));		
+		p1 = t.translate(p1);
+		p3 = t.translate(p3);
+		
+		//set p3 as the angle closer 0 deg from positive x - axis
+		if(p1.getAngleRelativeToOriginXAxis() < p3.getAngleRelativeToOriginXAxis()) {
+			GPSCoordinate temp = new GPSCoordinate(p1.getLat(), p1.getLng(), p1.getAlt());
+			p1 = new GPSCoordinate(p3.getLat(), p3.getLng(), p3.getAlt());
+					//p3.clone();
+			p3 = new GPSCoordinate(temp.getLat(), temp.getLng(), temp.getAlt());
+					//temp.clone();
+		}
+		System.out.println("p1 Angle relative to originx axis: " + p1.getAngleRelativeToOriginXAxis());
+		System.out.println("p3 Angle relative to originx axis: " + p3.getAngleRelativeToOriginXAxis());
+		double returnAngle = p1.getAngleRelativeToOriginXAxis() - p3.getAngleRelativeToOriginXAxis();
+		if(returnAngle > 180) return (360 - returnAngle);
+		else return returnAngle;
+	}
 
 }

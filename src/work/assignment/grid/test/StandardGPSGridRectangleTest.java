@@ -3,16 +3,14 @@ package work.assignment.grid.test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import work.assignment.grid.GPSCoordinate;
-import work.assignment.grid.GPSGridRectangle;
-import work.assignment.grid.StandardGPSGridRectangle;
-import work.assignment.grid.StandardisedGridRectangleMapper;
+import work.assignment.grid.rectangle.GPSGridRectangle;
+import work.assignment.grid.rectangle.StandardGPSGridRectangle;
+import work.assignment.grid.rectangle.StandardisedGridRectangleMapper;
 
 class StandardGPSGridRectangleTest {
 	GPSCoordinate p1;

@@ -25,6 +25,7 @@ public class GPSCoordinate {
 	}
 	
 	
+	@Override
 	public boolean equals(Object other) {
 		if(other == null) return false;
 		if(other == this) return true;	
@@ -47,6 +48,7 @@ public class GPSCoordinate {
 		}
 	}
 	
+	@Override
 	public GPSCoordinate clone() {
 		try {
 			return new GPSCoordinate(lat, lng, alt);
@@ -58,9 +60,10 @@ public class GPSCoordinate {
 		}
 	}
 	
+	@Override
 	public String toString() {
-		if(alt != null) return "(" + lat + ", " + lng + ", " + alt + ")";
-		else return "(" + lat + ", " + lng + ")";		
+		if(alt != null) return "" + lat + ", " + lng + ", " + alt + "";
+		else return "" + lat + ", " + lng + "";		
 	}
 	
 	
@@ -206,6 +209,17 @@ public class GPSCoordinate {
 		return returnCoord;
 	}
 	
+	public GPSCoordinate multiply(int number) throws Exception {
+		if(number == 0) {
+			return new GPSCoordinate(0,0);
+		}
+		GPSCoordinate returnCoord = clone();
+		for(int counter = 1; counter < number; counter++) {
+			returnCoord = returnCoord.add(this);
+		}
+		return returnCoord;
+	}
+	
 	public GPSCoordinate subtract(GPSCoordinate otherCoord) throws Exception {
 		GPSCoordinate returnCoord;
 		if(getAlt()!=null && otherCoord.getAlt()!=null) {
@@ -259,31 +273,6 @@ public class GPSCoordinate {
 		}
 	}
 	
-	public static double getAcuteAngle(GPSCoordinate p1, GPSCoordinate p2, GPSCoordinate p3) throws Exception {
-		//first check p1!=p2, p2!=p3, p1!=p3
-		
-		//Assuming all lats positive/negative and all longs positive/negative
-		//angle calculated is /_p1 p2 p3
-		//translate p2 back to 0
-		//rotate p3 to x-axis
-		//find angle between vector p1 and x-axis
-		//first get a translator from p2 back to 0
-		GPSCoordinateTranslator t = p2.getTranslatorFromThisTo(new GPSCoordinate(0,0));		
-		p1 = t.translate(p1);
-		p3 = t.translate(p3);
-		
-		//set p3 as the angle closer 0 deg from positive x - axis
-		if(p1.getAngleRelativeToOriginXAxis() < p3.getAngleRelativeToOriginXAxis()) {
-			GPSCoordinate temp = p1.clone();
-			p1 = p3.clone();
-			p3 = temp.clone();
-		}
-		
-		double returnAngle = p1.getAngleRelativeToOriginXAxis() - p3.getAngleRelativeToOriginXAxis();
-		if(returnAngle > 180) return (360 - returnAngle);
-		else return returnAngle;
-	}
-
 	public static double getLowerLatBound() {
 		return lowerLatBound;
 	}

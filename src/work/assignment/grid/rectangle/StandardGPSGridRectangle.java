@@ -1,6 +1,9 @@
-package work.assignment.grid;
+package work.assignment.grid.rectangle;
 
 import java.util.ArrayList;
+
+import work.assignment.grid.GPSCoordinate;
+import work.assignment.grid.GPSCoordinateUtils;
 
 public class StandardGPSGridRectangle extends GPSGridRectangle {
 	
@@ -8,7 +11,7 @@ public class StandardGPSGridRectangle extends GPSGridRectangle {
 			throws Exception {
 		// TODO Auto-generated constructor stub
 		//check that rectangle is standardised
-		super(p1,p2,p3,p4, "subclass");
+		super(p1,p2,p3,p4);
 		
 		if(!verifyOriginInRect()) throw new Exception("Origin must be in rectangle");
 		if(!verifyPointsPositive()) throw new Exception("All points must be positive");
@@ -26,6 +29,7 @@ public class StandardGPSGridRectangle extends GPSGridRectangle {
 		return returnList;
 	}
 	
+	@Override
 	public ArrayList<ArrayList<GPSCoordinate>> getCorners() throws Exception {
 		ArrayList<ArrayList<GPSCoordinate>> standardCorners = new ArrayList<ArrayList<GPSCoordinate>>();
 		GPSCoordinate origin = new GPSCoordinate(0,0);
@@ -65,11 +69,12 @@ public class StandardGPSGridRectangle extends GPSGridRectangle {
 	}
 	
 	//private
+	@Override
 	public boolean verifyRightAngles() throws Exception {
 		
 		for(ArrayList<GPSCoordinate> c:getCorners()) {
-			System.out.println("Calculated angle as: " + GPSCoordinate.getAcuteAngle(c.get(0), c.get(1), c.get(2)));
-			if(Math.abs(GPSCoordinate.getAcuteAngle(c.get(0), c.get(1), c.get(2)) - 90) > 4) {
+			System.out.println("Calculated angle as: " + GPSCoordinateUtils.getAcuteAngle(c.get(0), c.get(1), c.get(2)));
+			if(Math.abs(GPSCoordinateUtils.getAcuteAngle(c.get(0), c.get(1), c.get(2)) - 90) > 4) {
 				System.out.println("points: " + c.get(0) +  c.get(1) + c.get(2));
 				return false;
 			}

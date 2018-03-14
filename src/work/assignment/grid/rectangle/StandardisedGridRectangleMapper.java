@@ -1,4 +1,8 @@
-package work.assignment.grid;
+package work.assignment.grid.rectangle;
+
+import work.assignment.grid.GPSCoordinate;
+import work.assignment.grid.GPSCoordinateRotator;
+import work.assignment.grid.GPSCoordinateTranslator;
 
 public class StandardisedGridRectangleMapper {
 	//A class representing a grid rectangle with one point at the origin (0,0)
@@ -56,6 +60,7 @@ public class StandardisedGridRectangleMapper {
 		this.rot = rotate;
 	}
 	
+	@Override
 	public String toString() {
 		return "Translates to standard by: Lat - " + tran.getLatDelta() + " Long - " + tran.getLngDelta() + 
 				"\n and rotates by and angle of " + rot.getTheta() + " around the point " + rot.getRotateCoord();

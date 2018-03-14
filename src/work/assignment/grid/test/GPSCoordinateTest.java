@@ -5,16 +5,13 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import work.assignment.grid.GPSCoordinate;
 import work.assignment.grid.GPSCoordinateRotator;
 import work.assignment.grid.GPSCoordinateTranslator;
-import work.assignment.grid.GPSGridRectangle;
+import work.assignment.grid.GPSCoordinateUtils;
 
 class GPSCoordinateTest {
 	
@@ -34,6 +31,11 @@ class GPSCoordinateTest {
 	GPSCoordinate NUIGcoord11;
 	GPSCoordinate NUIGcoord21;
 	GPSCoordinate NUIGcoord31;
+	
+	GPSCoordinate NUIGcoord0a;
+	GPSCoordinate NUIGcoord1a;
+	GPSCoordinate NUIGcoord2a;
+	GPSCoordinate NUIGcoord3a;
 	
 	
 	Double nullDouble = null;
@@ -61,6 +63,15 @@ class GPSCoordinateTest {
 		NUIGcoord21 = new GPSCoordinate(53.279001, -9.0570580);
 		//lowestLat
 		NUIGcoord31 = new GPSCoordinate(53.27825, -9.05969);
+		
+		//lowestLat
+		NUIGcoord0a = new GPSCoordinate(53.2779115341, -9.0597334278);
+		//lowestLong
+		NUIGcoord1a = new GPSCoordinate(53.2812554869, -9.0627998557);
+		//highestLat
+		NUIGcoord2a = new GPSCoordinate(53.2823423226, -9.0594844171);
+		//highestLong
+		NUIGcoord3a = new GPSCoordinate(53.2789984548, -9.0564179892);
 		
 	}
 
@@ -362,25 +373,33 @@ class GPSCoordinateTest {
 	@Test
 	void testGetAcuteAngle() {
 		try {
-			assertEquals(108.4349488, GPSCoordinate.getAcuteAngle(coord2, coord0, coord1), 108 * 0.0000001);
+			assertEquals(108.4349488, GPSCoordinateUtils.getAcuteAngle(coord2, coord0, coord1), 108 * 0.0000001);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 		}
 		try {
-			assertEquals(90.0, GPSCoordinate.getAcuteAngle(coord2, coord0, coord3), 90 * 0.0000001);
+			assertEquals(90.0, GPSCoordinateUtils.getAcuteAngle(coord2, coord0, coord3), 90 * 0.0000001);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 		}
 		try {
-			assertEquals(161.5650512, GPSCoordinate.getAcuteAngle(coord2, coord0, coord4), 161.5650512 * 0.0000001);
+			assertEquals(161.5650512, GPSCoordinateUtils.getAcuteAngle(coord2, coord0, coord4), 161.5650512 * 0.0000001);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 		}
 		
 		try {
-			assertEquals(90, GPSCoordinate.getAcuteAngle(NUIGcoord0, NUIGcoord1, NUIGcoord2), 1);
+			assertEquals(90, GPSCoordinateUtils.getAcuteAngle(NUIGcoord0, NUIGcoord1, NUIGcoord2), 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
+		}
+		
+		try {
+			//looks like 90 on gps grid...
+			assertEquals(65.62864956599128, GPSCoordinateUtils.getAcuteAngle(NUIGcoord0a, NUIGcoord1a, NUIGcoord2a));
+		}
+		catch (Exception e) {
+			fail(e.getMessage());
 		}
 	}
 

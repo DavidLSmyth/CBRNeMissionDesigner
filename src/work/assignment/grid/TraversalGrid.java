@@ -8,7 +8,7 @@ public class TraversalGrid {
 	//A class which contains a set of GPS Points to be expored
 	
 	int noPoints;
-	ArrayList<GPSCoordinate> points;
+	protected ArrayList<GPSCoordinate> points;
 	
 	public TraversalGrid() {
 		this(new ArrayList<GPSCoordinate>());
@@ -17,12 +17,9 @@ public class TraversalGrid {
 		setPoints(points);
 		setNoPoints(points.size());
 	}
-//	
-//	public void addPoint(GPSCoordinate coord) {
-//		points.add(noPoints+1, coord);
-//		setNoPoints(getNoPoints()+1);
-//	}
-//	
+	
+	//add a method to allow the user to use different cost optimizations
+
 	public static double getCost(GPSCoordinate c1, GPSCoordinate c2, AgentType agentType) {
 		return c1.getMetresToOther(c2);
 	}

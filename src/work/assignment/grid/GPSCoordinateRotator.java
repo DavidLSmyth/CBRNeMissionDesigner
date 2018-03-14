@@ -24,23 +24,41 @@ public class GPSCoordinateRotator{
 			GPSCoordinateTranslator t = new GPSCoordinateTranslator(rotateCoord, new GPSCoordinate(0,0));
 			coord = t.translate(coord);
 			System.out.println("Translated coord to " + coord);
-			GPSCoordinate coordCopy = coord.clone();
-			//coord.setLng((coordCopy.getLng() * Math.cos(Math.toRadians(angleTheta))) - (coordCopy.getLat() * Math.sin(Math.toRadians(angleTheta))));
-			//coord.setLat((coordCopy.getLng() * Math.sin(Math.toRadians(angleTheta))) + (coordCopy.getLat() * Math.cos(Math.toRadians(angleTheta))));
+			System.out.println("Rotating by angle: " + getTheta());
+			double tempLat = coord.getLat();
+			double tempLong = coord.getLng();
+			
+//			double rotAngle1 = coord.getAngleRelativeToOriginXAxis();
+//			double vectorSize = Math.sqrt(Math.pow(coord.getLat(),2) + Math.pow(coord.getLng(),2));
+//			double rotAngle = rotAngle1 + getTheta();
+//			coord.setLat(lat);
+			
+			coord.setLng((tempLong * Math.cos(Math.toRadians(getTheta()))) - (tempLat * Math.sin(Math.toRadians(getTheta()))));
+			coord.setLat((tempLong * Math.sin(Math.toRadians(getTheta()))) + (tempLat * Math.cos(Math.toRadians(getTheta()))));
 //			coord.setLat(Math.asin(
 //					(Math.cos(getTheta() * Math.sin(coord.getLat())) - 
 //					(Math.cos(coord.getLng()) * Math.sin(getTheta()) * Math.cos(coord.getLat()))
 //					
 //							)));
-			return t.translateBack(coord);
+			System.out.println("Rotated coord: " + coord);
+			coord = t.translateBack(coord);
+			return coord;
 		}
 	}
 	
+	
 	public GPSCoordinate rotateClockwise(GPSCoordinate coord) throws Exception {
-		setTheta(-getTheta());
-		GPSCoordinate returnCoord = rotateAnticlockwise(coord);
-		setTheta(-getTheta());
-		return returnCoord;
+		GPSCoordinateTranslator t = new GPSCoordinateTranslator(rotateCoord, new GPSCoordinate(0,0));
+		//translate coordinate to relative position
+		coord = t.translate(coord);
+		System.out.println("Translated coord to " + coord);
+		System.out.println("Rotating by angle: " + getTheta());
+		GPSCoordinate coordCopy = coord.clone();
+		coord.setLng((coordCopy.getLng() * Math.cos(Math.toRadians(angleTheta))) + (coordCopy.getLat() * Math.sin(Math.toRadians(angleTheta))));
+		coord.setLat(-(coordCopy.getLng() * Math.sin(Math.toRadians(angleTheta))) + (coordCopy.getLat() * Math.cos(Math.toRadians(angleTheta))));
+		System.out.println("Rotated coord: " + coord);
+		coord = t.translateBack(coord);
+		return coord;
 	}
 
 	public double getTheta() {
@@ -59,6 +77,7 @@ public class GPSCoordinateRotator{
 		this.rotateCoord = rotateCoord;
 	}
 	
+	@Override
 	public String toString() {
 		return "Rotates by " + getTheta() + " around coordinate " + getRotateCoord(); 
 	}

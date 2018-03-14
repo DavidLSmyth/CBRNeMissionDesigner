@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test;
 
 import work.assignment.grid.GPSCoordinate;
 import work.assignment.grid.GPSCoordinateTranslator;
-import work.assignment.grid.GPSGridRectangle;
-import work.assignment.grid.StandardGPSGridRectangle;
-import work.assignment.grid.StandardisedGridRectangleMapper;
+import work.assignment.grid.rectangle.GPSGridRectangle;
+import work.assignment.grid.rectangle.StandardGPSGridRectangle;
+import work.assignment.grid.rectangle.StandardisedGridRectangleMapper;
 
 class StandardisedGridRectangleMapperTest {
 
