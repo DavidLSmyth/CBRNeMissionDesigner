@@ -1,5 +1,5 @@
 package mission.resolver;
-import Communications_Hub.target.classes.agent.Agent;
+import agent.Agent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,9 +58,9 @@ public class MapMissionStrategyBranchBound implements MapMissionStrategy {
 		this.grid = grid;
 	}
 
-	public HashMap<Agent, ArrayList<GPSCoordinate>> getAgentRoutesForMapping(ArrayList<Agent> agents) {
+	public HashMap<Agent, ArrayList<GPSCoordinate>> getAgentRoutesForMapping() throws Exception{
 		// TODO Auto-generated method stub
-		return null;
+		return new HashMap<Agent, ArrayList<GPSCoordinate>>();
 	}
 
 }

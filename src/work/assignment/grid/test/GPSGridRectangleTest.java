@@ -12,6 +12,7 @@ import work.assignment.grid.GPSCoordinate;
 import work.assignment.grid.rectangle.GPSGridRectangle;
 
 class GPSGridRectangleTest {
+	
 	GPSGridRectangle r1;
 	GPSCoordinate NUIGcoord0;
 	GPSCoordinate NUIGcoord1;
@@ -25,7 +26,7 @@ class GPSGridRectangleTest {
 		NUIGcoord2 = new GPSCoordinate(53.2823423226, -9.0594844171);
 		NUIGcoord3 = new GPSCoordinate(53.2789984548, -9.0564179892);
 		
-		//r1 = new GPSGridRectangle(NUIGcoord0, NUIGcoord1, NUIGcoord2, NUIGcoord3);  
+		r1 = new GPSGridRectangle(NUIGcoord0, NUIGcoord1, NUIGcoord2, NUIGcoord3);  
 	}
 	
 	@AfterEach

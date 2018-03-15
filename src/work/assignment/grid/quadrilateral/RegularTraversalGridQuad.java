@@ -20,7 +20,13 @@ public class RegularTraversalGridQuad extends TraversalGrid{
 		double lngSpacingMetres; // metres
 		double latSpacingMetres; // metres
 		double altitude;
-		ArrayList<ArrayList<Double>> pointsMetres;
+		ArrayList<Double> pointsMetres;
+		
+		double thetaOne;
+		double thetaTwo;
+		
+		GPSCoordinate deltaI;
+		GPSCoordinate deltaJ;
 		
 		GPSGridRectangle boundingRectangle;
 
@@ -31,34 +37,44 @@ public class RegularTraversalGridQuad extends TraversalGrid{
 //			setNoLatPoints((int) Math.ceil(r.getBoxHeightMetres() / latSpacingMetres));
 //			setNoLngPoints((int) Math.ceil(r.getBoxWidthMetres() / lngSpacingMetres));
 
-			setNoLatPoints((int) (r.getLowestLat().getMetresToOther(r.getHighestLong()) / latSpacingMetres));
-			setNoLngPoints((int) (r.getLowestLat().getMetresToOther(r.getLowestLong()) / lngSpacingMetres));
+			double distanceLowestLatHighestLong = r.getLowestLat().getMetresToOther(r.getHighestLong());
+			System.out.println("distance from lowest lat to highest long: " + distanceLowestLatHighestLong +
+					" divided by " + getLatSpacingMetres());
 			
+			double distanceLowestLatLowestLong = r.getLowestLat().getMetresToOther(r.getLowestLong()) ;
+			System.out.println("distance from lowest lat to lowest long: " + distanceLowestLatLowestLong +
+					" divided by " + getLngSpacingMetres());
+			
+			setNoLatPoints((int)Math.ceil(r.getLowestLat().getMetresToOther(r.getHighestLong()) / getLatSpacingMetres()));
+			setNoLngPoints((int)Math.ceil(r.getLowestLat().getMetresToOther(r.getLowestLong()) / getLngSpacingMetres()));
+		
 			System.out.println("No lat points: " + getNoLatPoints());
-			System.out.println("No lng points: " + getNoLatPoints());
+			System.out.println("No lng points: " + getNoLngPoints());
 			
-			GPSCoordinate deltaI;
-			GPSCoordinate deltaJ;
-			double thetaOne = GPSCoordinateUtils.getAcuteAngle(r.getLowestLat().add(new GPSCoordinate(0,0.000001)), r.getLowestLat(), r.getHighestLong());
+			
+			thetaOne = GPSCoordinateUtils.getAcuteAngle(r.getLowestLat().add(new GPSCoordinate(0,0.000001)), r.getLowestLat(), r.getHighestLong());
 //					r.getLowestLat().getAngleRelativeToOriginXAxis();
 			System.out.println("Calculated the angle between the lowest lat and highest long to be " + thetaOne);
 			
-			double thetaTwo = 90 + GPSCoordinateUtils.getAcuteAngle(r.getLowestLat().add(new GPSCoordinate(0.000001,0.0)), r.getLowestLat(), r.getLowestLong());
+			thetaTwo = 90+GPSCoordinateUtils.getAcuteAngle(r.getLowestLat().add(new GPSCoordinate(0.000001,0.0)), r.getLowestLat(), r.getLowestLong());
 			System.out.println("Calculated the angle between the lowest lat and lowest long to be " + thetaTwo);
 			
-			deltaI = new GPSCoordinate(GPSCoordinateUtils.convertMetresLatToDegrees((r.getLowestLat().getMetresToOther(r.getHighestLong()) / latSpacingMetres), r.getLowestLat().getLat()) * Math.sin(Math.toRadians(thetaOne)),
-					GPSCoordinateUtils.convertMetresLatToDegrees((r.getLowestLat().getMetresToOther(r.getHighestLong()) / latSpacingMetres), r.getLowestLat().getLat()) * Math.cos(Math.toRadians(thetaOne)));
 			
+			deltaI = r.getHighestLong().subtract(r.getLowestLat()).divide(getNoLatPoints());
+			deltaJ = r.getLowestLong().subtract(r.getLowestLat()).divide(getNoLngPoints());			
 			
-			deltaJ = new GPSCoordinate(GPSCoordinateUtils.convertMetresLongToDegrees((r.getLowestLat().getMetresToOther(r.getLowestLong()) / lngSpacingMetres), r.getLowestLat().getLat()) * Math.sin(Math.toRadians(thetaTwo)), 
-					GPSCoordinateUtils.convertMetresLongToDegrees((r.getLowestLat().getMetresToOther(r.getLowestLong()) / lngSpacingMetres), r.getLowestLat().getLat()) * Math.cos(Math.toRadians(thetaTwo)));		
-			
+//			deltaI = new GPSCoordinate(GPSCoordinateUtils.convertMetresLatToDegrees((r.getLowestLat().getMetresToOther(r.getHighestLong()) / latSpacingMetres) * Math.sin(Math.toRadians(thetaOne)), r.getLowestLat().getLat()),
+//					GPSCoordinateUtils.convertMetresLatToDegrees((r.getLowestLat().getMetresToOther(r.getHighestLong()) / latSpacingMetres) * Math.cos(Math.toRadians(thetaOne)), r.getLowestLat().getLat()) );
+//			
+//			
+//			deltaJ = new GPSCoordinate(GPSCoordinateUtils.convertMetresLongToDegrees((r.getLowestLat().getMetresToOther(r.getLowestLong()) / lngSpacingMetres)* Math.sin(Math.toRadians(thetaTwo)), r.getLowestLat().getLat()), 
+//					GPSCoordinateUtils.convertMetresLongToDegrees((r.getLowestLat().getMetresToOther(r.getLowestLong()) / lngSpacingMetres) * Math.cos(Math.toRadians(thetaTwo)), r.getLowestLat().getLat()));		
+//			
 			System.out.println("deltaI: " + deltaI);
 			System.out.println("deltaJ: " + deltaJ);
 			
 			//setBoundingRectangle(r);
 			setAltitude(altitude);
-			
 			//for (int lngPoint = 0; lngPoint < getNoLngPoints(); lngPoint++) {
 //			for (int latPoint = 0; latPoint < getNoLatPoints(); latPoint++) {
 //				//GPSCoordinate t = delta
@@ -77,8 +93,8 @@ public class RegularTraversalGridQuad extends TraversalGrid{
 //				System.out.println(r.getLowestLat().add(deltaJ.multiply(longPoint)));
 //			}
 			
-			for (int latPointCounter = 0; latPointCounter < getNoLatPoints(); latPointCounter++) {
-				for (int longPointCounter = 0; longPointCounter < getNoLngPoints(); longPointCounter++) {
+			for (int latPointCounter = 0; latPointCounter <= getNoLatPoints(); latPointCounter++) {
+				for (int longPointCounter = 0; longPointCounter <= getNoLngPoints(); longPointCounter++) {
 					points.add(r.getLowestLat().add(deltaJ.multiply(longPointCounter)).add(deltaI.multiply(latPointCounter)));
 				}
 			}
@@ -107,14 +123,33 @@ public class RegularTraversalGridQuad extends TraversalGrid{
 //			}
 		}
 		
+		public double getThetaOne() {
+			return thetaOne;
+		}
+		
+		public double getThetaTwo() {
+			return thetaTwo;
+		}
+		
+		public GPSCoordinate getDeltaI() {
+			return deltaI;
+		}
+		
+		public GPSCoordinate getDeltaJ() {
+			return deltaJ;
+		}
+		
 		@Override
 		public String toString() {
 			String returnString = "";
-			for(int i = 0; i < noLatPoints; i++) {
-				for (int j = 0; j < noLngPoints; j++) {
-					returnString += " " + "*";
-				}
-				returnString += "\n";
+//			for(int i = 0; i < noLatPoints; i++) {
+//				for (int j = 0; j < noLngPoints; j++) {
+//					returnString += " " + "*";
+//				}
+//				returnString += "\n";
+//			}
+			for(GPSCoordinate c: getPoints()) {
+				returnString += c.toString() + "\n";
 			}
 			return returnString;
 		}
@@ -168,10 +203,11 @@ public class RegularTraversalGridQuad extends TraversalGrid{
 			// test this
 			return points.get(longPoint * getNoLatPoints() + latPoint);
 		}
-		public ArrayList<Double> getLatPointLngPointMetres(int latPoint, int longPoint) {
-			// test this
-			return pointsMetres.get(longPoint * getNoLatPoints() + latPoint);
-		}
+		
+//		public ArrayList<Double> getLatPointLngPointMetres(int latPoint, int longPoint) {
+//			// test this
+//			return pointsMetres.get(longPoint * getNoLatPoints() + latPoint);
+//		}
 
 		public GPSGridRectangle getBoundingRectangle() {
 			return boundingRectangle;

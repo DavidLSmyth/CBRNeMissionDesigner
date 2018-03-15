@@ -1,6 +1,7 @@
 package work.assignment.grid.quadrilateral;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import work.assignment.grid.GPSCoordinate;
 
@@ -15,11 +16,12 @@ public class GPSGridQuadrilateral {
 	
 	public GPSGridQuadrilateral(GPSCoordinate p1, GPSCoordinate p2, GPSCoordinate p3, GPSCoordinate p4) {
 		//Assuming p1 has edge to p2 has edge to p3 has edge to p4 has edge to p1
-		points = new ArrayList<GPSCoordinate>();
-		points.add(p1);
-		points.add(p2);
-		points.add(p3);
-		points.add(p4);
+		points = new ArrayList<GPSCoordinate>(Arrays.asList(p1,p2,p3,p4));
+		this.p1 = p1;
+		this.p2 = p2;
+		this.p3 = p3;
+		this.p4 = p4;
+		
 		generateCorners();
 	}
 	
@@ -78,7 +80,6 @@ public class GPSGridQuadrilateral {
 		}
 		return highestLong;
 	}
-
 	public GPSCoordinate getHighestLat() {
 		//return highestLat;
 		GPSCoordinate highestLat = p1;

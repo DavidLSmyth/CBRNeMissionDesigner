@@ -209,17 +209,29 @@ public class GPSCoordinate {
 		return returnCoord;
 	}
 	
-	public GPSCoordinate multiply(int number) throws Exception {
+	public GPSCoordinate multiply(double number) throws Exception {
 		if(number == 0) {
 			return new GPSCoordinate(0,0);
 		}
 		GPSCoordinate returnCoord = clone();
-		for(int counter = 1; counter < number; counter++) {
-			returnCoord = returnCoord.add(this);
-		}
+		returnCoord.setLat(getLat() * number);
+		returnCoord.setLng(getLng() * number);
+//		for(int counter = 1; counter < number; counter++) {
+//			returnCoord = returnCoord.add(this);
+//		}
 		return returnCoord;
 	}
 	
+	public GPSCoordinate divide(int number) throws Exception {
+		if(number == 0) {
+			return new GPSCoordinate(0,0);
+		}
+		GPSCoordinate returnCoord = clone();
+		returnCoord.setLat(getLat() / number);
+		returnCoord.setLng(getLng() / number);
+		return returnCoord;
+	}
+
 	public GPSCoordinate subtract(GPSCoordinate otherCoord) throws Exception {
 		GPSCoordinate returnCoord;
 		if(getAlt()!=null && otherCoord.getAlt()!=null) {

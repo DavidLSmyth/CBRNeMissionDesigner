@@ -1,9 +1,9 @@
 package mission.resolver;
 
-import Communications_Hub.target.classes.agent.Agent;
+import agent.Agent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 
 import work.assignment.grid.GPSCoordinate;
 import work.assignment.grid.quadrilateral.GPSGridQuadrilateral;
@@ -13,7 +13,9 @@ public class MapMissionStrategyGreedy implements MapMissionStrategy{
 	
 	ArrayList<Agent> agents;
 	RegularTraversalGridQuad grid;
-	HashMap<Agent, ArrayList<GPSCoordinate>> agentPaths;
+	//HashMap<Agent, ArrayList<GPSCoordinate>> agentPaths;
+	
+	
 	public MapMissionStrategyGreedy(ArrayList<Agent> agents, ArrayList<GPSCoordinate> missionBoundingCoordinates) throws Exception {
 		setAgents(agents);
 		if(missionBoundingCoordinates.size() != 4) throw new UnsupportedOperationException("Expected 4 coordinates to map environment"
@@ -27,13 +29,12 @@ public class MapMissionStrategyGreedy implements MapMissionStrategy{
 			//need to determine the longspacing metres, latspacing metres and 
 			//altitude autonomously
 			//double lngSpacingMetres, double latSpacingMetres, double altitude
-			grid = new RegularTraversalGridQuad(quad, 20, 20, 20);
-			agentPaths = calculateMapEnvironmentPaths(agents);
+			grid = new RegularTraversalGridQuad(quad, 20, 25, 20);
+			//agentPaths = calculateMapEnvironmentPaths(agents);
 			
 		}
 		setGrid(grid);
 	}
-
 
 
 	private HashMap<Agent, ArrayList<GPSCoordinate>> calculateMapEnvironmentPaths(ArrayList<Agent> agents) throws Exception{
@@ -47,32 +48,47 @@ public class MapMissionStrategyGreedy implements MapMissionStrategy{
 		//new Map<Agent, ArrayList<GPSCoordinate>>();
 		//initialise returnList;
 		for(Agent agent: agents) {
-			returnMap.put(agent, new ArrayList<GPSCoordinate>());
+			returnMap.put(agent, new ArrayList<GPSCoordinate>(Arrays.asList(new GPSCoordinate(agent.getLocation().get(0),
+					agent.getLocation().get(1),
+					agent.getLocation().get(2)
+					))));
+		}
+		//System.out.println("Caulculating paths for " + agents.size() + " agents");
+		//System.out.println("Size of returnMap set as: " + returnMap.size());
+		for(Agent agent: agents) {
+			System.out.println("Agent: " + agent.getId() + " initial path " + (returnMap.get(agent)));
 		}
 		int agentNo = 0;
 		int noAgents = agents.size();
 		Agent currentAgent;
 		ArrayList<GPSCoordinate> agentPath;
-		while(!exploredPoints.equals(grid.getPoints())) {
+		//While there are still points left to explore
+		while(!(pointsToExplore.size() == 0)) {
 			currentAgent = agents.get(agentNo % noAgents);
+			agentNo++;
+			
 			agentPath = returnMap.get(currentAgent);
 			//get coord which has min cost
-			GPSCoordinate nearestCoord = getNearestAvailableCoord(pointsToExplore, new GPSCoordinate(currentAgent.getLocation().get(0),
-					currentAgent.getLocation().get(1),
-					currentAgent.getLocation().get(2)
-					));
+			GPSCoordinate nearestCoord = getNearestAvailableCoord(pointsToExplore, agentPath.get(agentPath.size()-1));
+//			GPSCoordinate nearestCoord = getNearestAvailableCoord(pointsToExplore, new GPSCoordinate(currentAgent.getLocation().get(0),
+//					currentAgent.getLocation().get(1),
+//					currentAgent.getLocation().get(2)
+//					));
 			agentPath.add(nearestCoord);
+			//System.out.println("Updated the path of agent " + currentAgent.getId() + " to " + agentPath);
 			returnMap.put(currentAgent, agentPath);
 			exploredPoints.add(nearestCoord);
+			//System.out.println("Points to explore: " + pointsToExplore);
 			pointsToExplore.remove(nearestCoord);
 		}
+		System.out.println("Returning returnMap: " + returnMap.toString());
 		return returnMap;
 		//iterate over agents until all grid points are assigned
 	}
 	
-	private GPSCoordinate getNearestAvailableCoord(ArrayList<GPSCoordinate> gpsCoordinates, GPSCoordinate agentLocation) {
+	private GPSCoordinate getNearestAvailableCoord(ArrayList<GPSCoordinate> availablesgpsCoordinates, GPSCoordinate agentLocation) {
 		ArrayList<Double> distances = new ArrayList<Double>();
-		for(GPSCoordinate coord: gpsCoordinates) {
+		for(GPSCoordinate coord: availablesgpsCoordinates) {
 			distances.add(agentLocation.getMetresToOther(coord));
 		}
 		int minCoordDistLocation = 0;
@@ -81,10 +97,11 @@ public class MapMissionStrategyGreedy implements MapMissionStrategy{
 		for(double distance: distances) {
 			if (distance < currentMinDistance) {
 				minCoordDistLocation = counter;
+				currentMinDistance = distance;
 			}
 			counter++;
 		}
-		return gpsCoordinates.get(minCoordDistLocation);
+		return availablesgpsCoordinates.get(minCoordDistLocation);
 	}
 
 //	@Override
@@ -114,18 +131,16 @@ public class MapMissionStrategyGreedy implements MapMissionStrategy{
 		this.grid = grid;
 	}
 
-
-
-	@Override
-	public HashMap<Agent, ArrayList<GPSCoordinate>> getAgentRoutesForMapping(ArrayList<Agent> agents) {
+	public HashMap<Agent, ArrayList<GPSCoordinate>> getAgentRoutesForMapping() throws Exception {
 		// TODO Auto-generated method stub
 		try {
-			return calculateMapEnvironmentPaths(agents);
+			return calculateMapEnvironmentPaths(getAgents());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return null;
+			throw e;
 		}
 	}
+
 
 }

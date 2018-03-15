@@ -76,7 +76,6 @@ public class GPSGridRectangle extends GPSGridQuadrilateral{
 		
 		//this(p1,p2,p3,p4, "Sub");
 		super(p1,p2,p3,p4);
-			
 		generateCorners();
 		//if standardGPSRectangle, return StandardGPSRectangle
 		

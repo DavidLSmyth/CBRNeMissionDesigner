@@ -1,14 +1,13 @@
 package mission.resolver;
 
+import java.util.ArrayList;
+
+import agent.Agent;
+import work.assignment.grid.GPSCoordinate;
+
 public class RGVMission extends Mission {
 
-	public RGVMission() {
+	public RGVMission(Agent agent, ArrayList<GPSCoordinate> missionPoints) {
 		// TODO Auto-generated constructor stub
-	}
-
-	@Override
-	public boolean submitMissionForExecution() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 }

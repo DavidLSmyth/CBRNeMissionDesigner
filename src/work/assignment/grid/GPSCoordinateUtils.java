@@ -55,7 +55,7 @@ public class GPSCoordinateUtils {
 	public static double convertMetresLongToDegrees(double metres, double lat) {
 		return metres/getLenMetresOneDegreeLong(lat);
 	}
-	
+
 	public static double getAcuteAngle(GPSCoordinate p1, GPSCoordinate p2, GPSCoordinate p3) throws Exception {
 		//first check p1!=p2, p2!=p3, p1!=p3
 		
