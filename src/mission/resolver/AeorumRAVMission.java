@@ -1,10 +1,6 @@
 package mission.resolver;
 
 import java.util.ArrayList;
-
-import agent.Agent;
-import work.assignment.grid.GPSCoordinate;
-
 public class AeorumRAVMission extends RAVMission {
 	
 	static int IDCounter = 0;
@@ -15,7 +11,7 @@ public class AeorumRAVMission extends RAVMission {
 	String missionSubtype;
 	FinalAction finalAction;
 	int numLaps;
-	public AeorumRAVMission(ArrayList<MissionPoint> missionPoints) {
+	public AeorumRAVMission(ArrayList<RAVMissionPoint> missionPoints) {
 		this("Default name", 
 				"Default missionDescriptions",
 				"AUTOMATIC",
@@ -29,7 +25,7 @@ public class AeorumRAVMission extends RAVMission {
 			String missionSubtype,
 			FinalAction finalAction,
 			int numLaps,
-			ArrayList<MissionPoint> missionPoints) {
+			ArrayList<RAVMissionPoint> missionPoints) {
 		super(IDCounter, missionPoints);
 		IDCounter++;
 		setMissionName(missionName);
@@ -37,6 +33,7 @@ public class AeorumRAVMission extends RAVMission {
 		setNumLaps(numLaps);
 		// TODO Auto-generated constructor stub
 	}
+
 
 	private String getMissionStructure() {
 		/**

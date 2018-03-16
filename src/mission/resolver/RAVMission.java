@@ -8,9 +8,9 @@ import work.assignment.grid.GPSCoordinate;
 public class RAVMission extends Mission {
 
 	
-	public RAVMission(int ID, ArrayList<MissionPoint> missionCoords) {
+	public RAVMission(int ID, ArrayList<RAVMissionPoint> missionPoints) {
 		// TODO Auto-generated constructor stub
-		super(ID, missionCoords);
+		super(ID, missionPoints);
 	}
 	
 }

@@ -43,11 +43,11 @@ public class AeorumMissionJSONHelper {
 	public static String getAeorumMissionJSON(AeorumRAVMission mission) {
 		StringBuilder b = new StringBuilder();
 		b.append("{\n");
-		b.append(wrapGeneric("name", mission.getMissionName()));
-		b.append(wrapGeneric("desc", mission.getMissionDescription()));
-		b.append(wrapGeneric("type", "AUTOMATIC"));
-		b.append(wrapGeneric("subtype", "NORMAL"));
-		b.append(wrapGeneric("finalAction", mission.getFinalAction().toString()));
+		b.append(wrapString("name", mission.getMissionName()));
+		b.append(wrapString("desc", mission.getMissionDescription()));
+		b.append(wrapString("type", "AUTOMATIC"));
+		b.append(wrapString("subtype", "NORMAL"));
+		b.append(wrapString("finalAction", mission.getFinalAction().name()));
 		b.append(wrapGeneric("numLaps", "1"));
 		b.append(wrapGeneric("mission_points", wrapMissionPoints(mission.getMissionPoints())));
 		b.append("}");
@@ -65,10 +65,13 @@ public class AeorumMissionJSONHelper {
 	}
 	public static String wrapParams(ArrayList<RAVMissionPointParam> RAVMissionPointParams) {
 		StringBuilder b = new StringBuilder();		
-		int counter = 0;
+		b.append("\"params\": {\n");
+		System.out.println(RAVMissionPointParams.size());
+		int counter = 1;
 		for (RAVMissionPointParam RAVMissionPointParam: RAVMissionPointParams) {
 			if(counter < RAVMissionPointParams.size()) b.append(wrapGeneric((RAVMissionPointParam.getParamType()).name(), String.valueOf(RAVMissionPointParam.arg)));
 			else b.append(wrapGenericLastTerm((RAVMissionPointParam.getParamType()).name(), String.valueOf(RAVMissionPointParam.arg)));
+			counter++;
 		}
 		b.append(",\n");
 		return b.toString();
@@ -76,11 +79,14 @@ public class AeorumMissionJSONHelper {
 	
 	public static String wrapCommands(ArrayList<RAVMissionPointCommand> commands) {
 		StringBuilder b = new StringBuilder();
-		b.append("\"commands\": [");
+		b.append("\"commands\": [\n");
 		int counter = 1;
 		for(RAVMissionPointCommand command: commands) {
+			b.append("{\n");
 			b.append(wrapCommand(command));
+			b.append("}\n");
 			if(counter < commands.size()) b.append(",");
+			counter++;
 		}
 		b.append("]");
 		return b.toString();
@@ -88,26 +94,29 @@ public class AeorumMissionJSONHelper {
 	
 	public static String wrapCommand(RAVMissionPointCommand missionPointCommand) {
 		StringBuilder b = new StringBuilder();
-		b.append(wrapGeneric("{\ncommand", missionPointCommand.getCommandType().name()));
+		b.append(wrapGeneric("command", missionPointCommand.getCommandType().name()));
 		Map<String, String> missionPointArgs = missionPointCommand.getArgs();
 		b.append("\"args\": {\n");
 		int counter = 1;
 		for (String entry: missionPointArgs.keySet()) {
 			if(counter < missionPointArgs.size()) b.append(wrapGeneric(entry, missionPointArgs.get(entry)));
 			else b.append(wrapGenericLastTerm(entry, missionPointArgs.get(entry)));
+			counter++;
 		}
-		b.append("}\n");
 		return b.toString();
 	}
 	
-	public static String wrapMissionPoints(ArrayList<MissionPoint> missionPoints) {
+	public static String wrapMissionPoints(ArrayList<? extends MissionPoint> missionPoints) {
 		StringBuilder b = new StringBuilder();	
 		b.append("\"mission_points\": [{\n");
+		int counter = 1;
 		for(MissionPoint p: missionPoints) {
-			b.append(wrapGeneric("name", p.getName()));
+			b.append(wrapString("name", p.getName()));
 			b.append(wrapGPS(p.getGpsCoord()));
 			b.append(wrapParams(p.getParams()));
 			b.append(wrapCommands(p.getCommands()));
+			if(counter != missionPoints.size()) b.append(",");
+			counter++;
 		}
 		return b.toString();
 	}

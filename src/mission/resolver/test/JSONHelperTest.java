@@ -23,18 +23,23 @@ import mission.resolver.RAVParamType;
 import work.assignment.grid.GPSCoordinate;
 
 class JSONHelperTest {
-
+	GPSCoordinate coorda;
+	ArrayList<RAVMissionPointParam> paramsa;
+	HashMap<String, String> commandsa1args;
+	AeorumRAVMission test;
+	
 	@BeforeEach
 	void setUp() throws Exception {
 		//(GPSCoordinate gpsCoord, ArrayList<RAVMissionPointParam> params, ArrayList<RAVMissionPointCommand> commands, String name
-		GPSCoordinate coorda = new GPSCoordinate(36.7473546059581,-4.55352991819382, Double.valueOf(70.0));
+		coorda = new GPSCoordinate(36.7473546059581,-4.55352991819382, Double.valueOf(70.0));
 		
-		ArrayList<RAVMissionPointParam> paramsa = new ArrayList<RAVMissionPointParam>(Arrays.asList(
+		paramsa = new ArrayList<RAVMissionPointParam>(Arrays.asList(
 				new RAVMissionPointParam(RAVParamType.KEEP_YAW, "false"),
 				new RAVMissionPointParam(RAVParamType.ALT_TYPE, "absolute"),
 				new RAVMissionPointParam(RAVParamType.VERIFY_ALT, "false")));
 		
-		HashMap<String, String> commandsa1args = new HashMap<String, String>();
+		
+		commandsa1args = new HashMap<String, String>();
 		commandsa1args.put("angle", "90");
 		commandsa1args.put("relative", "true");
 		RAVMissionPointCommand commanda1 = new RAVMissionPointCommand(RAVCommandType.TURN, commandsa1args);
@@ -61,7 +66,7 @@ class JSONHelperTest {
 		RAVMissionPoint p2 = new RAVMissionPoint(coordb, paramsb,
 				new ArrayList<RAVMissionPointCommand>(), 
 				"MP1");
-		AeorumRAVMission test = new AeorumRAVMission("SimpleMission", "Test","Auto","Normal",FinalAction.RTL,1,new ArrayList<MissionPoint>(Arrays.asList(p1,p2)));  
+		test = new AeorumRAVMission("SimpleMission", "Test","Auto","Normal",FinalAction.RTL,1,new ArrayList<RAVMissionPoint>(Arrays.asList(p1,p2)));  
 	}
 
 	@AfterEach
@@ -75,7 +80,6 @@ class JSONHelperTest {
 
 	@Test
 	void testWrapGeneric() {
-		assertEquals("\"name\": \"SimpleMission\",\n"), AeorumMissionJSONHelper.)
 	}
 
 	@Test
@@ -90,7 +94,7 @@ class JSONHelperTest {
 
 	@Test
 	void testWrapDouble() {
-		fail("Not yet implemented");
+		System.out.println(AeorumMissionJSONHelper.getAeorumMissionJSON(test));
 	}
 
 	@Test
@@ -116,7 +120,8 @@ class JSONHelperTest {
 
 	@Test
 	void testWrapParams() {
-		
+		assertEquals("\"params\": {\"KEEP_YAW\": \"false\",\"ALT_TYPE\": \"absolute\",\"VERIFY_ALT\": \"false\"},".replaceAll("\n",""),
+				AeorumMissionJSONHelper.wrapParams(paramsa).replaceAll("\n", ""));
 	}
 
 	@Test

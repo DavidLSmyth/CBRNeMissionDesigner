@@ -1,10 +1,8 @@
 package mission.resolver;
 
-import work.assignment.AgentType;
-import work.assignment.CostType;
+
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import agent.Agent;
 import agent.vehicle.VehicleType;
@@ -14,7 +12,7 @@ public abstract class Mission {
 	
 	protected int missionID;
 	//MissionPoint consists of ID, GPS Coordinate, params, commands relative to gps coordinate
-	protected ArrayList<MissionPoint> missionPoints;
+	protected ArrayList<? extends MissionPoint> missionPoints;
 	//name is an easy way to identify a mission
 	protected String missionName;
 	//speed at which drones will carry out mission
@@ -28,19 +26,19 @@ public abstract class Mission {
 	//the default mission speed for the drone is 2 m/s
 	protected static double defaultMissionSpeed = 2.0;
 	
-	protected Mission(int missionID, ArrayList<MissionPoint> missionPoints) {
+	protected Mission(int missionID, ArrayList<? extends MissionPoint> missionPoints) {
 		this(missionID, missionPoints, "Default name");
 	}
-	protected Mission(int missionID, ArrayList<MissionPoint> missionPoints, FinalAction finalAction) {
+	protected Mission(int missionID, ArrayList<? extends MissionPoint> missionPoints, FinalAction finalAction) {
 		this(missionID, missionPoints, "Default name", "Default description", finalAction);
 	}
 
-	protected Mission(int missionID, ArrayList<MissionPoint> missionPoints, String missionName) {
+	protected Mission(int missionID, ArrayList<? extends MissionPoint> missionPoints, String missionName) {
 		this(missionID, missionPoints, "Default name", "Default description", null);
 	}
 	
 	//protected since don't want to be instantiated directly but do want subclasses to be able to access
-	protected Mission(int missionID, ArrayList<MissionPoint> missionPoints, String missionName, String missionDescription, FinalAction finalAction) {
+	protected Mission(int missionID, ArrayList<? extends MissionPoint> missionPoints, String missionName, String missionDescription, FinalAction finalAction) {
 		setMissionName(missionName);
 		setMissionDescription(missionDescription);
 		setMissionID(missionID);
@@ -99,9 +97,9 @@ public abstract class Mission {
 	public static Mission makeMission(Agent agent, ArrayList<GPSCoordinate> missionPoints, double missionSpeed) throws Exception {
 		//Given an agent an a list of GPS coordinates, creates a mission for that agent
 		if (agent.getVehicle().getVehicleType().equals(VehicleType.AIR_VEHICLE)){
-			ArrayList<MissionPoint> missionPointsCopy = new ArrayList<MissionPoint>();
+			ArrayList<RAVMissionPoint> missionPointsCopy = new ArrayList<RAVMissionPoint>();
 			for(GPSCoordinate c: missionPoints) {
-				missionPointsCopy.add(new MissionPoint(c));
+				missionPointsCopy.add(new RAVMissionPoint(c));
 			}
 			return new AeorumRAVMission(missionPointsCopy);
 		}
@@ -139,11 +137,11 @@ public abstract class Mission {
 		throw new Exception("Not implemented");
 	}
 	
-	public ArrayList<MissionPoint> getMissionPoints(){
+	public ArrayList<? extends MissionPoint> getMissionPoints(){
 		return missionPoints;
 	}
 	
-	public void setMissionPoints(ArrayList<MissionPoint> missionPoints) {
+	public void setMissionPoints(ArrayList<? extends MissionPoint> missionPoints) {
 		this.missionPoints = missionPoints;
 	}
 	
