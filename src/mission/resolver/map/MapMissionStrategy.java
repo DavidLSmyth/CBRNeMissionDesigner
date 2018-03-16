@@ -1,4 +1,4 @@
-package mission.resolver;
+package mission.resolver.map;
 import java.util.ArrayList;
 import java.util.HashMap;
 import work.assignment.grid.GPSCoordinate;

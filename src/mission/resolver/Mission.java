@@ -15,21 +15,59 @@ public abstract class Mission {
 	protected int missionID;
 	//MissionPoint consists of ID, GPS Coordinate, params, commands relative to gps coordinate
 	protected ArrayList<MissionPoint> missionPoints;
+	//name is an easy way to identify a mission
+	protected String missionName;
 	//speed at which drones will carry out mission
 	protected double missionSpeed;
 	//a description of the mission to be logged in the database
 	protected String missionDescription;
+	//a final action for the drone to carry out when finished executing its mission points
+	protected FinalAction finalAction;
+		//a default final action for the drone to carry out when finished executing its mission points
+	protected static FinalAction defaultFinalAction = FinalAction.RTL;
 	//the default mission speed for the drone is 2 m/s
-	protected static final double defaultMissionSpeed = 2.0;
+	protected static double defaultMissionSpeed = 2.0;
 	
 	protected Mission(int missionID, ArrayList<MissionPoint> missionPoints) {
-		this(missionID, missionPoints, "Default description");
+		this(missionID, missionPoints, "Default name");
+	}
+	protected Mission(int missionID, ArrayList<MissionPoint> missionPoints, FinalAction finalAction) {
+		this(missionID, missionPoints, "Default name", "Default description", finalAction);
+	}
+
+	protected Mission(int missionID, ArrayList<MissionPoint> missionPoints, String missionName) {
+		this(missionID, missionPoints, "Default name", "Default description", null);
 	}
 	
 	//protected since don't want to be instantiated directly but do want subclasses to be able to access
-	protected Mission(int missionID, ArrayList<MissionPoint> missionPoints, String missionDescription) {
+	protected Mission(int missionID, ArrayList<MissionPoint> missionPoints, String missionName, String missionDescription, FinalAction finalAction) {
+		setMissionName(missionName);
+		setMissionDescription(missionDescription);
 		setMissionID(missionID);
 		setMissionPoints(missionPoints);
+		if (finalAction != null) setFinalAction(finalAction);
+		else setFinalAction(defaultFinalAction);
+		
+	}
+	
+	//protected since don't want to be instantiated directly but do want subclasses to be able to access
+	protected Mission(int missionID, ArrayList<MissionPoint> missionPoints, String missionName, String missionDescription) {
+		this(missionID, missionPoints, missionName, missionDescription, null);
+	}
+	
+	public FinalAction getFinalAction() {
+		return finalAction;
+	}
+	public void setFinalAction(FinalAction finalAction) {
+		this.finalAction = finalAction;
+	}
+	
+	public String getMissionName() {
+		return missionName;
+	}
+	//allow anyone to set the mission name
+	public void setMissionName(String missionName) {
+		this.missionName = missionName;
 	}
 	
 	public String getMissionDescription() {

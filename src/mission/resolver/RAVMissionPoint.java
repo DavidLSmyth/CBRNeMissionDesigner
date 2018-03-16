@@ -16,14 +16,18 @@ public class RAVMissionPoint extends MissionPoint {
 		// TODO Auto-generated constructor stub
 	}
 
-	public RAVMissionPoint(GPSCoordinate gpsCoord, HashMap<String, Object> params) {
+	public RAVMissionPoint(GPSCoordinate gpsCoord, ArrayList<RAVMissionPointParam> params) {
 		super(gpsCoord, params);
 		// TODO Auto-generated constructor stub
 	}
 
-	public RAVMissionPoint(GPSCoordinate gpsCoord, HashMap<String, Object> params, ArrayList<RAVMissionPointCommand> commands) {
-		super(gpsCoord, params, commands);
+	public RAVMissionPoint(GPSCoordinate gpsCoord, ArrayList<RAVMissionPointParam> params, ArrayList<RAVMissionPointCommand> commands, String name) {
+		super(gpsCoord, params, commands, name);
 		// TODO Auto-generated constructor stub
 	}
+	
+//	public String toString() throws Exception{
+//		throw new Exception("Not yet implemented");
+//	}
 
 }

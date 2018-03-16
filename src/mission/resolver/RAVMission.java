@@ -12,4 +12,5 @@ public class RAVMission extends Mission {
 		// TODO Auto-generated constructor stub
 		super(ID, missionCoords);
 	}
+	
 }

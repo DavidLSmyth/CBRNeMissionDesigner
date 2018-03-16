@@ -1,4 +1,4 @@
-package mission.resolver;
+package mission.resolver.map;
 
 import agent.Agent;
 import java.util.ArrayList;
