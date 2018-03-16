@@ -12,22 +12,42 @@ public class MissionPoint {
 	int ID;
 	GPSCoordinate gpsCoord;
 	HashMap<String, Object> params;
-	ArrayList<MissionCommand> commands;
+	ArrayList<RAVMissionPointCommand> commands;
 
 	public MissionPoint(GPSCoordinate gpsCoord) {
 		this(gpsCoord, new HashMap<String, Object>());
 	}
 	public MissionPoint(GPSCoordinate gpsCoord, HashMap<String, Object> params) {
-		this(gpsCoord, new HashMap<String, Object>(), new ArrayList<MissionCommand>());
+		this(gpsCoord, new HashMap<String, Object>(), new ArrayList<RAVMissionPointCommand>());
 	}
 	
-	public MissionPoint(GPSCoordinate gpsCoord, HashMap<String, Object> params, ArrayList<MissionCommand> commands) {
+	public MissionPoint(GPSCoordinate gpsCoord, HashMap<String, Object> params, ArrayList<RAVMissionPointCommand> commands) {
 		// TODO Auto-generated constructor stub
 		setID(IDCounter);
 		IDCounter++;
 		setGpsCoord(gpsCoord);
+		//speed should be in params
 		setParams(params);
 		setCommands(commands);
+	}
+	
+	public double getDistanceCostEstimate(GPSCoordinate coord) {
+		/**
+		* Returns a cost estimate in terms of distance of travelling from the provided coordinate to 
+		* the mission points coordinate and executing the missionPoint 
+		*/
+		return getGpsCoord().getMetresToOther(coord);
+	}
+	
+	public double getTimeCostEstimate(GPSCoordinate coord) throws Exception {
+		/**
+		* Returns a cost estimate in terms of time taken to travel from the provided coordinate to 
+		* the mission points coordinate and executing the missionPoint 
+		*/
+		
+		// speed = distance / time <=> time = distance / speed
+		//return getGpsCoord().getMetresToOther(coord) / missionSpeed + time taken to record images, rotate gimbal, etc.
+		throw new Exception("Not yet implemented");
 	}
 
 	public String toString() {
@@ -51,10 +71,10 @@ public class MissionPoint {
 	public void setParams(HashMap<String, Object> params) {
 		this.params = params;
 	}
-	public ArrayList<MissionCommand> getCommands() {
+	public ArrayList<RAVMissionPointCommand> getCommands() {
 		return commands;
 	}
-	public void setCommands(ArrayList<MissionCommand> commands) {
+	public void setCommands(ArrayList<RAVMissionPointCommand> commands) {
 		this.commands = commands;
 	}
 

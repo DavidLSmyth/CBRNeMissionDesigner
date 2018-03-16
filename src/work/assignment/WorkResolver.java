@@ -16,30 +16,67 @@ public class WorkResolver {
 	 */
 	int noAgents;
 	ArrayList<Agent> agents;
+	//type of work that needs to be resolved among multiple agents
 	WorkType workType;
+	//type of cost that needs to be minimized
+	CostType costType;
+	//give a default costType of total distance travelled by agents
+	protected static CostType defaultCostType = CostType.TOTALDISTANCE;
+	
 	HashMap<Agent, Mission> agentMissions;
 	ArrayList<GPSCoordinate> missionBoundingBox;
 	Map<Object, Object> optionalParams;
 	
 	public WorkResolver(WorkType workType, ArrayList<Agent> agents, ArrayList<GPSCoordinate> missionBoundingBox) throws Exception {
-		this(workType, agents, missionBoundingBox, null);
+		this(workType, agents, null ,missionBoundingBox, null);
+	}
+	
+	public WorkResolver(WorkType workType, ArrayList<Agent> agents, CostType costType, ArrayList<GPSCoordinate> missionBoundingBox) throws Exception {
+		this(workType, agents, costType, missionBoundingBox, null);
 	}
 
 
 	//need some way of passing in # agents, and each type of agent
 	public WorkResolver(WorkType workType, ArrayList<Agent> agents, ArrayList<GPSCoordinate> missionBoundingBox,
 			HashMap<Object, Object> optionalParams) throws Exception {
+		this(workType, agents, null, missionBoundingBox, optionalParams);
+//		setWorkType(workType);
+//		setNoAgents(agents.size());
+//		setAgents(agents);
+//		setMissionBoundingBox(missionBoundingBox);
+//		setAgentMissions(new HashMap<Agent, Mission>());
+//		setOptionalParams(optionalParams);
+//		calculateMissions();
+	}
+	
+	//need some way of passing in # agents, and each type of agent
+	public WorkResolver(WorkType workType, ArrayList<Agent> agents, CostType costType, ArrayList<GPSCoordinate> missionBoundingBox,
+			HashMap<Object, Object> optionalParams) throws Exception {
 		setWorkType(workType);
 		setNoAgents(agents.size());
 		setAgents(agents);
+		setCostType(costType);
 		setMissionBoundingBox(missionBoundingBox);
 		setAgentMissions(new HashMap<Agent, Mission>());
 		setOptionalParams(optionalParams);
 		calculateMissions();
 	}
 	
+	
+	
 	public void updateAgentMissions() throws Exception {
 		calculateMissions();
+	}
+	
+	public CostType getCostType() {
+		return costType;
+	}
+	public void setCostType(CostType costType) {
+		if(costType == null) {
+			//attempt to minimize total distance by default
+			this.costType = CostType.TOTALDISTANCE;
+		}
+		this.costType = costType;
 	}
 
 	protected void calculateMissions() throws Exception {

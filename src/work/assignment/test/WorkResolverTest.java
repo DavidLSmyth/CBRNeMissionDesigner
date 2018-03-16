@@ -2,6 +2,8 @@ package work.assignment.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -50,8 +52,12 @@ class WorkResolverTest {
 		
 		agent1.setLocation(new ArrayList<Double>(Arrays.asList(53.28, -9.07, 20.0)));
 		agent2.setLocation(new ArrayList<Double>(Arrays.asList(53.286, -9.0588, 20.0)));
+		agent3.setLocation(new ArrayList<Double>(Arrays.asList(53.2798, -9.0565, 20.0)));
+		agent4.setLocation(new ArrayList<Double>(Arrays.asList(53.277, -9.0576, 20.0)));
 		agent1.setVehicle(new RAV("1"));
 		agent2.setVehicle(new RAV("2"));
+		agent3.setVehicle(new RAV("3"));
+		agent4.setVehicle(new RAV("4"));
 		
 		NUIGcoord0 = new GPSCoordinate(53.2779115341, -9.0597334278);
 		NUIGcoord1 = new GPSCoordinate(53.2812554869, -9.0627998557);
@@ -73,36 +79,51 @@ class WorkResolverTest {
 	void testWorkResolver() {
 		fail("Not yet implemented");
 	}
+	
+	void writeAgentMission(WorkResolver workResovler, BufferedWriter outputFile) throws Exception{
+		HashMap<Agent, Mission> agentMissions = workResolver.getAgentMissions(); 
+		for(agent.Agent a: agentMissions.keySet()) {
+			outputFile.write(a.toString() + "\n");
+			for(MissionPoint p : agentMissions.get(a).getMissionPoints()) {
+				System.out.println(p + "\n");
+				outputFile.write(p.toString()+"\n");
+			}
+			outputFile.write("\n");
+			//System.out.println(agentMissions.get(a).getMissionPoints());
+		}
+	}
 
 	@Test
 	void testGetAgentMissions() throws Exception {
+		//create and output file to show results of mission
+		BufferedWriter mission1_writer = new BufferedWriter(new FileWriter("D:\\IJCAIDemoCode\\CommsHubCode\\test_work_resolver1.txt"));
 		workResolver = new WorkResolver(WorkType.MAP,
 				new ArrayList<Agent>(Arrays.asList(agent1, agent2)), 
 				new ArrayList<GPSCoordinate>(Arrays.asList(NUIGcoord0, NUIGcoord1, NUIGcoord2, NUIGcoord3)));
 		
-		System.out.println("Resolving work for agents");
-		HashMap<Agent, Mission> agentMissions = workResolver.getAgentMissions(); 
+		writeAgentMission(workResolver, mission1_writer);
+		mission1_writer.close();
 		
-		for(agent.Agent a: agentMissions.keySet()) {
-			System.out.println("Mission for agent: " + a.getId() + "\n" + agentMissions.get(a).getMissionPoints());
-			for(MissionPoint p : agentMissions.get(a).getMissionPoints()) {
-				System.out.println(p);
-			}
-			//System.out.println(agentMissions.get(a).getMissionPoints());
-		}
+		BufferedWriter mission2_writer = new BufferedWriter(new FileWriter("D:\\IJCAIDemoCode\\CommsHubCode\\test_work_resolver2.txt"));
 		
 		agent1.setLocation(new ArrayList<Double>(Arrays.asList(53.282, -9.052, 20.0)));
 		agent2.setLocation(new ArrayList<Double>(Arrays.asList(53.283, -9.0628, 20.0)));
+		
 		workResolver.setAgents(new ArrayList<Agent> (Arrays.asList(agent1, agent2)));
 		workResolver.updateAgentMissions();
-		agentMissions = workResolver.getAgentMissions(); 
-		for(agent.Agent a: agentMissions.keySet()) {
-			System.out.println("Mission for agent: " + a.getId() + "\n" + agentMissions.get(a).getMissionPoints());
-			for(MissionPoint p : agentMissions.get(a).getMissionPoints()) {
-				System.out.println(p);
-			}
-			//System.out.println(agentMissions.get(a).getMissionPoints());
-		}
+		
+		writeAgentMission(workResolver, mission2_writer);
+		mission2_writer.close();
+		
+		BufferedWriter mission3_writer = new BufferedWriter(new FileWriter("D:\\IJCAIDemoCode\\CommsHubCode\\test_work_resolver3.txt"));
+		
+		
+		workResolver.setAgents(new ArrayList<Agent> (Arrays.asList(agent1, agent2, agent3, agent4)));
+		workResolver.updateAgentMissions();
+		
+		writeAgentMission(workResolver, mission3_writer);
+		mission3_writer.close();
+
 	}
 
 	@Test

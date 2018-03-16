@@ -7,9 +7,11 @@ import work.assignment.grid.GPSCoordinate;
 
 public class ReamdaRGVMission extends RGVMission {
 
-	public ReamdaRGVMission(Agent agent, ArrayList<GPSCoordinate> missionPoints) {
-		super(agent, missionPoints);
+	static int IDCounter=0;
+	public ReamdaRGVMission(ArrayList<MissionPoint> missionPoints) {
+		super(IDCounter, missionPoints);
 		// TODO Auto-generated constructor stub
+		IDCounter++;
 	}
 
 

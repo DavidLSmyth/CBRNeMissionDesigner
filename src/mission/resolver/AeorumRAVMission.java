@@ -7,8 +7,10 @@ import work.assignment.grid.GPSCoordinate;
 
 public class AeorumRAVMission extends RAVMission {
 
-	public AeorumRAVMission(Agent agents, ArrayList<GPSCoordinate> missionCoords) {
-		super(agents, missionCoords);
+	static int IDCounter = 0;
+	public AeorumRAVMission(ArrayList<MissionPoint> missionCoords) {
+		super(IDCounter, missionCoords);
+		IDCounter++;
 		// TODO Auto-generated constructor stub
 	}
 

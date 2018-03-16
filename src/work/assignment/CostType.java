@@ -1,6 +1,6 @@
 package work.assignment;
 
-public enum CostTypes {
+public enum CostType {
 	//maximum distance required for any given vehicle to travel
 	MAXDISTANCE, 
 	//total distance required for vehicles to travel
