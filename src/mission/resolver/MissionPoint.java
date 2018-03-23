@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import mission.resolver.RAV.RAVMissionPointCommand;
+import mission.resolver.RAV.RAVMissionPointParam;
 import work.assignment.grid.GPSCoordinate;
 
 public class MissionPoint {

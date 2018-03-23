@@ -3,6 +3,8 @@ package mission.resolver;
 import java.util.ArrayList;
 import java.util.Map;
 
+import mission.resolver.RAV.RAVMissionPointCommand;
+import mission.resolver.RAV.RAVMissionPointParam;
 import work.assignment.grid.GPSCoordinate;
 
 public class AeorumMissionJSONHelper {
@@ -69,8 +71,8 @@ public class AeorumMissionJSONHelper {
 		System.out.println(RAVMissionPointParams.size());
 		int counter = 1;
 		for (RAVMissionPointParam RAVMissionPointParam: RAVMissionPointParams) {
-			if(counter < RAVMissionPointParams.size()) b.append(wrapGeneric((RAVMissionPointParam.getParamType()).name(), String.valueOf(RAVMissionPointParam.arg)));
-			else b.append(wrapGenericLastTerm((RAVMissionPointParam.getParamType()).name(), String.valueOf(RAVMissionPointParam.arg)));
+			if(counter < RAVMissionPointParams.size()) b.append(wrapGeneric((RAVMissionPointParam.getParamType()).name(), String.valueOf(RAVMissionPointParam.getArg())));
+			else b.append(wrapGenericLastTerm((RAVMissionPointParam.getParamType()).name(), String.valueOf(RAVMissionPointParam.getArg())));
 			counter++;
 		}
 		b.append(",\n");

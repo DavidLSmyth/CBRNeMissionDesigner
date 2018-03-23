@@ -1,4 +1,4 @@
-package mission.resolver;
+package mission.resolver.RAV;
 
 import java.util.ArrayList;
 import java.util.HashMap;

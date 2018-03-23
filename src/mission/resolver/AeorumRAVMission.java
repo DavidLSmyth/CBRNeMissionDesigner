@@ -1,6 +1,9 @@
 package mission.resolver;
 
 import java.util.ArrayList;
+
+import mission.resolver.RAV.RAVMission;
+import mission.resolver.RAV.RAVMissionPoint;
 public class AeorumRAVMission extends RAVMission {
 	
 	static int IDCounter = 0;
@@ -34,18 +37,8 @@ public class AeorumRAVMission extends RAVMission {
 		// TODO Auto-generated constructor stub
 	}
 
-
-	private String getMissionStructure() {
-		/**
-		 * Returns a string builder which creates an Aeorum mission given a certain structure. 
-		 * Could have multiple versions of this method for different types of aeorum mission structure.
-		 */
-		StringBuilder builder = new StringBuilder();		
-		return "";
-	}
-
-	public String getJSONMission() {
-		return "";
+	public String getMissionJSON() {
+		return AeorumMissionJSONHelper.getAeorumMissionJSON(this);
 		
 	}
 	public String getMissionDescription() {

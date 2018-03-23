@@ -15,11 +15,11 @@ import org.junit.jupiter.api.Test;
 import mission.resolver.AeorumMissionJSONHelper;
 import mission.resolver.AeorumRAVMission;
 import mission.resolver.FinalAction;
-import mission.resolver.RAVCommandType;
-import mission.resolver.RAVMissionPoint;
-import mission.resolver.RAVMissionPointCommand;
-import mission.resolver.RAVMissionPointParam;
-import mission.resolver.RAVParamType;
+import mission.resolver.RAV.RAVCommandType;
+import mission.resolver.RAV.RAVMissionPoint;
+import mission.resolver.RAV.RAVMissionPointCommand;
+import mission.resolver.RAV.RAVMissionPointParam;
+import mission.resolver.RAV.RAVParamType;
 import work.assignment.grid.GPSCoordinate;
 
 class JSONHelperTest {

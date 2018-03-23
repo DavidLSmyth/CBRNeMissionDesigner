@@ -1,8 +1,10 @@
-package mission.resolver;
+package mission.resolver.RGV;
 
 import java.util.ArrayList;
 
 import agent.Agent;
+import mission.resolver.Mission;
+import mission.resolver.MissionPoint;
 import work.assignment.grid.GPSCoordinate;
 
 public class RGVMission extends Mission {
