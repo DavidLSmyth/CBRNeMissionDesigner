@@ -50,6 +50,8 @@ public class WorkResolver {
 	}
 	
 	//need some way of passing in # agents, and each type of agent
+	//add option in the constructor to calculate agent missions immediately or 
+	//essentially lazily evaluate
 	public WorkResolver(WorkType workType, ArrayList<Agent> agents, CostType costType, ArrayList<GPSCoordinate> missionBoundingBox,
 			HashMap<Object, Object> optionalParams) throws Exception {
 		setWorkType(workType);
@@ -59,7 +61,8 @@ public class WorkResolver {
 		setMissionBoundingBox(missionBoundingBox);
 		setAgentMissions(new HashMap<Agent, Mission>());
 		setOptionalParams(optionalParams);
-		calculateMissions();
+		//calculate the agent missions on construction?
+		updateAgentMissions();
 	}
 	
 	
