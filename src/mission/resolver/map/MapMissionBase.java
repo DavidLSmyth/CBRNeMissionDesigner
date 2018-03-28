@@ -3,6 +3,7 @@ package mission.resolver.map;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import agent.Agent;
 import work.assignment.environmentalfactors.WindFactor;
 import work.assignment.grid.GPSCoordinate;
 import work.assignment.grid.quadrilateral.GPSGridQuadrilateral;
@@ -12,6 +13,7 @@ public abstract class MapMissionBase {
 	
 	ArrayList<Agent> agents;
 	RegularTraversalGridQuad grid;
+	HashMap<Agent, ArrayList<GPSCoordinate>> agentPaths;
 	
 	protected MapMissionBase(ArrayList<Agent> agents, ArrayList<GPSCoordinate> missionBoundingCoordinates) throws Exception {
 		setAgents(agents);
@@ -26,11 +28,13 @@ public abstract class MapMissionBase {
 			//need to determine the longspacing metres, latspacing metres and 
 			//altitude autonomously
 			//double lngSpacingMetres, double latSpacingMetres, double altitude
-			grid = new RegularTraversalGridQuad(quad, 20, 25, 20);
-			//agentPaths = calculateMapEnvironmentPaths(agents);
-			
+			grid = new RegularTraversalGridQuad(quad, 10, 15, 20);
+			setGrid(grid);
+			this.agentPaths = calculateMapEnvironmentPaths(agents);
 		}
-		setGrid(grid);
+	}
+	public HashMap<Agent, ArrayList<GPSCoordinate>> getAgentPaths(){
+		return this.agentPaths;
 	}
 	
 	protected GPSCoordinate getNearestAvailableCoord(ArrayList<GPSCoordinate> availablesgpsCoordinates, GPSCoordinate agentLocation,
@@ -90,7 +94,8 @@ public abstract class MapMissionBase {
 	public HashMap<Agent, ArrayList<GPSCoordinate>> getAgentRoutesForMapping() throws Exception {
 		// TODO Auto-generated method stub
 		try {
-			return calculateMapEnvironmentPaths(getAgents());
+			//return calculateMapEnvironmentPaths(getAgents());
+			return getAgentPaths();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -98,7 +103,8 @@ public abstract class MapMissionBase {
 		}
 	}
 	
-	public abstract HashMap<Agent, ArrayList<GPSCoordinate>> getAgentRoutesForMapping() throws Exception;
+	protected abstract HashMap<Agent, ArrayList<GPSCoordinate>> calculateMapEnvironmentPaths(ArrayList<Agent> agents) throws Exception;
+	//public abstract HashMap<Agent, ArrayList<GPSCoordinate>> getAgentRoutesForMapping() throws Exception;
 	
 
 }

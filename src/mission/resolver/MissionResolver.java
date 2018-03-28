@@ -60,9 +60,11 @@ public class MissionResolver {
 						// " + getMissionAgents().get(0).getId() + getMissionAgents().get(1).getId());
 				MapMissionBase strategy;
 					
-				if(getOptionalParams() != null) {
+				//base case with no optional params
+				if(getOptionalParams() == null) {
 					strategy = new MapMissionStrategyGreedy(getMissionAgents(), getMissionBoundingCoordinates());
 					HashMap<Agent, ArrayList<GPSCoordinate>> agentRoutes= strategy.getAgentRoutesForMapping();
+					System.out.println("Agent routes greedy no wind: " + agentRoutes);
 					System.out.println("First agent route mission resolver: " + agentRoutes.get(getMissionAgents().get(0)));
 					HashMap<Agent, Mission> returnMap = new HashMap<Agent, Mission>();
 					//convert arraylist of gps points to mission for each agent
@@ -72,12 +74,22 @@ public class MissionResolver {
 					System.out.println("Resolved agent missions as: " + returnMap.toString());
 					return returnMap;
 				}
+				
+				
 				else {
 					if(getOptionalParams().containsKey("wind")) {
 						//wind should be an arraylist <north, east>
 						ArrayList<Double> windDetails = (ArrayList<Double>) getOptionalParams().get("wind");
 						WindFactor windFactor = new WindFactor(windDetails.get(0), windDetails.get(1));
 						strategy = new MapMissionStrategyGreedy(getMissionAgents(), getMissionBoundingCoordinates());
+						HashMap<Agent, ArrayList<GPSCoordinate>> agentRoutes= strategy.getAgentRoutesForMapping();
+						HashMap<Agent, Mission> returnMap = new HashMap<Agent, Mission>();
+						//convert arraylist of gps points to mission for each agent
+						for(Agent agent: agentRoutes.keySet()) {
+							returnMap.put(agent, Mission.makeMission(agent, agentRoutes.get(agent)));
+						}
+						System.out.println("Resolved agent missions as: " + returnMap.toString());
+						return returnMap;
 					}
 				}
 				
@@ -94,6 +106,7 @@ public class MissionResolver {
 			throw new Exception("Not implemnted");
 			//return null;
 		}
+		return null;
 	}
 	
 

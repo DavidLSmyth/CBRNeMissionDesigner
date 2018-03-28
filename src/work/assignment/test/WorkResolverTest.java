@@ -16,24 +16,26 @@ import org.junit.jupiter.api.Test;
 
 import agent.Agent;
 import agent.AgentImpl;
-import agent.vehicle.RAV;
+//import agent.vehicle.RAV;
 import agent.vehicle.VehicleImpl;
 import agent.vehicle.VehicleType;
 import agent.vehicle.uav.AeorumUAV;
+import agent.vehicle.uav.UAV;
 import mission.resolver.Mission;
 import mission.resolver.MissionPoint;
 import work.assignment.WorkResolver;
 import work.assignment.WorkType;
 import work.assignment.grid.GPSCoordinate;
+import java.util.Date;
 
 class WorkResolverTest {
 
 	WorkResolver workResolver;
 	
-	agent.Agent agent1;
-	agent.Agent agent2;
-	agent.Agent agent3; 
-	agent.Agent agent4; 
+	Agent agent1;
+	Agent agent2;
+	Agent agent3; 
+	Agent agent4; 
 	
 	GPSCoordinate NUIGcoord0;
 	GPSCoordinate NUIGcoord1;
@@ -54,16 +56,27 @@ class WorkResolverTest {
 		agent2.setLocation(new ArrayList<Double>(Arrays.asList(53.286, -9.0588, 20.0)));
 		agent3.setLocation(new ArrayList<Double>(Arrays.asList(53.2798, -9.0565, 20.0)));
 		agent4.setLocation(new ArrayList<Double>(Arrays.asList(53.277, -9.0576, 20.0)));
-		agent1.setVehicle(new RAV("1"));
-		agent2.setVehicle(new RAV("2"));
-		agent3.setVehicle(new RAV("3"));
-		agent4.setVehicle(new RAV("4"));
+
+		agent1.setVehicle(new AeorumUAV("1", "127.0.0.1", "41451"));
+		agent2.setVehicle(new AeorumUAV("2", "127.0.0.1", "41452"));
+		agent3.setVehicle(new AeorumUAV("3", "127.0.0.1", "41453"));
+		agent4.setVehicle(new AeorumUAV("4", "127.0.0.1", "41454"));
 		
-		NUIGcoord0 = new GPSCoordinate(53.2779115341, -9.0597334278);
-		NUIGcoord1 = new GPSCoordinate(53.2812554869, -9.0627998557);
-		NUIGcoord2 = new GPSCoordinate(53.2823423226, -9.0594844171);
-		NUIGcoord3 = new GPSCoordinate(53.2789984548, -9.0564179892);
+//		NUIGcoord0 = new GPSCoordinate(53.2779115341, -9.0597334278);
+//		NUIGcoord1 = new GPSCoordinate(53.2812554869, -9.0627998557);
+//		NUIGcoord2 = new GPSCoordinate(53.2823423226, -9.0594844171);
+//		NUIGcoord3 = new GPSCoordinate(53.2789984548, -9.0564179892);
+//[-9.0604869552,53.2790865775],[-9.0609452143,53.2801474395],[-9.0578275525,53.2806288832],[-9.0573692935,53.2795680332],[-9.0604869552,53.2790865775]
 		
+//		NUIGcoord0 = new GPSCoordinate(53.2790865775, -9.0604869552);
+//        NUIGcoord1 = new GPSCoordinate(53.2801474395, -9.0609452143);
+//        NUIGcoord2 = new GPSCoordinate(53.2806288832, -9.0578275525);
+//        NUIGcoord3 = new GPSCoordinate(53.2795680332, -9.0573692935);
+//
+		NUIGcoord0 = new GPSCoordinate(53.2791748417, -9.0644775368);
+        NUIGcoord1 = new GPSCoordinate(53.2801009832, -9.0648776011);
+        NUIGcoord2 = new GPSCoordinate(53.2805257224, -9.0621271428);
+        NUIGcoord3 = new GPSCoordinate(53.27959959, -9.0617270785);
 		
 		//WorkType workType, ArrayList<Agent> agents, ArrayList<GPSCoordinate> missionBoundingBox,
 		//HashMap<Object, Object> optionalParams
@@ -95,16 +108,18 @@ class WorkResolverTest {
 
 	@Test
 	void testGetAgentMissions() throws Exception {
+		Date date = new Date();
+		double t1 = System.currentTimeMillis();
 		//create and output file to show results of mission
-		BufferedWriter mission1_writer = new BufferedWriter(new FileWriter("D:\\IJCAIDemoCode\\CommsHubCode\\test_work_resolver1.txt"));
+		BufferedWriter mission1_writer = new BufferedWriter(new FileWriter("D:\\IJCAIDemoCode\\CommsHubCode\\test_work_resolver11.txt"));
 		workResolver = new WorkResolver(WorkType.MAP,
-				new ArrayList<Agent>(Arrays.asList(agent1, agent2)), 
+				new ArrayList<Agent>(Arrays.asList(agent1, agent2, agent3)), 
 				new ArrayList<GPSCoordinate>(Arrays.asList(NUIGcoord0, NUIGcoord1, NUIGcoord2, NUIGcoord3)));
 		
 		writeAgentMission(workResolver, mission1_writer);
 		mission1_writer.close();
 		
-		BufferedWriter mission2_writer = new BufferedWriter(new FileWriter("D:\\IJCAIDemoCode\\CommsHubCode\\test_work_resolver2.txt"));
+		BufferedWriter mission2_writer = new BufferedWriter(new FileWriter("D:\\IJCAIDemoCode\\CommsHubCode\\test_work_resolver21.txt"));
 		
 		agent1.setLocation(new ArrayList<Double>(Arrays.asList(53.282, -9.052, 20.0)));
 		agent2.setLocation(new ArrayList<Double>(Arrays.asList(53.283, -9.0628, 20.0)));
@@ -115,15 +130,15 @@ class WorkResolverTest {
 		writeAgentMission(workResolver, mission2_writer);
 		mission2_writer.close();
 		
-		BufferedWriter mission3_writer = new BufferedWriter(new FileWriter("D:\\IJCAIDemoCode\\CommsHubCode\\test_work_resolver3.txt"));
+		BufferedWriter mission3_writer = new BufferedWriter(new FileWriter("D:\\IJCAIDemoCode\\CommsHubCode\\test_work_resolver31.txt"));
 		
 		
-		workResolver.setAgents(new ArrayList<Agent> (Arrays.asList(agent1, agent2, agent3, agent4)));
+		workResolver.setAgents(new ArrayList<Agent> (Arrays.asList(agent1, agent2, agent3)));
 		workResolver.updateAgentMissions();
 		
 		writeAgentMission(workResolver, mission3_writer);
 		mission3_writer.close();
-
+		System.out.println(System.currentTimeMillis() - t1);
 	}
 
 	@Test
