@@ -147,7 +147,7 @@ public abstract class Mission {
 	}
 	
 	public String toString() {
-		return "Mission " + missionID + "\n" + missionPoints.toString();
+		return "Mission :" + missionID + "\tMission Points: " + missionPoints.toString();
 		
 	}
 

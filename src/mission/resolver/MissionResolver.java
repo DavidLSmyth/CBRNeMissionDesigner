@@ -63,6 +63,7 @@ public class MissionResolver {
 				//base case with no optional params
 				if(getOptionalParams() == null) {
 					strategy = new MapMissionStrategyGreedy(getMissionAgents(), getMissionBoundingCoordinates());
+					strategy.updateAgentPaths();
 					HashMap<Agent, ArrayList<GPSCoordinate>> agentRoutes= strategy.getAgentRoutesForMapping();
 					System.out.println("Agent routes greedy no wind: " + agentRoutes);
 					System.out.println("First agent route mission resolver: " + agentRoutes.get(getMissionAgents().get(0)));
@@ -78,10 +79,13 @@ public class MissionResolver {
 				
 				else {
 					if(getOptionalParams().containsKey("wind")) {
+						System.out.println("Dealing with wind...");
+						System.out.println(getOptionalParams().get("wind"));
 						//wind should be an arraylist <north, east>
-						ArrayList<Double> windDetails = (ArrayList<Double>) getOptionalParams().get("wind");
-						WindFactor windFactor = new WindFactor(windDetails.get(0), windDetails.get(1));
-						strategy = new MapMissionStrategyGreedy(getMissionAgents(), getMissionBoundingCoordinates());
+						WindFactor windFactor =  (WindFactor) getOptionalParams().get("wind");
+						System.out.println("Wind factor: " + windFactor);
+						//WindFactor windFactor = new WindFactor(windDetails.get(0), windDetails.get(1));
+						strategy = new MapMissionStrategyGreedy(getMissionAgents(), getMissionBoundingCoordinates(), windFactor);
 						HashMap<Agent, ArrayList<GPSCoordinate>> agentRoutes= strategy.getAgentRoutesForMapping();
 						HashMap<Agent, Mission> returnMap = new HashMap<Agent, Mission>();
 						//convert arraylist of gps points to mission for each agent

@@ -18,12 +18,16 @@ public class WindFactor {
 		this.northComponent = northComponent;
 	}
 
-	public double getSouthComponent() {
+	public double getEastComponent() {
 		return eastComponent;
 	}
 
 	public void setEastComponent(double eastComponent) {
 		this.eastComponent = eastComponent;
+	}
+	
+	public String toString() {
+		return "Wind blowing N: " + getNorthComponent() + ", E: " + getEastComponent(); 
 	}
 
 }

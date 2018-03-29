@@ -25,7 +25,7 @@ public class WorkResolver {
 	
 	HashMap<Agent, Mission> agentMissions;
 	ArrayList<GPSCoordinate> missionBoundingBox;
-	Map<Object, Object> optionalParams;
+	HashMap<Object, Object> optionalParams;
 	
 	public WorkResolver(WorkType workType, ArrayList<Agent> agents, ArrayList<GPSCoordinate> missionBoundingBox) throws Exception {
 		this(workType, agents, null ,missionBoundingBox, null);
@@ -85,7 +85,14 @@ public class WorkResolver {
 	protected void calculateMissions() throws Exception {
 		//sets the missions of each agent for the provided data
 		System.out.println("Calculating the missions each agent needs to carry out");
-		MissionResolver resolver = new MissionResolver(getAgents(), getWorkType(), getMissionBoundingBox());
+		MissionResolver resolver;
+		if(getOptionalParams()!= null) {
+			System.out.println("Using mission resolver with wind");
+			resolver = new MissionResolver(getAgents(), getWorkType(), getMissionBoundingBox(), getOptionalParams());
+		}
+		else {
+			resolver = new MissionResolver(getAgents(), getWorkType(), getMissionBoundingBox());
+		}
 		setAgentMissions(resolver.resolveMissions());
 	}
 	
@@ -131,11 +138,11 @@ public class WorkResolver {
 	public void setMissionBoundingBox(ArrayList<GPSCoordinate> missionBoundingBox) {
 		this.missionBoundingBox = missionBoundingBox;
 	}
-	public Map<Object, Object> getOptionalParams() {
+	public HashMap<Object, Object> getOptionalParams() {
 		return optionalParams;
 	}
 
-	public void setOptionalParams(Map<Object, Object> optionalParams) {
+	public void setOptionalParams(HashMap<Object, Object> optionalParams) {
 		this.optionalParams = optionalParams;
 	}
 }

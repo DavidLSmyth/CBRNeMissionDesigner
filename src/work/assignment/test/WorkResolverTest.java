@@ -25,6 +25,7 @@ import mission.resolver.Mission;
 import mission.resolver.MissionPoint;
 import work.assignment.WorkResolver;
 import work.assignment.WorkType;
+import work.assignment.environmentalfactors.WindFactor;
 import work.assignment.grid.GPSCoordinate;
 import java.util.Date;
 
@@ -94,11 +95,13 @@ class WorkResolverTest {
 	}
 	
 	void writeAgentMission(WorkResolver workResovler, BufferedWriter outputFile) throws Exception{
+		workResolver.updateAgentMissions();
 		HashMap<Agent, Mission> agentMissions = workResolver.getAgentMissions(); 
-		for(agent.Agent a: agentMissions.keySet()) {
+		System.out.println("Agents Keyset: " + agentMissions.keySet());
+		for(Agent a: workResolver.getAgentMissions().keySet()) {
 			outputFile.write(a.toString() + "\n");
-			for(MissionPoint p : agentMissions.get(a).getMissionPoints()) {
-				System.out.println(p + "\n");
+			for(MissionPoint p :  workResolver.getAgentMissions().get(a).getMissionPoints()) {
+				System.out.println("Next mission point: " + p + "\n");
 				outputFile.write(p.toString()+"\n");
 			}
 			outputFile.write("\n");
@@ -108,27 +111,31 @@ class WorkResolverTest {
 
 	@Test
 	void testGetAgentMissions() throws Exception {
-		Date date = new Date();
 		double t1 = System.currentTimeMillis();
 		//create and output file to show results of mission
-		BufferedWriter mission1_writer = new BufferedWriter(new FileWriter("D:\\IJCAIDemoCode\\CommsHubCode\\test_work_resolver11.txt"));
+//		BufferedWriter mission1_writer = new BufferedWriter(new FileWriter("D:\\IJCAIDemoCode\\CommsHubCode\\test_work_resolver11.txt"));
+//		
+		WindFactor windFactor = new WindFactor(0, -50);
+		HashMap<Object, Object> optionalParams = new HashMap<Object, Object>();
+		optionalParams.put("wind", windFactor);
 		workResolver = new WorkResolver(WorkType.MAP,
 				new ArrayList<Agent>(Arrays.asList(agent1, agent2, agent3)), 
-				new ArrayList<GPSCoordinate>(Arrays.asList(NUIGcoord0, NUIGcoord1, NUIGcoord2, NUIGcoord3)));
-		
-		writeAgentMission(workResolver, mission1_writer);
-		mission1_writer.close();
-		
-		BufferedWriter mission2_writer = new BufferedWriter(new FileWriter("D:\\IJCAIDemoCode\\CommsHubCode\\test_work_resolver21.txt"));
-		
-		agent1.setLocation(new ArrayList<Double>(Arrays.asList(53.282, -9.052, 20.0)));
-		agent2.setLocation(new ArrayList<Double>(Arrays.asList(53.283, -9.0628, 20.0)));
-		
-		workResolver.setAgents(new ArrayList<Agent> (Arrays.asList(agent1, agent2)));
-		workResolver.updateAgentMissions();
-		
-		writeAgentMission(workResolver, mission2_writer);
-		mission2_writer.close();
+				new ArrayList<GPSCoordinate>(Arrays.asList(NUIGcoord0, NUIGcoord1, NUIGcoord2, NUIGcoord3)),
+				optionalParams);
+//		
+//		writeAgentMission(workResolver, mission1_writer);
+//		mission1_writer.close();
+//		
+//		BufferedWriter mission2_writer = new BufferedWriter(new FileWriter("D:\\IJCAIDemoCode\\CommsHubCode\\test_work_resolver21.txt"));
+//		
+//		agent1.setLocation(new ArrayList<Double>(Arrays.asList(53.282, -9.052, 20.0)));
+//		agent2.setLocation(new ArrayList<Double>(Arrays.asList(53.283, -9.0628, 20.0)));
+//		
+//		workResolver.setAgents(new ArrayList<Agent> (Arrays.asList(agent1, agent2)));
+//		workResolver.updateAgentMissions();
+//		
+//		writeAgentMission(workResolver, mission2_writer);
+//		mission2_writer.close();
 		
 		BufferedWriter mission3_writer = new BufferedWriter(new FileWriter("D:\\IJCAIDemoCode\\CommsHubCode\\test_work_resolver31.txt"));
 		
@@ -138,6 +145,26 @@ class WorkResolverTest {
 		
 		writeAgentMission(workResolver, mission3_writer);
 		mission3_writer.close();
+		System.out.println(System.currentTimeMillis() - t1);
+		
+//		WindFactor windFactor = new WindFactor(20, 0);
+//		HashMap<Object, Object> optionalParams = new HashMap<Object, Object>();
+//		optionalParams.put("wind", windFactor);
+//		WorkResolver w1 = new WorkResolver(WorkType.MAP,
+//				new ArrayList<Agent>(Arrays.asList(agent1)), 
+//				new ArrayList<GPSCoordinate>(Arrays.asList(NUIGcoord0, NUIGcoord1, NUIGcoord2, NUIGcoord3)),
+//				optionalParams
+//				);
+//		System.out.println("Number of agents for mission: " + w1.getNoAgents());
+//		w1.updateAgentMissions();
+//		w1.setAgents(new ArrayList<Agent>(Arrays.asList(agent1)));
+////		workResolver.setAgents(new ArrayList<Agent> (Arrays.asList(agent1, agent2, agent3)));
+////		workResolver.updateAgentMissions();
+//		System.out.println("Getting agent missions");
+//		BufferedWriter mission4_writer = new BufferedWriter(new FileWriter("D:\\IJCAIDemoCode\\CommsHubCode\\test_work_resolver41.txt"));
+//		System.out.println("Agent Missions: " + w1.getAgentMissions().keySet()); 
+//		writeAgentMission(w1, mission4_writer);
+//		mission4_writer.close();
 		System.out.println(System.currentTimeMillis() - t1);
 	}
 
