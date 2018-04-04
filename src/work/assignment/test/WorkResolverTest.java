@@ -21,6 +21,8 @@ import agent.vehicle.VehicleImpl;
 import agent.vehicle.VehicleType;
 import agent.vehicle.uav.AeorumUAV;
 import agent.vehicle.uav.UAV;
+import mission.resolver.AeorumMissionJSONHelper;
+import mission.resolver.AeorumRAVMission;
 import mission.resolver.Mission;
 import mission.resolver.MissionPoint;
 import work.assignment.WorkResolver;
@@ -142,6 +144,8 @@ class WorkResolverTest {
 		
 		workResolver.setAgents(new ArrayList<Agent> (Arrays.asList(agent1, agent2, agent3)));
 		workResolver.updateAgentMissions();
+		Mission agent1Mission = workResolver.getMissionFor(agent1);
+		System.out.println(AeorumMissionJSONHelper.getAeorumMissionJSON((AeorumRAVMission) agent1Mission));
 		
 		writeAgentMission(workResolver, mission3_writer);
 		mission3_writer.close();
@@ -165,6 +169,10 @@ class WorkResolverTest {
 //		System.out.println("Agent Missions: " + w1.getAgentMissions().keySet()); 
 //		writeAgentMission(w1, mission4_writer);
 //		mission4_writer.close();
+		//System.out.println(AeorumMissionJSONHelper.getAeorumMissionJSON((AeorumRAVMission) agent1Mission));
+		BufferedWriter mission4_writer = new BufferedWriter(new FileWriter("D:\\IJCAIDemoCode\\CommsHubCode\\test_mission_json.txt"));
+		mission4_writer.write(AeorumMissionJSONHelper.getAeorumMissionJSON((AeorumRAVMission) agent1Mission));
+		mission4_writer.close();
 		System.out.println(System.currentTimeMillis() - t1);
 	}
 

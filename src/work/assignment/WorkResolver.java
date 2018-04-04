@@ -20,7 +20,7 @@ public class WorkResolver {
 	WorkType workType;
 	//type of cost that needs to be minimized
 	CostType costType;
-	//give a default costType of total distance travelled by agents
+	//give a default costType of total distance traveled by agents
 	protected static CostType defaultCostType = CostType.TOTALDISTANCE;
 	
 	HashMap<Agent, Mission> agentMissions;

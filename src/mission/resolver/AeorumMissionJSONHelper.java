@@ -61,7 +61,12 @@ public class AeorumMissionJSONHelper {
 		b.append("\"gps\": {\n");
 		b.append(wrapDouble("lat", coord.getLat()));
 		b.append(wrapDouble("lng", coord.getLng()));
-		b.append(wrapDoubleLastTerm("alt", coord.getAlt()));
+		try {
+			b.append(wrapDoubleLastTerm("alt", coord.getAlt()));
+		}
+		catch(Exception e) {
+			b.append(wrapDoubleLastTerm("alt", 30));
+		}
 		b.append("},\n");
 		return b.toString();
 	}

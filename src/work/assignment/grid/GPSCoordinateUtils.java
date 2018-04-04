@@ -39,11 +39,25 @@ public class GPSCoordinateUtils {
 		return Math.abs(lat1 - lat2) * getLenMetresOneDegreeLat(lat1);
 	}
 	
+	public static double convertLatDegreeDifferenceToMetresSigned(double lat1, double lat2) {
+		// longitude calculation term 3
+	//given two degrees of latitude, calculates the distance in metres between them.
+	//assuming lat1 and lat2 are 'close'
+	return (lat1 - lat2) * getLenMetresOneDegreeLat(lat1);
+	}
+	
 	public static double convertLongDegreeDifferenceToMetres(double long1, double long2, double lat) {
 		// longitude calculation term 3
 		//given two degrees of latitude, calculates the distance in metres between them.
 		//assuming lat1 and lat2 are 'close'
 		return Math.abs(long1 - long2) * getLenMetresOneDegreeLong(lat);
+	}
+	
+	public static double convertLongDegreeDifferenceToMetresSigned(double long1, double long2, double lat) {
+		// longitude calculation term 3
+		//given two degrees of latitude, calculates the distance in metres between them.
+		//assuming lat1 and lat2 are 'close'
+		return (long1 - long2) * getLenMetresOneDegreeLong(lat);
 	}
 	
 	public static double convertMetresLatToDegrees(double metres, double lat) {

@@ -10,33 +10,29 @@ import work.assignment.grid.GPSCoordinateUtils;
 import work.assignment.grid.quadrilateral.GPSGridQuadrilateral;
 import work.assignment.grid.quadrilateral.RegularTraversalGridQuad;
 
+//agent velocity 5m/s by default
 public abstract class MapMissionBase {
 	
 	ArrayList<Agent> agents;
 	RegularTraversalGridQuad grid;
 	HashMap<Agent, ArrayList<GPSCoordinate>> agentPaths;
 	WindFactor windFactor;
+	//the effective velocity which each each should move with
+	HashMap<Agent, Double> agentVelocities;
+	
+	protected MapMissionBase(ArrayList<Agent> agents, ArrayList<GPSCoordinate> missionBoundingCoordinates, HashMap<Agent, Double> agentVelocities) throws Exception {
+		this(agents, missionBoundingCoordinates, agentVelocities, new WindFactor(0,0));
+	}
 	
 	protected MapMissionBase(ArrayList<Agent> agents, ArrayList<GPSCoordinate> missionBoundingCoordinates) throws Exception {
-//		setAgents(agents);
-//		if(missionBoundingCoordinates.size() != 4) throw new UnsupportedOperationException("Expected 4 coordinates to map environment"
-//				+ " but got " + missionBoundingCoordinates.size());
-//		else {
-//			GPSGridQuadrilateral quad = new GPSGridQuadrilateral(missionBoundingCoordinates.get(0),
-//					missionBoundingCoordinates.get(1),
-//					missionBoundingCoordinates.get(2),
-//					missionBoundingCoordinates.get(3)); 
-//			
-//			//need to determine the longspacing metres, latspacing metres and 
-//			//altitude autonomously
-//			//double lngSpacingMetres, double latSpacingMetres, double altitude
-//			grid = new RegularTraversalGridQuad(quad, 10, 15, 20);
-//			setGrid(grid);
-//			this.agentPaths = calculateMapEnvironmentPaths(agents);
-//		}
-		this(agents, missionBoundingCoordinates, new WindFactor(0,0));
+		this(agents, missionBoundingCoordinates, new HashMap<Agent, Double>(), new WindFactor(0,0));
+		for(int counter = 0; counter < agents.size(); counter++) {
+			//velocity 5m/s by default
+			agentVelocities.put(agents.get(counter), Double.valueOf(5.0));
+		}
 	}
-	protected MapMissionBase(ArrayList<Agent> agents, ArrayList<GPSCoordinate> missionBoundingCoordinates, WindFactor windFactor) throws Exception {
+	
+	protected MapMissionBase(ArrayList<Agent> agents, ArrayList<GPSCoordinate> missionBoundingCoordinates, HashMap<Agent, Double> agentVelocities, WindFactor windFactor) throws Exception {
 		setAgents(agents);
 		if(missionBoundingCoordinates.size() != 4) throw new UnsupportedOperationException("Expected 4 coordinates to map environment"
 				+ " but got " + missionBoundingCoordinates.size());
@@ -51,6 +47,7 @@ public abstract class MapMissionBase {
 			//double lngSpacingMetres, double latSpacingMetres, double altitude
 			grid = new RegularTraversalGridQuad(quad, 10, 15, 20);
 			setGrid(grid);
+			setAgentVelocities(agentVelocities);
 			//pre-emptively calculate agent paths
 			//this.agentPaths = calculateMapEnvironmentPaths(agents, windFactor);
 			this.windFactor = windFactor;
@@ -63,6 +60,14 @@ public abstract class MapMissionBase {
 	
 	public HashMap<Agent, ArrayList<GPSCoordinate>> getAgentPaths(){
 		return this.agentPaths;
+	}
+	
+	public HashMap<Agent, Double> getAgentVelocities() {
+		return agentVelocities;
+	}
+
+	public void setAgentVelocities(HashMap<Agent, Double> agentVelocities) {
+		this.agentVelocities = agentVelocities;
 	}
 	
 	//should be protected
