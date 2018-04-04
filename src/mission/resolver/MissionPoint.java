@@ -39,25 +39,7 @@ public class MissionPoint {
 		setCommands(commands);
 		setName(name);
 	}
-	
-	public double getDistanceCostEstimate(GPSCoordinate coord) {
-		/**
-		* Returns a cost estimate in terms of distance of travelling from the provided coordinate to 
-		* the mission points coordinate and executing the missionPoint 
-		*/
-		return getGpsCoord().getMetresToOther(coord);
-	}
-	
-	public double getTimeCostEstimate(GPSCoordinate coord) throws Exception {
-		/**
-		* Returns a cost estimate in terms of time taken to travel from the provided coordinate to 
-		* the mission points coordinate and executing the missionPoint 
-		*/
-		
-		// speed = distance / time <=> time = distance / speed
-		//return getGpsCoord().getMetresToOther(coord) / missionSpeed + time taken to record images, rotate gimbal, etc.
-		throw new Exception("Not yet implemented");
-	}
+
 	public String getName() {
 		return this.name;
 	}

@@ -57,8 +57,18 @@ public abstract class Mission {
 	public FinalAction getFinalAction() {
 		return finalAction;
 	}
+	
 	public void setFinalAction(FinalAction finalAction) {
 		this.finalAction = finalAction;
+	}
+	
+	public ArrayList<GPSCoordinate> getMissionGPSCoordinates(){
+		//returns the GPS coordinates for the mission
+		ArrayList<GPSCoordinate> missionGPSCoordinates = new ArrayList<GPSCoordinate>();
+		for(MissionPoint m: getMissionPoints()) {
+			missionGPSCoordinates.add(m.getGpsCoord());
+		}
+		return missionGPSCoordinates;
 	}
 	
 	public String getMissionName() {
