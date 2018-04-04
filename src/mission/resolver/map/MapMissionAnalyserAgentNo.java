@@ -37,12 +37,16 @@ public class MapMissionAnalyserAgentNo {
 		//setVelocities(velocities);
 	}
 	
-	public MapMissionAnalyserAgentNo(ArrayList<Mission> agentMissions, RegularTraversalGridQuad traversalGrid) {
+	public MapMissionAnalyserAgentNo(ArrayList<Mission> agentMissions) {
 		ArrayList<ArrayList<GPSCoordinate>> agentPaths = new ArrayList<ArrayList<GPSCoordinate>>();
-		setTraversalGrid(traversalGrid);
+		setTraversalGrid(null);
 		for(Mission m: agentMissions) {
 			agentPaths.add(m.getMissionGPSCoordinates());
 		}
+		setAgentPaths(agentPaths);
+	}
+	
+	public MapMissionAnalyserAgentNo(ArrayList<ArrayList<GPSCoordinate>> agentPaths, Object junk) {
 		setAgentPaths(agentPaths);
 	}
 	

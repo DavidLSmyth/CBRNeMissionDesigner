@@ -15,6 +15,8 @@ public class MapMissionAnalyserAgent{
 	//ArrayList<ArrayList<GPSCoordinate>> agentPaths;
 	HashMap<Agent, Double> velocities;
 	RegularTraversalGridQuad traversalGrid; 
+	//travels at 8 m/s by default
+	private static double defaultVelocity = 8;
 	protected MapMissionAnalyserAgentNo analyser;
 	
 	
@@ -24,6 +26,24 @@ public class MapMissionAnalyserAgent{
 			//ArrayList<ArrayList<GPSCoordinate>> agentPaths
 			HashMap<Agent, Double> velocities) {
 		analyser = new MapMissionAnalyserAgentNo(traversalGrid, (ArrayList) agentPathsMap.values());
+	}
+	
+	public MapMissionAnalyserAgent(RegularTraversalGridQuad traversalGrid, 
+			ArrayList<Agent> agents, 
+			HashMap<Agent, ArrayList<GPSCoordinate>> agentPathsMap) {
+		analyser = new MapMissionAnalyserAgentNo(traversalGrid, (ArrayList) agentPathsMap.values());
+		velocities = new HashMap<Agent, Double>();
+		for(Agent agent: agents) {
+			velocities.put(agent, MapMissionAnalyserAgent.defaultVelocity);
+		}
+	}
+	public MapMissionAnalyserAgent(	ArrayList<Agent> agents, 
+			HashMap<Agent, ArrayList<GPSCoordinate>> agentPathsMap) {
+		analyser = new MapMissionAnalyserAgentNo((ArrayList) agentPathsMap.values());
+		velocities = new HashMap<Agent, Double>();
+		for(Agent agent: agents) {
+			velocities.put(agent, MapMissionAnalyserAgent.defaultVelocity);
+		}
 	}
 	
 	private boolean validateAgent(Agent agent) throws Exception {
