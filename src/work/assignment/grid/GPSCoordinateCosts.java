@@ -31,10 +31,15 @@ public class GPSCoordinateCosts {
 	public static double getTimeCost(double agentVelocity, WindFactor windFactor, GPSCoordinate from, GPSCoordinate to) throws Exception {
 		//System.out.println("lat metres: " + GPSCoordinateUtils.convertLatDegreeDifferenceToMetresSigned(to.getLat(), from.getLat()));
 		//System.out.println("long metres: " + GPSCoordinateUtils.convertLongDegreeDifferenceToMetresSigned(to.getLng(), from.getLng(), from.getLat()));
-
+//		System.out.println("From: " + from);
+//		System.out.println("To: " + to);
+		if(from.equals(to)) {
+			return 0;
+		}
+		
 		double theta = Math.abs(Math.atan(GPSCoordinateUtils.convertLatDegreeDifferenceToMetresSigned(from.getLat(), to.getLat()) / GPSCoordinateUtils.convertLongDegreeDifferenceToMetresSigned(from.getLng(), to.getLng(), from.getLat())));
-		//System.out.println("theta: " + theta);
-		//System.out.println("Theta degrees: " + Math.toDegrees(theta));
+//		System.out.println("theta: " + theta);
+//		System.out.println("Theta degrees: " + Math.toDegrees(theta));
 		
 		//System.out.println(windFactor.getNorthComponent());
 		//System.out.println(windFactor.getEastComponent());

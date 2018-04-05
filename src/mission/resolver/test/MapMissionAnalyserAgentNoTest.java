@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +27,10 @@ class MapMissionAnalyserAgentNoTest {
 	GPSCoordinate NUIGcoord1;
 	GPSCoordinate NUIGcoord2;
 	GPSCoordinate NUIGcoord3;
+	MapMissionAnalyserAgentNo analyser;
+	ArrayList<ArrayList<GPSCoordinate>> agentmissions;
+	HashMap<Integer, Double> velocities;
+	
 	@BeforeEach
 	void setUp() throws Exception {
 		agent1 = new AgentImpl("1");
@@ -49,9 +54,13 @@ class MapMissionAnalyserAgentNoTest {
 		GPSCoordinate mission5 = new GPSCoordinate(53.2823423226, -9.0594844171);
 		ArrayList<GPSCoordinate> agent2missions = new ArrayList<GPSCoordinate>(Arrays.asList(mission3, mission4, mission5));
 		
-		ArrayList<ArrayList<GPSCoordinate>> agentmissions = new ArrayList<ArrayList<GPSCoordinate>>(Arrays.asList(agent1missions, agent2missions));
+		velocities = new HashMap<Integer, Double>();
+		velocities.put(0, 8.0);
+		velocities.put(1, 8.0);
+		
+		agentmissions = new ArrayList<ArrayList<GPSCoordinate>>(Arrays.asList(agent1missions, agent2missions));
 		//need to pass in a junk parameter to overload constructor
-		MapMissionAnalyserAgentNo analyser = new MapMissionAnalyserAgentNo(agentmissions, null);
+		analyser = new MapMissionAnalyserAgentNo(agentmissions, null);
 	}
 
 	@AfterEach
@@ -79,38 +88,43 @@ class MapMissionAnalyserAgentNoTest {
 	}
 
 	@Test
-	void testGetTimeEstimateForAgent() {
-		System.out.println()
+	void testGetTimeEstimateForAgent() throws Exception {
+		//distance 423
+		assertEquals(141, analyser.getTimeEstimateForAgent(0, 3.0), 2);
+		//distance 251 + 490/3
+		assertEquals(247, analyser.getTimeEstimateForAgent(1, 3.0), 2);
 	}
 
 	@Test
-	void testGetTotalTimeEstimate() {
-		fail("Not yet implemented");
+	void testGetTotalTimeEstimate() throws Exception {
+		//53+92.5
+		assertEquals(146, analyser.getTotalTimeEstimate(velocities), 2);
 	}
 
 	@Test
-	void testGetAverageTimeEstimate() {
-		fail("Not yet implemented");
+	void testGetAverageTimeEstimate() throws Exception {
+		assertEquals(146/2, analyser.getAverageTimeEstimate(velocities), 2);
 	}
 
 	@Test
-	void testGetMaximumTimeEstimate() {
-		fail("Not yet implemented");
+	void testGetMaximumTimeEstimate() throws Exception {
+		assertEquals(92.5, analyser.getMaximumTimeEstimate(velocities), 2);
 	}
 
 	@Test
-	void testGetMinimumTimeEstimate() {
-		fail("Not yet implemented");
+	void testGetMinimumTimeEstimate() throws Exception {
+		assertEquals(53, analyser.getMinimumTimeEstimate(velocities), 2);
 	}
 
 	@Test
 	void testGetTimeReport() {
-		fail("Not yet implemented");
+		System.out.println(analyser.getTimeReport(velocities));
 	}
 
 	@Test
-	void testGetDistanceEstimateForAgent() {
-		fail("Not yet implemented");
+	void testGetDistanceEstimateForAgent() throws Exception {
+		assertEquals(423, analyser.getDistanceEstimateForAgent(0), 5);
+		assertEquals(251 + 490, analyser.getDistanceEstimateForAgent(1), 5);
 	}
 
 	@Test
@@ -119,28 +133,29 @@ class MapMissionAnalyserAgentNoTest {
 	}
 
 	@Test
-	void testGetMinimumDistanceEstimate() {
-		fail("Not yet implemented");
+	void testGetMinimumDistanceEstimate() throws Exception {
+		assertEquals(423, analyser.getMinimumDistanceEstimate(),5);
 	}
 
 	@Test
-	void testGetMaximumDistanceEstimate() {
-		fail("Not yet implemented");
+	void testGetMaximumDistanceEstimate() throws Exception {
+		assertEquals(251+490, analyser.getMaximumDistanceEstimate(),5);
 	}
 
 	@Test
-	void testGetAverageDistanceEstimate() {
-		fail("Not yet implemented");
+	void testGetAverageDistanceEstimate() throws Exception {
+		assertEquals((251 + 490 + 423)/2, analyser.getAverageDistanceEstimate(),5);
 	}
 
 	@Test
-	void testGetTotalDistanceEstimate() {
-		fail("Not yet implemented");
+	void testGetTotalDistanceEstimate() throws Exception {
+		assertEquals((251 + 490 + 423), analyser.getAverageDistanceEstimate(),5);
 	}
 
 	@Test
 	void testGetDistanceReport() {
-		fail("Not yet implemented");
+		System.out.println(analyser.getDistanceReport());
+		System.out.println(analyser.getReport(velocities));
 	}
 
 	@Test

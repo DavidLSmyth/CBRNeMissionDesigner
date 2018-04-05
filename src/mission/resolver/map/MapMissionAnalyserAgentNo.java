@@ -76,6 +76,18 @@ public class MapMissionAnalyserAgentNo {
 		this.agentPaths = agentPaths;
 	}
 	
+	public int numberOfGridPointsVisitedByAgent(int agentNumber) {
+		return getAgentPaths().get(agentNumber).size();
+	}
+	
+	public int totalNumberOfGridPointsVisited() {
+		int sum = 0;
+		for(int counter = 0; counter < getAgentPaths().size(); counter++) {
+			sum += numberOfGridPointsVisitedByAgent(counter);
+		}
+		return sum;
+	}
+	
 //	public double getBatteryEstimateForAgent(Agent agent) throws Exception {
 //		validateAgent(agent);
 //		throw new Exception("Not implemented");
@@ -91,10 +103,13 @@ public class MapMissionAnalyserAgentNo {
 		GPSCoordinate prevCoord = agentPaths.get(agentNumber).get(0);
 		for(GPSCoordinate coord: agentPaths.get(agentNumber)) {
 			timeCost += GPSCoordinateCosts.getTimeCost(velocity, prevCoord, coord);
+			//System.out.println("Adding time cost: " + timeCost);
 			prevCoord = coord;
 		}
 		return timeCost;
 	}
+	
+	
 	//HashMap agentnumber, corresponding velocity
 	public double getTotalTimeEstimate(HashMap<Integer, Double> velocities) throws Exception {
 		double totalTimeEstimate = 0;
@@ -130,13 +145,39 @@ public class MapMissionAnalyserAgentNo {
 		return minTime;
 	}
 	
-	public String getTimeReport(HashMap<Integer, Double> velocities) {
+	private String wrapReportLine(String string) {
+		String returnString = "*\t" + string;
+		for(int counter = 0; counter < 51 - string.length() - 1; counter++) {
+			returnString += " ";
+		}
+		returnString += "*\n";
+		returnString += "*	                                                  *\n";
+		return returnString;
+	}
+	
+	protected String getBaseTimeReport(HashMap<Integer, Double> velocities) {
 		String returnString = "";
 		try {
-			returnString += String.format("Total time taken by RAVs: %f\n", getTotalTimeEstimate(velocities));
-			returnString += String.format("Average time taken by any RAV: %f\n", getAverageTimeEstimate(velocities));
-			returnString += String.format("Min time taken by any RAV: %f\n", getMinimumTimeEstimate(velocities));
-			returnString += String.format("Max time taken by any RAV: %f\n", getMaximumTimeEstimate(velocities));
+			//returnString +="*********************** Time Report ***********************\n";
+			returnString += wrapReportLine(String.format("Total time taken by RAVs:              %.3fs", getTotalTimeEstimate(velocities)));
+			returnString += wrapReportLine(String.format("Average time taken by RAVs:            %.3fs", getAverageTimeEstimate(velocities)));
+			returnString += wrapReportLine(String.format("Min time taken by any RAV:             %.3fs", getMinimumTimeEstimate(velocities)));
+			returnString += wrapReportLine(String.format("Max time taken by any RAV:             %.3fs", getMaximumTimeEstimate(velocities)));
+			//returnString +="*********************** Time Report ***********************\n";
+			return returnString;
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return("Error encountered when analysing distance travelled during mission");
+		}
+	}
+	
+	public String getTimeReport(HashMap<Integer, Double> velocities) {
+		try {
+			String returnString ="*********************** Time Report ***********************\n";
+			returnString += getGridPointReport();
+			returnString += getBaseTimeReport(velocities);
+			returnString +="*********************** Time Report ***********************\n";
 			return returnString;
 		}
 		catch(Exception e) {
@@ -182,8 +223,9 @@ public class MapMissionAnalyserAgentNo {
 	
 	public double getMaximumDistanceEstimate() throws Exception {
 		double maxDistance = getDistanceEstimateForAgent(0);
+		double currentDistance;
 		for(int agentNumber = 0; agentNumber < getAgentPaths().size(); agentNumber++) {
-			double currentDistance = getDistanceEstimateForAgent(agentNumber);
+			currentDistance = getDistanceEstimateForAgent(agentNumber);
 			if(currentDistance > maxDistance) {
 				maxDistance = currentDistance;
 			}
@@ -192,11 +234,7 @@ public class MapMissionAnalyserAgentNo {
 	}
 	
 	public double getAverageDistanceEstimate() throws Exception {
-		double distanceSum = 0;
-		for(int agentNumber = 0; agentNumber < getAgentPaths().size(); agentNumber++) {
-			double currentDistance = getDistanceEstimateForAgent(agentNumber);
-		}
-		return distanceSum / getAgentPaths().size();
+		return getTotalDistanceEstimate() / getAgentPaths().size();
 	}
 	
 	
@@ -208,13 +246,42 @@ public class MapMissionAnalyserAgentNo {
 		return totalDistanceCost;
 	}
 	
-	public String getDistanceReport(HashMap<Integer, Double> velocities) {
-		String returnString = "";
+	protected String getBaseDistanceReport() {
 		try {
-			returnString += String.format("Average distance travelled by RAVs: %f\n", getAverageDistanceEstimate());
-			returnString += String.format("Maximum distance travelled by any RAV: %f\n", getMaximumDistanceEstimate());
-			returnString += String.format("Min distance travelled by any RAV: %f\n", getMinimumDistanceEstimate());
-			returnString += String.format("Max distance travelled by any RAV: %f\n", getMaximumDistanceEstimate());
+			String returnString = "";
+			returnString += wrapReportLine(String.format("Average distance travelled by RAVs:    %.3fm", getAverageDistanceEstimate()));
+			returnString += wrapReportLine(String.format("Maximum distance travelled by any RAV: %.3fm", getMaximumDistanceEstimate()));
+			returnString += wrapReportLine(String.format("Min distance travelled by any RAV:     %.3fm", getMinimumDistanceEstimate()));
+			returnString += wrapReportLine(String.format("Max distance travelled by any RAV:     %.3fm", getMaximumDistanceEstimate()));
+			return returnString;
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return("Error encountered when analysing distance travelled during mission");
+		}
+	}
+	public String getGridPointReport() {
+		try {
+			String returnString = "";
+			returnString +=     wrapReportLine("Number of agents:                      " + getAgentPaths().size());
+			returnString +=     wrapReportLine("Total # of grid points visited:        " + totalNumberOfGridPointsVisited());
+			for(int agentCounter = 0; agentCounter < getAgentPaths().size(); agentCounter++) {
+				returnString += wrapReportLine("# of grid points visited by agent " + agentCounter + ":   " + numberOfGridPointsVisitedByAgent(agentCounter));
+			}
+			return returnString;
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return("Error encountered when reporting agent data");
+		}
+	}
+	
+	public String getDistanceReport() {
+		try {
+			String returnString = "********************* Distance Report *********************\n";
+			returnString += getGridPointReport();
+			returnString += getBaseDistanceReport();
+			returnString +="********************* Distance Report *********************\n";
 			return returnString;
 		}
 		catch(Exception e) {
@@ -227,15 +294,24 @@ public class MapMissionAnalyserAgentNo {
 	*****************************ANALYSIS OF DISTANCE TRAVELLED*****************************
 	****************************************************************************************/
 	
-	public String toString(HashMap<Integer, Double> agentVelocities) {
-		String returnString = "***************** Report for Mission ****************";
+	public String getReport(HashMap<Integer, Double> velocities) {
 		try {
-			//Distance report
-			returnString += getTimeReport(agentVelocities);
-			
-			//Time report
-			returnString += getDistanceReport(agentVelocities);
+			String returnString = "********************* Mission  Report *********************\n";
+			returnString += getGridPointReport();
+			returnString += getBaseDistanceReport(); 
+			returnString += getBaseTimeReport(velocities);
+			returnString += "********************* Mission  Report *********************\n";
 			return returnString;
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return("Error encountered when generating mission report");
+		}
+	}
+	
+	public String toString(HashMap<Integer, Double> agentVelocities) {
+		try {
+			return getReport(agentVelocities);
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
