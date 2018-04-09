@@ -4,15 +4,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import agent.Agent;
+import work.assignment.CostType;
 import work.assignment.environmentalfactors.WindFactor;
 import work.assignment.grid.GPSCoordinate;
+import work.assignment.grid.GPSCoordinateCosts;
 import work.assignment.grid.GPSCoordinateUtils;
 import work.assignment.grid.quadrilateral.GPSGridQuadrilateral;
 import work.assignment.grid.quadrilateral.RegularTraversalGridQuad;
 
 //agent velocity 5m/s by default
-public abstract class MapMissionBase {
-	
+public abstract class MapMissionBase implements MapMissionStrategy{
+	//in order to modify costs, need to extend this class
 	ArrayList<Agent> agents;
 	RegularTraversalGridQuad grid;
 	HashMap<Agent, ArrayList<GPSCoordinate>> agentPaths;
@@ -70,66 +72,139 @@ public abstract class MapMissionBase {
 		this.agentVelocities = agentVelocities;
 	}
 	
-	//should be protected
-	public GPSCoordinate getNearestAvailableCoord(ArrayList<GPSCoordinate> availablesgpsCoordinates, GPSCoordinate agentLocation,
-			WindFactor windFactor) throws Exception {
-		ArrayList<Double> distances = new ArrayList<Double>();
+	/***************************************** Cost Generating Methods ******************************/
+	
+	protected ArrayList<Double> generateDistanceCosts(ArrayList<GPSCoordinate> availablesgpsCoordinates, GPSCoordinate agentLocation){
+		ArrayList<Double> distanceCosts = new ArrayList<Double>();
 		for(GPSCoordinate coord: availablesgpsCoordinates) {
-			//take wind factor into account here
-			//System.out.println(windFactor.getEastComponent());
-			double wind_factor_long = -(GPSCoordinateUtils.convertLongDegreeDifferenceToMetres(coord.getLng(), agentLocation.getLng(), agentLocation.getLat())/agentLocation.getMetresToOther(coord));
-			if(coord.getLng() - agentLocation.getLng() < 0) {
-				wind_factor_long = - wind_factor_long;
-			}
-			wind_factor_long = wind_factor_long - windFactor.getEastComponent();
-					//+ windFactor.getEastComponent();
-			double wind_factor_lat = (GPSCoordinateUtils.convertLatDegreeDifferenceToMetres(coord.getLat(), agentLocation.getLat())/agentLocation.getMetresToOther(coord));
-			if(coord.getLat() - agentLocation.getLat() < 0) {
-				wind_factor_lat = - wind_factor_lat;
-			}
-			wind_factor_lat = wind_factor_lat - windFactor.getNorthComponent();
-			//+ windFactor.getNorthComponent();
-			
-			System.out.println("wind factor long: " + wind_factor_long);
-			System.out.println("wind factor lat: " + wind_factor_lat);
-//			
-//			System.out.println("Effective speed moving to coordinate " + coord + " is " +Math.sqrt(Math.pow(wind_factor_long, 2) + Math.pow(wind_factor_lat,2)));
-			
-			double total_effect = agentLocation.getMetresToOther(coord) + Math.sqrt(Math.pow(wind_factor_long, 2) + Math.pow(wind_factor_lat,2));
-			System.out.println("total effect of wind for " + coord + " : " + total_effect);
-			distances.add(total_effect);
+			distanceCosts.add(GPSCoordinateCosts.getDistanceCost(agentLocation, coord));
 		}
-		int minCoordDistLocation = 0;
+		return distanceCosts;
+	}
+	
+	protected ArrayList<Double> generateTimeCosts(ArrayList<GPSCoordinate> availablesgpsCoordinates,
+			GPSCoordinate agentLocation,
+			WindFactor windFactor, 
+			double agentVelocity) throws Exception{		
+		ArrayList<Double> timeCosts = new ArrayList<Double>();
+		for(GPSCoordinate coord: availablesgpsCoordinates) {
+			timeCosts.add(GPSCoordinateCosts.getTimeCost(agentVelocity, windFactor, agentLocation, coord));
+		}
+		return timeCosts;
+	}
+	protected ArrayList<Double> generateTimeCosts(ArrayList<GPSCoordinate> availablesgpsCoordinates,
+			GPSCoordinate agentLocation,
+			double agentVelocity) throws Exception{		
+		ArrayList<Double> timeCosts = new ArrayList<Double>();
+		for(GPSCoordinate coord: availablesgpsCoordinates) {
+			timeCosts.add(GPSCoordinateCosts.getTimeCost(agentVelocity, agentLocation, coord));
+		}
+		return timeCosts;
+	}
+	
+	protected ArrayList<Double> generateBatteryCosts(ArrayList<GPSCoordinate> availablesgpsCoordinates,
+			GPSCoordinate agentLocation) throws Exception{
+		ArrayList<Double> batteryCosts = new ArrayList<Double>();
+		for(GPSCoordinate coord: availablesgpsCoordinates) {
+			//throws an exception
+			batteryCosts.add(GPSCoordinateCosts.getBatteryCost(agentLocation, coord));
+		}
+		return batteryCosts;
+	}
+	
+	/**************************************** Cost Generating Methods *******************************/
+	
+//should not need to implement this as passing in 0 values to overloaded method should yield same results
+//	protected ArrayList<Double> getCosts(ArrayList<GPSCoordinate> availablesgpsCoordinates, GPSCoordinate agentLocation,
+//			CostType costType) throws Exception{
+//		ArrayList<Double> costs;
+//		switch(costType) {
+//			case MAXDISTANCE: costs = generateDistanceCosts(availablesgpsCoordinates,
+//					agentLocation); break;
+//					
+//			case TOTALDISTANCE: costs = generateDistanceCosts(availablesgpsCoordinates,
+//					agentLocation); break;
+//					
+//			case BATTERY: costs = generateBatteryCosts(availablesgpsCoordinates, agentLocation); break;
+//			
+//			default: throw new Exception("Cannot calculate costs");
+//		}
+//		return costs;
+//	}
+	
+	protected ArrayList<Double> getCosts(ArrayList<GPSCoordinate> availablesgpsCoordinates, 
+			GPSCoordinate agentLocation,
+			WindFactor windFactor,
+			Double agentVelocity,
+			CostType costType) throws Exception{
+		ArrayList<Double> costs;
+		switch(costType) {
+			case MAXDISTANCE: costs = generateDistanceCosts(availablesgpsCoordinates,
+					agentLocation); break;
+					
+			case TOTALDISTANCE: costs = generateDistanceCosts(availablesgpsCoordinates,
+					agentLocation); break;
+					
+			case TOTALTIME: costs = generateTimeCosts(availablesgpsCoordinates,
+					agentLocation, windFactor, agentVelocity); break;
+				
+			case MAXTIME: costs = generateTimeCosts(availablesgpsCoordinates,
+					agentLocation, windFactor, agentVelocity); break;
+					
+			case BATTERY: costs = generateBatteryCosts(availablesgpsCoordinates, agentLocation); break;
+			
+			default: throw new Exception("Cannot calculate costs");
+		}
+		return costs;
+	}
+	
+	
+	//should be protected?
+	public GPSCoordinate getAvailableCoordOfLeastCost(ArrayList<GPSCoordinate> availableGPSCoordinates, GPSCoordinate agentLocation,
+			CostType costType,
+			WindFactor windFactor,
+			Double agentVelocity) throws Exception {
+		
+		ArrayList<Double> costs = getCosts(availableGPSCoordinates, agentLocation,
+				windFactor,
+				agentVelocity, 
+				costType);
+		
+		return availableGPSCoordinates.get(getMinIndexOfCostArray(costs));
+	}
+	
+	protected int getMinIndexOfCostArray(ArrayList<Double> costs) {
+		int minCoordCostLocation = 0;
 		int counter = 0;
-		double currentMinDistance = distances.get(0);
-		for(double distance: distances) {
-			if (distance < currentMinDistance) {
-				minCoordDistLocation = counter;
-				currentMinDistance = distance;
+		double currentMinCost = costs.get(0);
+		for(double cost: costs) {
+			if (cost < currentMinCost) {
+				minCoordCostLocation = counter;
+				currentMinCost = cost;
 			}
 			counter++;
 		}
-		return availablesgpsCoordinates.get(minCoordDistLocation);
+		return minCoordCostLocation;
 	}
 	
 	//should be protected
-	public GPSCoordinate getNearestAvailableCoord(ArrayList<GPSCoordinate> availablesgpsCoordinates, GPSCoordinate agentLocation) {
-		ArrayList<Double> distances = new ArrayList<Double>();
-		for(GPSCoordinate coord: availablesgpsCoordinates) {
-			distances.add(agentLocation.getMetresToOther(coord));
-		}
-		int minCoordDistLocation = 0;
-		int counter = 0;
-		double currentMinDistance = distances.get(0);
-		for(double distance: distances) {
-			if (distance < currentMinDistance) {
-				minCoordDistLocation = counter;
-				currentMinDistance = distance;
-			}
-			counter++;
-		}
-		return availablesgpsCoordinates.get(minCoordDistLocation);
-	}
+//	public GPSCoordinate getNearestAvailableCoord(ArrayList<GPSCoordinate> availablesgpsCoordinates, GPSCoordinate agentLocation) {
+//		ArrayList<Double> distances = new ArrayList<Double>();
+//		for(GPSCoordinate coord: availablesgpsCoordinates) {
+//			distances.add(agentLocation.getMetresToOther(coord));
+//		}
+//		int minCoordDistLocation = 0;
+//		int counter = 0;
+//		double currentMinDistance = distances.get(0);
+//		for(double distance: distances) {
+//			if (distance < currentMinDistance) {
+//				minCoordDistLocation = counter;
+//				currentMinDistance = distance;
+//			}
+//			counter++;
+//		}
+//		return availablesgpsCoordinates.get(minCoordDistLocation);
+//	}
 	
 	public ArrayList<Agent> getAgents() {
 		return agents;
@@ -159,6 +234,10 @@ public abstract class MapMissionBase {
 		}
 	}
 	
+	protected HashMap<Agent, ArrayList<GPSCoordinate>> calculateMapEnvironmentPaths(ArrayList<Agent> agents) throws Exception{
+		//assume a windfactor of 0
+		return calculateMapEnvironmentPaths(agents, new WindFactor(0,0));
+	}
 	protected abstract HashMap<Agent, ArrayList<GPSCoordinate>> calculateMapEnvironmentPaths(ArrayList<Agent> agents, WindFactor windFactor) throws Exception;
 	//public abstract HashMap<Agent, ArrayList<GPSCoordinate>> getAgentRoutesForMapping() throws Exception;
 	

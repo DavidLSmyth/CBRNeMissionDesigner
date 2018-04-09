@@ -10,5 +10,5 @@ public enum CostType {
 	//total time required for vehicles to complete their mission 
 	TOTALTIME,
 	//max time for any given vehicle to complete their mission
-	MAXTIME 
+	MAXTIME,
 }

@@ -14,6 +14,7 @@ public class MapMissionStrategyGreedy extends MapMissionBase {
 	WindFactor windFactor;
 	public MapMissionStrategyGreedy(ArrayList<Agent> agents, ArrayList<GPSCoordinate> missionBoundingCoordinates) throws Exception {
 		super(agents, missionBoundingCoordinates);
+		//pre-emptively calculate agent paths
 		agentPaths = calculateMapEnvironmentPaths(agents);
 	}
 	
@@ -72,9 +73,9 @@ public class MapMissionStrategyGreedy extends MapMissionBase {
 		//iterate over agents until all grid points are assigned
 	}
 
-	protected HashMap<Agent, ArrayList<GPSCoordinate>> calculateMapEnvironmentPaths(ArrayList<Agent> agents) throws Exception{
-		return calculateMapEnvironmentPaths(agents, new WindFactor(0,0));
-	}
+//	protected HashMap<Agent, ArrayList<GPSCoordinate>> calculateMapEnvironmentPaths(ArrayList<Agent> agents) throws Exception{
+//		return calculateMapEnvironmentPaths(agents, new WindFactor(0,0));
+//	}
 
 
 //	protected HashMap<Agent, ArrayList<GPSCoordinate>> calculateMapEnvironmentPaths(ArrayList<Agent> agents) throws Exception{

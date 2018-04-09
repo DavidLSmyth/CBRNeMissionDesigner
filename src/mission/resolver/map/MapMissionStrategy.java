@@ -1,6 +1,8 @@
 package mission.resolver.map;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import work.assignment.environmentalfactors.WindFactor;
 import work.assignment.grid.GPSCoordinate;
 import agent.Agent;
 
@@ -12,6 +14,7 @@ public interface MapMissionStrategy {
 	
 	//get the sequence of GPS points necessary to map the environment given a list of 
 	//agents
+	//public HashMap<Agent, ArrayList<GPSCoordinate>> calculateMapEnvironmentPaths(ArrayList<Agent> agents, WindFactor windFactor) throws Exception;
 	public HashMap<Agent, ArrayList<GPSCoordinate>> getAgentRoutesForMapping() throws Exception;
 	
 	//Need to write other method signatures that will need to be implemented...

@@ -297,8 +297,13 @@ public class MapMissionAnalyserAgentNo {
 	public String getReport(HashMap<Integer, Double> velocities) {
 		try {
 			String returnString = "********************* Mission  Report *********************\n";
+			returnString += "*	                                                  *\n";
 			returnString += getGridPointReport();
+			returnString += "*-------------------- Distance Report --------------------*\n";
+			returnString += "*	                                                  *\n";
 			returnString += getBaseDistanceReport(); 
+			returnString += "*---------------------- Time  Report ---------------------*\n";
+			returnString += "*	                                                  *\n";
 			returnString += getBaseTimeReport(velocities);
 			returnString += "********************* Mission  Report *********************\n";
 			return returnString;

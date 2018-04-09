@@ -117,7 +117,7 @@ class WorkResolverTest {
 		//create and output file to show results of mission
 //		BufferedWriter mission1_writer = new BufferedWriter(new FileWriter("D:\\IJCAIDemoCode\\CommsHubCode\\test_work_resolver11.txt"));
 //		
-		WindFactor windFactor = new WindFactor(0, -50);
+		WindFactor windFactor = new WindFactor(0, -5);
 		HashMap<Object, Object> optionalParams = new HashMap<Object, Object>();
 		optionalParams.put("wind", windFactor);
 		workResolver = new WorkResolver(WorkType.MAP,
@@ -139,7 +139,7 @@ class WorkResolverTest {
 //		writeAgentMission(workResolver, mission2_writer);
 //		mission2_writer.close();
 		
-		BufferedWriter mission3_writer = new BufferedWriter(new FileWriter("D:\\IJCAIDemoCode\\CommsHubCode\\test_work_resolver31.txt"));
+		BufferedWriter mission3_writer = new BufferedWriter(new FileWriter("D:\\IJCAIDemoCode\\CommsHubCode\\test_work_resolver32.txt"));
 		
 		
 		workResolver.setAgents(new ArrayList<Agent> (Arrays.asList(agent1, agent2, agent3)));

@@ -6,9 +6,9 @@ import work.assignment.environmentalfactors.WindFactor;
 
 public class GPSCoordinateCosts {
 
-	public GPSCoordinateCosts() {
-		// TODO Auto-generated constructor stub
-	}
+//	public GPSCoordinateCosts() {
+//		// TODO Auto-generated constructor stub
+//	}
 	
 	public static double getDistanceCost(GPSCoordinate c1, GPSCoordinate c2) {
 		//assuming that the agent can travel with a constant velocity once it has accelerated, calculates the distance
@@ -16,11 +16,11 @@ public class GPSCoordinateCosts {
 		return c1.getMetresToOther(c2);
 	}
 	//protected
-	protected static double getLatDistanceCost(GPSCoordinate c1, GPSCoordinate c2) {
+	public static double getLatDistanceCost(GPSCoordinate c1, GPSCoordinate c2) {
 		return c1.getLatMetresToOther(c2);
 	}
 	//protected
-	protected static double getLongDistanceCost(GPSCoordinate c1, GPSCoordinate c2) {
+	public static double getLongDistanceCost(GPSCoordinate c1, GPSCoordinate c2) {
 		return c1.getLngMetresToOther(c2);
 	}
 	
@@ -64,8 +64,8 @@ public class GPSCoordinateCosts {
 		return getDistanceCost(from, to) / effectiveVelocity;
 	}
 	
-	public static double getBatteryCost(Agent agent, GPSCoordinate c1, GPSCoordinate c2) {
-		return 0;
+	public static double getBatteryCost(GPSCoordinate c1, GPSCoordinate c2) throws Exception {
+		throw new Exception("Not implemented");
 	}
 
 }

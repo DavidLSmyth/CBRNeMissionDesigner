@@ -149,7 +149,7 @@ class MapMissionAnalyserAgentNoTest {
 
 	@Test
 	void testGetTotalDistanceEstimate() throws Exception {
-		assertEquals((251 + 490 + 423), analyser.getAverageDistanceEstimate(),5);
+		assertEquals((251 + 490 + 423), analyser.getTotalDistanceEstimate(),10);
 	}
 
 	@Test
