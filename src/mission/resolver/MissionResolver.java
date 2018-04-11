@@ -9,6 +9,7 @@ import agent.vehicle.VehicleType;
 import mission.resolver.map.MapMissionBase;
 import mission.resolver.map.MapMissionStrategy;
 import mission.resolver.map.MapMissionStrategyGreedy;
+import work.assignment.CostType;
 import work.assignment.WorkType;
 import work.assignment.environmentalfactors.WindFactor;
 import work.assignment.grid.GPSCoordinate;
@@ -62,7 +63,9 @@ public class MissionResolver {
 					
 				//base case with no optional params
 				if(getOptionalParams() == null) {
-					strategy = new MapMissionStrategyGreedy(getMissionAgents(), getMissionBoundingCoordinates());
+					//swap out this strategy for another strategy that is more efficient
+					//cost type should depend on what is trying to be achieved
+					strategy = new MapMissionStrategyGreedy(getMissionAgents(), getMissionBoundingCoordinates(), CostType.TOTALTIME);
 					strategy.updateAgentPaths();
 					HashMap<Agent, ArrayList<GPSCoordinate>> agentRoutes= strategy.getAgentRoutesForMapping();
 					System.out.println("Agent routes greedy no wind: " + agentRoutes);
@@ -85,7 +88,24 @@ public class MissionResolver {
 						WindFactor windFactor =  (WindFactor) getOptionalParams().get("wind");
 						System.out.println("Wind factor: " + windFactor);
 						//WindFactor windFactor = new WindFactor(windDetails.get(0), windDetails.get(1));
-						strategy = new MapMissionStrategyGreedy(getMissionAgents(), getMissionBoundingCoordinates(), windFactor);
+						
+//						ArrayList<Agent> agents, 
+//						ArrayList<GPSCoordinate> missionBoundingCoordinates,
+//						HashMap<Agent, Double> agentVelocities,
+//						WindFactor windFactor, 
+//						CostType costType
+						
+						HashMap<Agent, Double> agentVelocities = new HashMap<Agent, Double>();
+						for(Agent agent: getMissionAgents()) {
+							agentVelocities.put(agent, agent.getVehicle().getOperationalVelocity());
+						}
+						
+						strategy = new MapMissionStrategyGreedy(getMissionAgents(), 
+								getMissionBoundingCoordinates(),
+								//assume there is some way to get the velocity each agent can travel with
+								agentVelocities,
+								windFactor,
+								CostType.TOTALTIME);
 						HashMap<Agent, ArrayList<GPSCoordinate>> agentRoutes= strategy.getAgentRoutesForMapping();
 						HashMap<Agent, Mission> returnMap = new HashMap<Agent, Mission>();
 						//convert arraylist of gps points to mission for each agent

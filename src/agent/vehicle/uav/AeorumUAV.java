@@ -16,9 +16,26 @@ public class AeorumUAV extends UAV {
 	
 	
 	//final static Logger LOG = LoggerFactory.getLogger(AeorumUAV.class);
-
+	private static final double DEFAULT_VELOCITY = 5;
+	public double velocity;
+	
+	
+	public AeorumUAV(String droneId, String ip, String port, double velocity) {
+		super(droneId, ip, port);
+		setVelocity(velocity);
+	}
+	
 	public AeorumUAV(String droneId, String ip, String port) {
 		super(droneId, ip, port);
+		setVelocity(AeorumUAV.DEFAULT_VELOCITY);
+	}
+	
+	public void setVelocity(double velocity) {
+		this.velocity = velocity;
+	}
+	
+	public double getVelocity() {
+		return this.velocity;
 	}
 
 	@Override

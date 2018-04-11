@@ -14,6 +14,7 @@ import agent.AgentImpl;
 import agent.vehicle.uav.AeorumUAV;
 import mission.resolver.map.MapMissionBase;
 import mission.resolver.map.MapMissionStrategyGreedy;
+import work.assignment.CostType;
 import work.assignment.environmentalfactors.WindFactor;
 import work.assignment.grid.GPSCoordinate;
 
@@ -32,6 +33,8 @@ class MapMissionBaseTest {
 	WindFactor windFactor;
 	
 	MapMissionBase mapMissionBase;
+	
+	CostType costType;
 	
 	@BeforeEach
 	void setUp() throws Exception {
@@ -58,10 +61,11 @@ class MapMissionBaseTest {
         
         windFactor = new WindFactor(0, -5);
         
+        costType = CostType.TOTALDISTANCE;
+        
         mapMissionBase = new MapMissionStrategyGreedy(new ArrayList<Agent> (Arrays.asList(agent1, agent2)),
         		new ArrayList<GPSCoordinate> (Arrays.asList(NUIGcoord0, NUIGcoord1, NUIGcoord2, NUIGcoord3)),
-        		windFactor
-        		);
+        		 costType);
 	}
 
 	@AfterEach
@@ -85,13 +89,13 @@ class MapMissionBaseTest {
 
 	@Test
 	void testGetNearestAvailableCoordArrayListOfGPSCoordinateGPSCoordinateWindFactor() throws Exception {
-		System.out.println(mapMissionBase.getNearestAvailableCoord(new ArrayList<GPSCoordinate>(Arrays.asList(NUIGcoord1,NUIGcoord2,NUIGcoord3)), NUIGcoord0, windFactor));
-		assertEquals(NUIGcoord3, mapMissionBase.getNearestAvailableCoord(new ArrayList<GPSCoordinate>(Arrays.asList(NUIGcoord1,NUIGcoord2,NUIGcoord3)), NUIGcoord0, windFactor));
+		System.out.println(mapMissionBase.getAvailableCoordOfLeastCost(new ArrayList<GPSCoordinate>(Arrays.asList(NUIGcoord1,NUIGcoord2,NUIGcoord3)), NUIGcoord0, agent1, costType));
+		assertEquals(NUIGcoord3, mapMissionBase.getAvailableCoordOfLeastCost(new ArrayList<GPSCoordinate>(Arrays.asList(NUIGcoord1,NUIGcoord2,NUIGcoord3)), NUIGcoord0, agent1, CostType.MAXTIME));
 	}
 
 	@Test
-	void testGetNearestAvailableCoordArrayListOfGPSCoordinateGPSCoordinate() {
-		assertEquals(NUIGcoord1, mapMissionBase.getNearestAvailableCoord(new ArrayList<GPSCoordinate>(Arrays.asList(NUIGcoord1,NUIGcoord2,NUIGcoord3)), NUIGcoord0));
+	void testGetNearestAvailableCoordArrayListOfGPSCoordinateGPSCoordinate() throws Exception {
+		assertEquals(NUIGcoord1, mapMissionBase.getAvailableCoordOfLeastCost(new ArrayList<GPSCoordinate>(Arrays.asList(NUIGcoord1,NUIGcoord2,NUIGcoord3)), NUIGcoord0, agent1, costType));
 		
 	}
 

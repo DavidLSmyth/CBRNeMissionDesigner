@@ -5,45 +5,71 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import work.assignment.CostType;
 import work.assignment.environmentalfactors.WindFactor;
 import work.assignment.grid.GPSCoordinate;
 import work.assignment.grid.quadrilateral.GPSGridQuadrilateral;
 import work.assignment.grid.quadrilateral.RegularTraversalGridQuad;
 
 public class MapMissionStrategyGreedy extends MapMissionBase {
-	WindFactor windFactor;
-	public MapMissionStrategyGreedy(ArrayList<Agent> agents, ArrayList<GPSCoordinate> missionBoundingCoordinates) throws Exception {
-		super(agents, missionBoundingCoordinates);
+	
+	public MapMissionStrategyGreedy(ArrayList<Agent> agents,
+			ArrayList<GPSCoordinate> missionBoundingCoordinates,
+			CostType costType) throws Exception {
+		
+		super(agents, missionBoundingCoordinates, costType);
 		//pre-emptively calculate agent paths
 		agentPaths = calculateMapEnvironmentPaths(agents);
 	}
 	
-	public MapMissionStrategyGreedy(ArrayList<Agent> agents, ArrayList<GPSCoordinate> missionBoundingCoordinates, WindFactor windFactor) throws Exception {
-		super(agents, missionBoundingCoordinates);
-		this.windFactor = windFactor;
-		agentPaths = calculateMapEnvironmentPaths(agents, windFactor);
+	public MapMissionStrategyGreedy(ArrayList<Agent> agents, 
+			ArrayList<GPSCoordinate> missionBoundingCoordinates,
+			HashMap<Agent, Double> agentVelocities,
+			WindFactor windFactor, 
+			CostType costType) throws Exception {
+		super(agents, missionBoundingCoordinates, agentVelocities, windFactor, costType);
+		agentPaths = calculateMapEnvironmentPaths(agents);
 	}
 	
-	protected HashMap<Agent, ArrayList<GPSCoordinate>> calculateMapEnvironmentPaths(ArrayList<Agent> agents, WindFactor windFactor) throws Exception{
-		//each agent adds to their list of points to explore greedily
-		ArrayList<GPSCoordinate> exploredPoints;
-		ArrayList<GPSCoordinate> pointsToExplore;
-		System.out.println("Working with wind factor: " + windFactor);
-		exploredPoints = new ArrayList<GPSCoordinate>();
-		pointsToExplore = grid.getPoints();
+	
+	protected HashMap<Agent, ArrayList<GPSCoordinate>> initialiseReturnMap(ArrayList<Agent> agents) throws Exception{
 		HashMap<Agent, ArrayList<GPSCoordinate>> returnMap = new HashMap<Agent, ArrayList<GPSCoordinate>>(); 
-		//new Map<Agent, ArrayList<GPSCoordinate>>();
-		//initialise returnList;
 		for(Agent agent: agents) {
 			returnMap.put(agent, new ArrayList<GPSCoordinate>(Arrays.asList(new GPSCoordinate(agent.getLocation().get(0),
 					agent.getLocation().get(1),
 					agent.getLocation().get(2)))));
 		}
+		return returnMap;
+	}
+	
+	protected HashMap<Agent, ArrayList<GPSCoordinate>> calculateMapEnvironmentPaths(ArrayList<Agent> agents 
+			//,WindFactor windFactor
+			) throws Exception{
+		//each agent adds to their list of points to explore greedily
+		ArrayList<GPSCoordinate> exploredPoints = new ArrayList<GPSCoordinate>();
+		ArrayList<GPSCoordinate> pointsToExplore = grid.getPoints();
+		
+		//System.out.println("Working with wind factor: " + windFactor);
+//		exploredPoints = 
+//		pointsToExplore 
+		
+		//contains the route for each agent
+		//HashMap<Agent, ArrayList<GPSCoordinate>> returnMap = new HashMap<Agent, ArrayList<GPSCoordinate>>(); 
+		
+		//initialise returnMap for each agent
+//		for(Agent agent: agents) {
+//			returnMap.put(agent, new ArrayList<GPSCoordinate>(Arrays.asList(new GPSCoordinate(agent.getLocation().get(0),
+//					agent.getLocation().get(1),
+//					agent.getLocation().get(2)))));
+//		}
+		HashMap<Agent, ArrayList<GPSCoordinate>> returnMap = initialiseReturnMap(agents);
 		//System.out.println("Caulculating paths for " + agents.size() + " agents");
 		//System.out.println("Size of returnMap set as: " + returnMap.size());
-		for(Agent agent: agents) {
-			System.out.println("Agent: " + agent.getId() + " initial path " + (returnMap.get(agent)));
-		}
+//		for(Agent agent: agents) {
+//			System.out.println("Agent: " + agent.getId() + " initial path " + (returnMap.get(agent)));
+//		}
+		
+		//denotes the agent who currently can choose next GPS coordinate to explore
 		int agentNo = 0;
 		int noAgents = agents.size();
 		Agent currentAgent;
@@ -53,19 +79,15 @@ public class MapMissionStrategyGreedy extends MapMissionBase {
 		while(!(pointsToExplore.size() == 0)) {
 			currentAgent = agents.get(agentNo % noAgents);
 			agentNo++;
-			
 			agentPath = returnMap.get(currentAgent);
-			//get coord which has min cost
-			GPSCoordinate nearestCoord = getNearestAvailableCoord(pointsToExplore, agentPath.get(agentPath.size()-1), windFactor);
-//			GPSCoordinate nearestCoord = getNearestAvailableCoord(pointsToExplore, new GPSCoordinate(currentAgent.getLocation().get(0),
-//					currentAgent.getLocation().get(1),
-//					currentAgent.getLocation().get(2)
-//					));
+			//get coord which has min cost for the agent to travel to from its current location
+			GPSCoordinate nearestCoord = getAvailableCoordOfLeastCost(pointsToExplore, agentPath.get(agentPath.size()-1), currentAgent, getCostType());
 			agentPath.add(nearestCoord);
-			System.out.println("Updated the path of agent " + currentAgent.getId() + " to " + agentPath);
+			//System.out.println("Updated the path of agent " + currentAgent.getId() + " to " + agentPath);
+			//update the returnMap
 			returnMap.put(currentAgent, agentPath);
 			exploredPoints.add(nearestCoord);
-			System.out.println("Points to explore: " + pointsToExplore);
+			//System.out.println("Points to explore: " + pointsToExplore);
 			pointsToExplore.remove(nearestCoord);
 		}
 		//System.out.println("Returning returnMap: " + returnMap.toString());
