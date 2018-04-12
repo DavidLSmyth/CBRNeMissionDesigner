@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import work.assignment.CostType;
 import work.assignment.environmentalfactors.WindFactor;
 import work.assignment.grid.GPSCoordinate;
 import work.assignment.grid.quadrilateral.GPSGridQuadrilateral;
@@ -13,9 +14,9 @@ import work.assignment.grid.quadrilateral.RegularTraversalGridQuad;
 
 public class MapMissionStrategyBranchBound extends MapMissionBase implements MapMissionStrategy{
 	
-	public MapMissionStrategyBranchBound(ArrayList<Agent> agents, ArrayList<GPSCoordinate> missionBoundingCoordinates) throws Exception {
+	public MapMissionStrategyBranchBound(ArrayList<Agent> agents, ArrayList<GPSCoordinate> missionBoundingCoordinates, CostType costType) throws Exception {
 		// TODO Auto-generated constructor stub
-		super(agents, missionBoundingCoordinates);
+		super(agents, missionBoundingCoordinates, costType);
 		agentPaths = calculateMapEnvironmentPaths(agents);
 //		setAgents(agents);
 //		if(missionBoundingCoordinates.size() != 4) throw new UnsupportedOperationException("Expected 4 coordinates to map environment"
@@ -41,10 +42,17 @@ public class MapMissionStrategyBranchBound extends MapMissionBase implements Map
 //		List<GPSCoordinate> pointsToExplore;
 //
 //	}
+//
+//	@Override
+//	protected HashMap<Agent, ArrayList<GPSCoordinate>> calculateMapEnvironmentPaths(ArrayList<Agent> agents,
+//			WindFactor windFactor) throws Exception {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 	@Override
-	protected HashMap<Agent, ArrayList<GPSCoordinate>> calculateMapEnvironmentPaths(ArrayList<Agent> agents,
-			WindFactor windFactor) throws Exception {
+	protected HashMap<Agent, ArrayList<GPSCoordinate>> calculateMapEnvironmentPaths(ArrayList<Agent> agents)
+			throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}

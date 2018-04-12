@@ -13,16 +13,29 @@ public abstract class VehicleImpl implements Vehicle {
 	protected String id;
 	
 	protected String url;
+	
+	//an estimate of the velocity at which the vehicle can operate at
+	protected double operationalVelocity;
+	//default velocity 5m/s
+	protected static double DEFAULTOPERATIONALVELOCITY = 5;
 	//protected RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
 	//protected ObjectMapper mapper = new ObjectMapper();
 
-	
 	protected VehicleImpl(String id,String ip, String port,VehicleType vehicleType){
 		this.id=id;
 		this.url = "http://" + ip + ":" + port;
 		this.vehicleType=vehicleType;
+		this.operationalVelocity = DEFAULTOPERATIONALVELOCITY;
 	}
 
+	public double getOperationalVelocity() {
+		return operationalVelocity;
+	}
+
+	public void setOperationalVelocity(double newOperationalVelocity) {
+		this.operationalVelocity = newOperationalVelocity;
+	}
+	
 	@Override
 	public String getID() {
 		return this.id;

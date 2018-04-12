@@ -91,8 +91,8 @@ public class GPSCoordinateUtils {
 			p3 = new GPSCoordinate(temp.getLat(), temp.getLng(), temp.getAlt());
 					//temp.clone();
 		}
-		System.out.println("p1 Angle relative to originx axis: " + p1.getAngleRelativeToOriginXAxis());
-		System.out.println("p3 Angle relative to originx axis: " + p3.getAngleRelativeToOriginXAxis());
+//		System.out.println("p1 Angle relative to originx axis: " + p1.getAngleRelativeToOriginXAxis());
+//		System.out.println("p3 Angle relative to originx axis: " + p3.getAngleRelativeToOriginXAxis());
 		double returnAngle = p1.getAngleRelativeToOriginXAxis() - p3.getAngleRelativeToOriginXAxis();
 		if(returnAngle > 180) return (360 - returnAngle);
 		else return returnAngle;

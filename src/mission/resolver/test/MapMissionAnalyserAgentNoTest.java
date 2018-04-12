@@ -41,9 +41,9 @@ class MapMissionAnalyserAgentNoTest {
 		agent2.setLocation(new ArrayList<Double>(Arrays.asList(53.286, -9.0588, 20.0)));
 		agent3.setLocation(new ArrayList<Double>(Arrays.asList(53.2798, -9.0565, 20.0)));
 
-		agent1.setVehicle(new AeorumUAV("1", "127.0.0.1", "41451"));
-		agent2.setVehicle(new AeorumUAV("2", "127.0.0.1", "41452"));
-		agent3.setVehicle(new AeorumUAV("3", "127.0.0.1", "41453"));
+		agent1.setVehicle(new AeorumUAV("1", "127.0.0.1", "41451", 5));
+		agent2.setVehicle(new AeorumUAV("2", "127.0.0.1", "41452", 5));
+		agent3.setVehicle(new AeorumUAV("3", "127.0.0.1", "41453", 5));
 		
 		GPSCoordinate mission1 = new GPSCoordinate(53.2779115341, -9.0597334278);
 		GPSCoordinate mission2 = new GPSCoordinate(53.2812554869, -9.0627998557);
@@ -108,12 +108,14 @@ class MapMissionAnalyserAgentNoTest {
 
 	@Test
 	void testGetMaximumTimeEstimate() throws Exception {
-		assertEquals(92.5, analyser.getMaximumTimeEstimate(velocities), 2);
+		assertEquals(92.5, (double) analyser.getMaximumTimeEstimateAndCorrespondingAgent(velocities).getKey(), 2);
+		assertEquals(1, (int) analyser.getMaximumTimeEstimateAndCorrespondingAgent(velocities).getValue());
 	}
 
 	@Test
 	void testGetMinimumTimeEstimate() throws Exception {
-		assertEquals(53, analyser.getMinimumTimeEstimate(velocities), 2);
+		assertEquals(53, (double) analyser.getMinimumTimeEstimateAndCorrespondingAgent(velocities).getKey(), 2);
+		assertEquals(0, (int) analyser.getMinimumTimeEstimateAndCorrespondingAgent(velocities).getValue());
 	}
 
 	@Test
@@ -134,12 +136,14 @@ class MapMissionAnalyserAgentNoTest {
 
 	@Test
 	void testGetMinimumDistanceEstimate() throws Exception {
-		assertEquals(423, analyser.getMinimumDistanceEstimate(),5);
+		assertEquals(423, (double) analyser.getMinimumDistanceEstimateAndCorrespondingAgent().getKey(),5);
+		assertEquals(0, (int) analyser.getMinimumDistanceEstimateAndCorrespondingAgent().getValue());
 	}
 
 	@Test
 	void testGetMaximumDistanceEstimate() throws Exception {
-		assertEquals(251+490, analyser.getMaximumDistanceEstimate(),5);
+		assertEquals(251+490, (double) analyser.getMaximumDistanceEstimateAndCorrespondingAgent().getKey(),5);
+		assertEquals(1, (int) analyser.getMaximumDistanceEstimateAndCorrespondingAgent().getValue());
 	}
 
 	@Test

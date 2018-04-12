@@ -131,7 +131,7 @@ public class GPSGridRectangle extends GPSGridQuadrilateral{
 		//allow 3% error
 		double tolPercentage = 0.03;	
 		for(ArrayList<GPSCoordinate> corner: getCorners()) {
-			System.out.println("Angle between GPS Coords: " + corner + GPSCoordinateUtils.getAcuteAngle(corner.get(0), corner.get(1), corner.get(2)));
+			//System.out.println("Angle between GPS Coords: " + corner + GPSCoordinateUtils.getAcuteAngle(corner.get(0), corner.get(1), corner.get(2)));
 			//System.out.println("Angle between GPS Coords: " + corner + GPSCoordinate.getAcuteAngle(corner.get(0), corner.get(2), corner.get(1)));
 
 			if(Math.abs(90 - GPSCoordinateUtils.getAcuteAngle(corner.get(0), corner.get(1), corner.get(2))) >= 90 * tolPercentage) {
@@ -188,7 +188,7 @@ public class GPSGridRectangle extends GPSGridQuadrilateral{
 //				standardizedGPSGridReflector.setReflectLng(true);
 //				c = standardizedGPSGridReflector.reflectLong(c);
 //			}
-			System.out.println("Setting c as: " + c);
+			//System.out.println("Setting c as: " + c);
 			rectanglePoints.set(counter, c);
 			counter++;
 			
@@ -233,10 +233,10 @@ public class GPSGridRectangle extends GPSGridQuadrilateral{
 		GPSCoordinateTranslator t = getStandardizedGPSGridTranslator();
 		//translate lowestLong back to origin
 		//then get rotator which rotates lowestLat back to x-axis
-		System.out.println("lowest lat" + getLowestLat());
-		System.out.println("lowest long " + getLowestLong());
-		System.out.println(t.translate(getLowestLat()));
-		System.out.println(t.translate(getLowestLat()).getAngleRelativeToOriginXAxis());
+//		System.out.println("lowest lat" + getLowestLat());
+//		System.out.println("lowest long " + getLowestLong());
+//		System.out.println(t.translate(getLowestLat()));
+//		System.out.println(t.translate(getLowestLat()).getAngleRelativeToOriginXAxis());
 		return t.translate(getLowestLong()).getRotatorAboutThis(
 				t.translate(getLowestLat()).getAngleRelativeToOriginXAxis());
 	}
@@ -267,10 +267,10 @@ public class GPSGridRectangle extends GPSGridQuadrilateral{
 	//private
 	public boolean verifyOriginInRect() throws Exception {
 		GPSCoordinate origin = new GPSCoordinate(0,0);
-		System.out.println("p1: " + p1);
-		System.out.println("p2: " + p2);
-		System.out.println("p3: " + p3);
-		System.out.println("p4: " + p4);
+//		System.out.println("p1: " + p1);
+//		System.out.println("p2: " + p2);
+//		System.out.println("p3: " + p3);
+//		System.out.println("p4: " + p4);
 		if(!p1.equals(origin) && (!p2.equals(origin)) && (!p3.equals(origin)) && (!p4.equals(origin))) return false;
 		else return true;
 	}

@@ -12,7 +12,8 @@ import work.assignment.grid.GPSCoordinate;
 public class WorkResolver {
 	/*
 	 *  A class that is responsible for taking in a work type, #agents, work boundary, optional params
-	 * and resolves the work that each individual agent will need to carry out in the form of a mission
+	 * and resolves the work that each individual agent will need to carry out in the form of a mission.
+	 * Here cost type should be decided by the program, but allow the user to overload if they choose - reconsider this.
 	 */
 	int noAgents;
 	ArrayList<Agent> agents;
@@ -20,16 +21,17 @@ public class WorkResolver {
 	WorkType workType;
 	//type of cost that needs to be minimized
 	CostType costType;
-	//give a default costType of total distance traveled by agents
-	protected static CostType defaultCostType = CostType.TOTALDISTANCE;
+	//give a default costType of total distance traveled by agents - this is probably bad? 
+	//this should be autonomously decided given they type of mission
+	//protected static CostType defaultCostType = CostType.TOTALDISTANCE;
 	
 	HashMap<Agent, Mission> agentMissions;
 	ArrayList<GPSCoordinate> missionBoundingBox;
 	HashMap<Object, Object> optionalParams;
 	
-	public WorkResolver(WorkType workType, ArrayList<Agent> agents, ArrayList<GPSCoordinate> missionBoundingBox) throws Exception {
-		this(workType, agents, null ,missionBoundingBox, null);
-	}
+//	public WorkResolver(WorkType workType, ArrayList<Agent> agents, ArrayList<GPSCoordinate> missionBoundingBox) throws Exception {
+//		this(workType, agents, null ,missionBoundingBox, null);
+//	}
 	
 	public WorkResolver(WorkType workType, ArrayList<Agent> agents, CostType costType, ArrayList<GPSCoordinate> missionBoundingBox) throws Exception {
 		this(workType, agents, costType, missionBoundingBox, null);
@@ -40,13 +42,6 @@ public class WorkResolver {
 	public WorkResolver(WorkType workType, ArrayList<Agent> agents, ArrayList<GPSCoordinate> missionBoundingBox,
 			HashMap<Object, Object> optionalParams) throws Exception {
 		this(workType, agents, null, missionBoundingBox, optionalParams);
-//		setWorkType(workType);
-//		setNoAgents(agents.size());
-//		setAgents(agents);
-//		setMissionBoundingBox(missionBoundingBox);
-//		setAgentMissions(new HashMap<Agent, Mission>());
-//		setOptionalParams(optionalParams);
-//		calculateMissions();
 	}
 	
 	//need some way of passing in # agents, and each type of agent
@@ -57,7 +52,16 @@ public class WorkResolver {
 		setWorkType(workType);
 		setNoAgents(agents.size());
 		setAgents(agents);
-		setCostType(costType);
+		if(costType != null) {
+			setCostType(costType);
+		}
+		else {
+			switch(workType) {
+				case MAP: setCostType(CostType.TOTALTIME); break;
+				case SEARCH: setCostType(CostType.BATTERY); break;
+				default: setCostType(CostType.TOTALTIME); break;
+			}
+		}
 		setMissionBoundingBox(missionBoundingBox);
 		setAgentMissions(new HashMap<Agent, Mission>());
 		setOptionalParams(optionalParams);
@@ -74,10 +78,11 @@ public class WorkResolver {
 	public CostType getCostType() {
 		return costType;
 	}
-	public void setCostType(CostType costType) {
+	public void setCostType(CostType costType) throws Exception {
 		if(costType == null) {
 			//attempt to minimize total distance by default
-			this.costType = CostType.TOTALDISTANCE;
+			throw new Exception("Cost type not provided");
+			//this.costType = CostType.TOTALTIME;
 		}
 		this.costType = costType;
 	}

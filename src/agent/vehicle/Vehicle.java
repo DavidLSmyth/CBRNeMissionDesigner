@@ -30,4 +30,6 @@ public interface Vehicle {
 
 	public String ping();
 	
+	public double getOperationalVelocity();
+	
 }

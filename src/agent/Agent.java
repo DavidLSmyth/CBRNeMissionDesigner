@@ -37,6 +37,8 @@ public interface Agent {
 
 	public void setLocation(ArrayList<Double> location);
 	public ArrayList<Double> getLocation();
+	
+	public String toString();
 
 
 }

@@ -73,7 +73,7 @@ public class AeorumMissionJSONHelper {
 	public static String wrapParams(ArrayList<RAVMissionPointParam> RAVMissionPointParams) {
 		StringBuilder b = new StringBuilder();		
 		b.append("\"params\": {\n");
-		System.out.println(RAVMissionPointParams.size());
+		//System.out.println(RAVMissionPointParams.size());
 		int counter = 1;
 		for (RAVMissionPointParam RAVMissionPointParam: RAVMissionPointParams) {
 			if(counter < RAVMissionPointParams.size()) b.append(wrapGeneric((RAVMissionPointParam.getParamType()).name(), String.valueOf(RAVMissionPointParam.getArg())));

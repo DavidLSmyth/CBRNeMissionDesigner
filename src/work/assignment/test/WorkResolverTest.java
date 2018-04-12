@@ -60,10 +60,10 @@ class WorkResolverTest {
 		agent3.setLocation(new ArrayList<Double>(Arrays.asList(53.2798, -9.0565, 20.0)));
 		agent4.setLocation(new ArrayList<Double>(Arrays.asList(53.277, -9.0576, 20.0)));
 
-		agent1.setVehicle(new AeorumUAV("1", "127.0.0.1", "41451"));
-		agent2.setVehicle(new AeorumUAV("2", "127.0.0.1", "41452"));
-		agent3.setVehicle(new AeorumUAV("3", "127.0.0.1", "41453"));
-		agent4.setVehicle(new AeorumUAV("4", "127.0.0.1", "41454"));
+		agent1.setVehicle(new AeorumUAV("1", "127.0.0.1", "41451", 5));
+		agent2.setVehicle(new AeorumUAV("2", "127.0.0.1", "41452", 5));
+		agent3.setVehicle(new AeorumUAV("3", "127.0.0.1", "41453", 5));
+		agent4.setVehicle(new AeorumUAV("4", "127.0.0.1", "41454", 5));
 		
 //		NUIGcoord0 = new GPSCoordinate(53.2779115341, -9.0597334278);
 //		NUIGcoord1 = new GPSCoordinate(53.2812554869, -9.0627998557);

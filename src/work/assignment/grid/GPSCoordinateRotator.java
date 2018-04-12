@@ -23,8 +23,8 @@ public class GPSCoordinateRotator{
 			//translate by rotateCoord, rotate about origin, translate back
 			GPSCoordinateTranslator t = new GPSCoordinateTranslator(rotateCoord, new GPSCoordinate(0,0));
 			coord = t.translate(coord);
-			System.out.println("Translated coord to " + coord);
-			System.out.println("Rotating by angle: " + getTheta());
+			//System.out.println("Translated coord to " + coord);
+			//System.out.println("Rotating by angle: " + getTheta());
 			double tempLat = coord.getLat();
 			double tempLong = coord.getLng();
 			
@@ -40,7 +40,7 @@ public class GPSCoordinateRotator{
 //					(Math.cos(coord.getLng()) * Math.sin(getTheta()) * Math.cos(coord.getLat()))
 //					
 //							)));
-			System.out.println("Rotated coord: " + coord);
+			//System.out.println("Rotated coord: " + coord);
 			coord = t.translateBack(coord);
 			return coord;
 		}
@@ -51,12 +51,12 @@ public class GPSCoordinateRotator{
 		GPSCoordinateTranslator t = new GPSCoordinateTranslator(rotateCoord, new GPSCoordinate(0,0));
 		//translate coordinate to relative position
 		coord = t.translate(coord);
-		System.out.println("Translated coord to " + coord);
-		System.out.println("Rotating by angle: " + getTheta());
+		//System.out.println("Translated coord to " + coord);
+		//System.out.println("Rotating by angle: " + getTheta());
 		GPSCoordinate coordCopy = coord.clone();
 		coord.setLng((coordCopy.getLng() * Math.cos(Math.toRadians(angleTheta))) + (coordCopy.getLat() * Math.sin(Math.toRadians(angleTheta))));
 		coord.setLat(-(coordCopy.getLng() * Math.sin(Math.toRadians(angleTheta))) + (coordCopy.getLat() * Math.cos(Math.toRadians(angleTheta))));
-		System.out.println("Rotated coord: " + coord);
+		//System.out.println("Rotated coord: " + coord);
 		coord = t.translateBack(coord);
 		return coord;
 	}

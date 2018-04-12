@@ -14,6 +14,7 @@ public class MapMissionAnalyserMapMission extends MapMissionAnalyserAgent{
 	RegularTraversalGridQuad traversalGrid; 
 	protected MapMissionAnalyserAgent analyser;
 	
+	//A class that analyses an overall mission
 	public MapMissionAnalyserMapMission(HashMap<Agent, Mission> agentMissions,
 	RegularTraversalGridQuad traversalGrid,
 	HashMap<Agent, Double> velocities) {

@@ -18,23 +18,41 @@ public abstract class MapMissionBase implements MapMissionStrategy{
 	ArrayList<Agent> agents;
 	RegularTraversalGridQuad grid;
 	HashMap<Agent, ArrayList<GPSCoordinate>> agentPaths;
+	
+	//assuming windFactor is constant for all agents
 	WindFactor windFactor;
+	
 	//the effective velocity which each each should move with
 	HashMap<Agent, Double> agentVelocities;
 	
-	protected MapMissionBase(ArrayList<Agent> agents, ArrayList<GPSCoordinate> missionBoundingCoordinates, HashMap<Agent, Double> agentVelocities) throws Exception {
-		this(agents, missionBoundingCoordinates, agentVelocities, new WindFactor(0,0));
+	//The cost type to be taken into account when the agents 
+	//routes are being planned
+	CostType costType;
+	
+	protected MapMissionBase(ArrayList<Agent> agents, 
+			ArrayList<GPSCoordinate> missionBoundingCoordinates, 
+			HashMap<Agent, Double> agentVelocities,
+			CostType costType) throws Exception {
+		
+		this(agents, missionBoundingCoordinates, agentVelocities, new WindFactor(0,0), costType);
 	}
 	
-	protected MapMissionBase(ArrayList<Agent> agents, ArrayList<GPSCoordinate> missionBoundingCoordinates) throws Exception {
-		this(agents, missionBoundingCoordinates, new HashMap<Agent, Double>(), new WindFactor(0,0));
+	protected MapMissionBase(ArrayList<Agent> agents, 
+			ArrayList<GPSCoordinate> missionBoundingCoordinates,
+			CostType costType) throws Exception {
+		
+		this(agents, missionBoundingCoordinates, new HashMap<Agent, Double>(), new WindFactor(0,0), costType);
 		for(int counter = 0; counter < agents.size(); counter++) {
 			//velocity 5m/s by default
 			agentVelocities.put(agents.get(counter), Double.valueOf(5.0));
 		}
 	}
 	
-	protected MapMissionBase(ArrayList<Agent> agents, ArrayList<GPSCoordinate> missionBoundingCoordinates, HashMap<Agent, Double> agentVelocities, WindFactor windFactor) throws Exception {
+	protected MapMissionBase(ArrayList<Agent> agents,
+			ArrayList<GPSCoordinate> missionBoundingCoordinates, 
+			HashMap<Agent, Double> agentVelocities, 
+			WindFactor windFactor, 
+			CostType costType) throws Exception {
 		setAgents(agents);
 		if(missionBoundingCoordinates.size() != 4) throw new UnsupportedOperationException("Expected 4 coordinates to map environment"
 				+ " but got " + missionBoundingCoordinates.size());
@@ -52,16 +70,30 @@ public abstract class MapMissionBase implements MapMissionStrategy{
 			setAgentVelocities(agentVelocities);
 			//pre-emptively calculate agent paths
 			//this.agentPaths = calculateMapEnvironmentPaths(agents, windFactor);
-			this.windFactor = windFactor;
+			setWindFactor(windFactor);
+			setCostType(costType);
 		}
 	}
 	
+	public CostType getCostType() {
+		return costType;
+	}
+
+	public void setCostType(CostType costType) {
+		this.costType = costType;
+	}
+
+	
 	public void updateAgentPaths() throws Exception {
-		calculateMapEnvironmentPaths(agents, windFactor);
+		calculateMapEnvironmentPaths(agents);
 	}
 	
 	public HashMap<Agent, ArrayList<GPSCoordinate>> getAgentPaths(){
 		return this.agentPaths;
+	}
+
+	public void setAgentPaths(HashMap<Agent, ArrayList<GPSCoordinate>> newAgentPaths){
+		this.agentPaths = newAgentPaths;
 	}
 	
 	public HashMap<Agent, Double> getAgentVelocities() {
@@ -70,6 +102,14 @@ public abstract class MapMissionBase implements MapMissionStrategy{
 
 	public void setAgentVelocities(HashMap<Agent, Double> agentVelocities) {
 		this.agentVelocities = agentVelocities;
+	}
+	
+	public WindFactor getWindFactor() {
+		return windFactor;
+	}
+
+	public void setWindFactor(WindFactor windFactor) {
+		this.windFactor = windFactor;
 	}
 	
 	/***************************************** Cost Generating Methods ******************************/
@@ -132,26 +172,39 @@ public abstract class MapMissionBase implements MapMissionStrategy{
 //		return costs;
 //	}
 	
-	protected ArrayList<Double> getCosts(ArrayList<GPSCoordinate> availablesgpsCoordinates, 
+	protected ArrayList<Double> getCosts(ArrayList<GPSCoordinate> availableGPSCoordinates,
+			GPSCoordinate agentLocation, 
+			Agent agent, 
+			CostType costType) throws Exception{
+		return getCosts(availableGPSCoordinates,
+				agentLocation,
+				getWindFactor(),
+				getAgentVelocities().get(agent),
+				costType);
+	}
+	
+	//gets the costs of travelling to each of the GPSCoordinates in availablesgpsCoordinates
+	//from agentLocation
+	protected ArrayList<Double> getCosts(ArrayList<GPSCoordinate> availableGPSCoordinates, 
 			GPSCoordinate agentLocation,
 			WindFactor windFactor,
 			Double agentVelocity,
 			CostType costType) throws Exception{
 		ArrayList<Double> costs;
 		switch(costType) {
-			case MAXDISTANCE: costs = generateDistanceCosts(availablesgpsCoordinates,
+			case MAXDISTANCE: costs = generateDistanceCosts(availableGPSCoordinates,
 					agentLocation); break;
 					
-			case TOTALDISTANCE: costs = generateDistanceCosts(availablesgpsCoordinates,
+			case TOTALDISTANCE: costs = generateDistanceCosts(availableGPSCoordinates,
 					agentLocation); break;
 					
-			case TOTALTIME: costs = generateTimeCosts(availablesgpsCoordinates,
+			case TOTALTIME: costs = generateTimeCosts(availableGPSCoordinates,
 					agentLocation, windFactor, agentVelocity); break;
 				
-			case MAXTIME: costs = generateTimeCosts(availablesgpsCoordinates,
+			case MAXTIME: costs = generateTimeCosts(availableGPSCoordinates,
 					agentLocation, windFactor, agentVelocity); break;
 					
-			case BATTERY: costs = generateBatteryCosts(availablesgpsCoordinates, agentLocation); break;
+			case BATTERY: costs = generateBatteryCosts(availableGPSCoordinates, agentLocation); break;
 			
 			default: throw new Exception("Cannot calculate costs");
 		}
@@ -168,6 +221,17 @@ public abstract class MapMissionBase implements MapMissionStrategy{
 		ArrayList<Double> costs = getCosts(availableGPSCoordinates, agentLocation,
 				windFactor,
 				agentVelocity, 
+				costType);
+		
+		return availableGPSCoordinates.get(getMinIndexOfCostArray(costs));
+	}
+	
+	public GPSCoordinate getAvailableCoordOfLeastCost(ArrayList<GPSCoordinate> availableGPSCoordinates, GPSCoordinate agentLocation,
+			Agent agent,
+			CostType costType) throws Exception {
+		
+		ArrayList<Double> costs = getCosts(availableGPSCoordinates, agentLocation,
+				agent, 
 				costType);
 		
 		return availableGPSCoordinates.get(getMinIndexOfCostArray(costs));
@@ -234,11 +298,11 @@ public abstract class MapMissionBase implements MapMissionStrategy{
 		}
 	}
 	
-	protected HashMap<Agent, ArrayList<GPSCoordinate>> calculateMapEnvironmentPaths(ArrayList<Agent> agents) throws Exception{
+	protected abstract HashMap<Agent, ArrayList<GPSCoordinate>> calculateMapEnvironmentPaths(ArrayList<Agent> agents) throws Exception;
 		//assume a windfactor of 0
-		return calculateMapEnvironmentPaths(agents, new WindFactor(0,0));
-	}
-	protected abstract HashMap<Agent, ArrayList<GPSCoordinate>> calculateMapEnvironmentPaths(ArrayList<Agent> agents, WindFactor windFactor) throws Exception;
+		//return calculateMapEnvironmentPaths(agents, new WindFactor(0,0));
+	//}
+	//protected abstract HashMap<Agent, ArrayList<GPSCoordinate>> calculateMapEnvironmentPaths(ArrayList<Agent> agents, WindFactor windFactor) throws Exception;
 	//public abstract HashMap<Agent, ArrayList<GPSCoordinate>> getAgentRoutesForMapping() throws Exception;
 	
 

@@ -27,7 +27,15 @@ public class WindFactor {
 	}
 	
 	public String toString() {
-		return "Wind blowing N: " + getNorthComponent() + ", E: " + getEastComponent(); 
+		String n_s = "N";
+		String e_w = "N";
+		if(getNorthComponent() < 0) {
+			n_s = "S";
+		}
+		if(getEastComponent() < 0) {
+			e_w = "W";
+		}
+		return "Wind blowing " + n_s + ": " + Math.abs(getNorthComponent()) + ", " + e_w + ": " + Math.abs(getEastComponent()); 
 	}
 
 }
