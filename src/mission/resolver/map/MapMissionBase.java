@@ -1,5 +1,6 @@
 package mission.resolver.map;
 
+import java.awt.desktop.SystemEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -182,6 +183,14 @@ public abstract class MapMissionBase implements MapMissionStrategy{
 				getAgentVelocities().get(agent),
 				costType);
 	}
+	protected ArrayList<Double> getCosts(ArrayList<GPSCoordinate> availableGPSCoordinates, 
+			GPSCoordinate agentLocation,
+			Double agentVelocity,
+			CostType costType) throws Exception{
+		return getCosts(availableGPSCoordinates, agentLocation, new WindFactor(0, 0), agentVelocity, costType);
+		
+	}
+	
 	
 	//gets the costs of travelling to each of the GPSCoordinates in availablesgpsCoordinates
 	//from agentLocation
@@ -220,6 +229,18 @@ public abstract class MapMissionBase implements MapMissionStrategy{
 		
 		ArrayList<Double> costs = getCosts(availableGPSCoordinates, agentLocation,
 				windFactor,
+				agentVelocity, 
+				costType);
+		System.out.println("Cost of reaching coords: " + availableGPSCoordinates.toString());
+		System.out.println(costs.toString());
+		return availableGPSCoordinates.get(getMinIndexOfCostArray(costs));
+	}
+	
+	public GPSCoordinate getAvailableCoordOfLeastCost(ArrayList<GPSCoordinate> availableGPSCoordinates, GPSCoordinate agentLocation,
+			CostType costType,
+			Double agentVelocity) throws Exception {
+		
+		ArrayList<Double> costs = getCosts(availableGPSCoordinates, agentLocation,
 				agentVelocity, 
 				costType);
 		

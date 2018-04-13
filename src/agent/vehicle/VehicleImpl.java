@@ -17,7 +17,8 @@ public abstract class VehicleImpl implements Vehicle {
 	//an estimate of the velocity at which the vehicle can operate at
 	protected double operationalVelocity;
 	//default velocity 5m/s
-	protected static double DEFAULTOPERATIONALVELOCITY = 5;
+	protected static double DEFAULTOPERATIONALVELOCITY = 6;
+
 	//protected RestTemplateBuilder restTemplateBuilder = new RestTemplateBuilder();
 	//protected ObjectMapper mapper = new ObjectMapper();
 

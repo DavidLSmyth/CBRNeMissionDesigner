@@ -59,7 +59,7 @@ class MapMissionBaseTest {
         NUIGcoord2 = new GPSCoordinate(53.2805257224, -9.0621271428);
         NUIGcoord3 = new GPSCoordinate(53.27959959, -9.0617270785);
         
-        windFactor = new WindFactor(0, -5);
+        windFactor = new WindFactor(-10, 0);
         
         costType = CostType.TOTALDISTANCE;
         
@@ -89,8 +89,26 @@ class MapMissionBaseTest {
 
 	@Test
 	void testGetNearestAvailableCoordArrayListOfGPSCoordinateGPSCoordinateWindFactor() throws Exception {
-		System.out.println(mapMissionBase.getAvailableCoordOfLeastCost(new ArrayList<GPSCoordinate>(Arrays.asList(NUIGcoord1,NUIGcoord2,NUIGcoord3)), NUIGcoord0, agent1, costType));
-		assertEquals(NUIGcoord3, mapMissionBase.getAvailableCoordOfLeastCost(new ArrayList<GPSCoordinate>(Arrays.asList(NUIGcoord1,NUIGcoord2,NUIGcoord3)), NUIGcoord0, agent1, CostType.MAXTIME));
+		//System.out.println(mapMissionBase.getAvailableCoordOfLeastCost(new ArrayList<GPSCoordinate>(Arrays.asList(NUIGcoord1,NUIGcoord2,NUIGcoord3)), NUIGcoord0, agent1, costType));
+//		ArrayList<GPSCoordinate> availableGPSCoordinates, GPSCoordinate agentLocation,
+//		CostType costType,
+//		WindFactor windFactor,
+//		Double agentVelocity
+		mapMissionBase = new MapMissionStrategyGreedy(new ArrayList<Agent> (Arrays.asList(agent1, agent2)),
+        		new ArrayList<GPSCoordinate> (Arrays.asList(NUIGcoord0, NUIGcoord1, NUIGcoord2, NUIGcoord3)),
+        		 CostType.TOTALTIME);
+		
+		System.out.println("\n\n\n\n");
+		//strong southerly wind
+		assertEquals(NUIGcoord3, mapMissionBase.getAvailableCoordOfLeastCost(new ArrayList<GPSCoordinate>(Arrays.asList(NUIGcoord1,NUIGcoord2,NUIGcoord3)), NUIGcoord0, CostType.MAXTIME, new WindFactor(-5, 0), 6.0));
+		System.out.println("\n\n\n\n");
+		//strong northerly wind
+		assertEquals(NUIGcoord1, mapMissionBase.getAvailableCoordOfLeastCost(new ArrayList<GPSCoordinate>(Arrays.asList(NUIGcoord1,NUIGcoord2,NUIGcoord3)), NUIGcoord0, CostType.MAXTIME, new WindFactor(5, 0), 6.0));
+		System.out.println("\n\n\n\n");
+		//weak north westerly wind
+		assertEquals(NUIGcoord2, mapMissionBase.getAvailableCoordOfLeastCost(new ArrayList<GPSCoordinate>(Arrays.asList(NUIGcoord1,NUIGcoord2,NUIGcoord3)), NUIGcoord0, CostType.MAXTIME, new WindFactor(1, -2), 7.0));
+		
+		
 	}
 
 	@Test

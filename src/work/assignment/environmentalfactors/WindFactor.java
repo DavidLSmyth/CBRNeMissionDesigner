@@ -28,7 +28,7 @@ public class WindFactor {
 	
 	public String toString() {
 		String n_s = "N";
-		String e_w = "N";
+		String e_w = "E";
 		if(getNorthComponent() < 0) {
 			n_s = "S";
 		}

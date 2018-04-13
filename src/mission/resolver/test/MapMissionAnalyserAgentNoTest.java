@@ -44,6 +44,8 @@ class MapMissionAnalyserAgentNoTest {
 		agent1.setVehicle(new AeorumUAV("1", "127.0.0.1", "41451", 5));
 		agent2.setVehicle(new AeorumUAV("2", "127.0.0.1", "41452", 5));
 		agent3.setVehicle(new AeorumUAV("3", "127.0.0.1", "41453", 5));
+
+		agent3.setVehicle(new AeorumUAV("3", "127.0.0.1", "41453"));
 		
 		GPSCoordinate mission1 = new GPSCoordinate(53.2779115341, -9.0597334278);
 		GPSCoordinate mission2 = new GPSCoordinate(53.2812554869, -9.0627998557);

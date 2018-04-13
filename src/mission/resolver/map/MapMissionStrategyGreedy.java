@@ -50,9 +50,7 @@ public class MapMissionStrategyGreedy extends MapMissionBase {
 		return returnMap;
 	}
 	
-	protected HashMap<Agent, ArrayList<GPSCoordinate>> calculateMapEnvironmentPaths(ArrayList<Agent> agents 
-			//,WindFactor windFactor
-			) throws Exception{
+	protected HashMap<Agent, ArrayList<GPSCoordinate>> calculateMapEnvironmentPaths(ArrayList<Agent> agents) throws Exception{
 		//each agent adds to their list of points to explore greedily
 		ArrayList<GPSCoordinate> exploredPoints = new ArrayList<GPSCoordinate>();
 		ArrayList<GPSCoordinate> pointsToExplore = grid.getPoints();
@@ -90,7 +88,15 @@ public class MapMissionStrategyGreedy extends MapMissionBase {
 			agentNo++;
 			agentPath = returnMap.get(currentAgent);
 			//get coord which has min cost for the agent to travel to from its current location
-			GPSCoordinate nearestCoord = getAvailableCoordOfLeastCost(pointsToExplore, agentPath.get(agentPath.size()-1), currentAgent, getCostType());
+//			ArrayList<GPSCoordinate> availableGPSCoordinates, GPSCoordinate agentLocation,
+//			CostType costType,
+//			WindFactor windFactor,
+//			Double agentVelocity
+			GPSCoordinate nearestCoord = getAvailableCoordOfLeastCost(pointsToExplore, 
+					agentPath.get(agentPath.size()-1), 
+					getCostType(),
+					getWindFactor(),
+					currentAgent.getVehicle().getOperationalVelocity());
 			agentPath.add(nearestCoord);
 			//System.out.println("Updated the path of agent " + currentAgent.getId() + " to " + agentPath);
 			//update the returnMap

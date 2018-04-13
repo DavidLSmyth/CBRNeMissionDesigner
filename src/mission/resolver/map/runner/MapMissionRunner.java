@@ -64,7 +64,8 @@ public class MapMissionRunner {
         NUIGcoord2 = new GPSCoordinate(53.2805257224, -9.0621271428);
         NUIGcoord3 = new GPSCoordinate(53.27959959, -9.0617270785);
         
-        windFactor = new WindFactor(-20, 0);
+        //northerly wind
+        windFactor = new WindFactor(0, -6);
         
         costType = CostType.TOTALTIME;
         
@@ -124,7 +125,7 @@ public class MapMissionRunner {
 		
 		for(Agent a: workResolver.getAgentMissions().keySet()) {
 			outputFile.write(a.toString() + "\n");
-			System.out.println("Numbe rof mission points to write: " + workResolver.getAgentMissions().get(a).getMissionPoints().size());
+			System.out.println("Number of mission points to write: " + workResolver.getAgentMissions().get(a).getMissionPoints().size());
 			for(MissionPoint p :  workResolver.getAgentMissions().get(a).getMissionPoints()) {
 				//System.out.println("Next mission point: " + p + "\n");
 				outputFile.write(p.toString()+"\n");
