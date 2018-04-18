@@ -65,7 +65,7 @@ public class MapMissionRunner {
         NUIGcoord3 = new GPSCoordinate(53.27959959, -9.0617270785);
         
         //northerly wind
-        windFactor = new WindFactor(0, -6);
+        windFactor = new WindFactor(0, 0);
         
         costType = CostType.TOTALTIME;
         
@@ -74,7 +74,7 @@ public class MapMissionRunner {
         optionalParams.put("wind", windFactor);
         
 		workResolver = new WorkResolver(WorkType.MAP,
-				new ArrayList<Agent>(Arrays.asList(agent1, agent2, agent3)), 
+				new ArrayList<Agent>(Arrays.asList(agent1)), 
 				new ArrayList<GPSCoordinate>(Arrays.asList(NUIGcoord0, NUIGcoord1, NUIGcoord2, NUIGcoord3)),
 				optionalParams);
 
@@ -96,8 +96,8 @@ public class MapMissionRunner {
         //ArrayList<Agent> agents, HashMap<Agent, ArrayList<GPSCoordinate>> agentPathsMap
         HashMap<Agent, ArrayList<GPSCoordinate>> agentPathsMap = new HashMap<Agent, ArrayList<GPSCoordinate>>();
         agentPathsMap.put(agent1, workResolver.getMissionFor(agent1).getMissionGPSCoordinates());
-        agentPathsMap.put(agent2, workResolver.getMissionFor(agent2).getMissionGPSCoordinates());
-        agentPathsMap.put(agent3, workResolver.getMissionFor(agent3).getMissionGPSCoordinates());
+//        agentPathsMap.put(agent2, workResolver.getMissionFor(agent2).getMissionGPSCoordinates());
+//        agentPathsMap.put(agent3, workResolver.getMissionFor(agent3).getMissionGPSCoordinates());
         
         
         agentAnalyser = new MapMissionAnalyserAgent(new ArrayList<Agent>(Arrays.asList(agent1, agent2, agent3)), agentPathsMap);
