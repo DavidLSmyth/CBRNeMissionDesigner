@@ -329,6 +329,7 @@ public class MapMissionAnalyserAgentNo {
 		//gives an idea of how far a single agent would have to travel
 		//to map the environment
 		//need to have traversalGrid here, throw exception if not present
+		//held-karp lower bound should be suitable!
 		return 0;
 	}
 	

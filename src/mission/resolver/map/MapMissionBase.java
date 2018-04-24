@@ -66,7 +66,17 @@ public abstract class MapMissionBase implements MapMissionStrategy{
 			//need to determine the longspacing metres, latspacing metres and 
 			//altitude autonomously
 			//double lngSpacingMetres, double latSpacingMetres, double altitude
-			grid = new RegularTraversalGridQuad(quad, 10, 15, 20);
+			//for 20% image overlap, use formula w = 4/3 * H * tan(theta), 
+			//where H is the altitude that the RAV operates at, theta is the
+			//FOV of the camera divided by two
+			//don't have this hard-coded
+			double operationalAltitude = 32;
+			double theta = 45;
+			//in general for x% image overlap:
+			//2 * operationalAltitude * Math.tan(theta) * ((1-x)/(x+1))
+			//for 20% image overlap, 
+			double RAVSpacing = (4/3) * operationalAltitude * Math.tan(Math.toRadians(theta));
+			grid = new RegularTraversalGridQuad(quad, RAVSpacing, RAVSpacing, operationalAltitude);
 			setGrid(grid);
 			setAgentVelocities(agentVelocities);
 			//pre-emptively calculate agent paths
