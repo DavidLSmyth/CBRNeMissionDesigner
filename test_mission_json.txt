@@ -1,0 +1,523 @@
+{
+"name": "Default name",
+"desc": "Default missionDescriptions",
+"type": "AUTOMATIC",
+"subtype": "NORMAL",
+"finalAction": "RTL",
+"numLaps": 1,
+"mission_points": "mission_points": [{
+"name": "Default Name",
+"gps": {
+"lat": 53.28,
+"lng": -9.07,
+"alt": 20.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.2801009832,
+"lng": -9.0648776011,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.28001678851818,
+"lng": -9.064841231618182,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.279932593836364,
+"lng": -9.064804862136363,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.279848399154545,
+"lng": -9.064768492654546,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27976420447273,
+"lng": -9.064732123172726,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27968000979091,
+"lng": -9.06469575369091,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27959581510909,
+"lng": -9.06465938420909,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27951162042727,
+"lng": -9.064623014727273,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27942742574545,
+"lng": -9.064586645245454,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.279343231063635,
+"lng": -9.064550275763636,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.279259036381816,
+"lng": -9.064513906281817,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.2791748417,
+"lng": -9.0644775368,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27920751464615,
+"lng": -9.064265963084615,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27929170932797,
+"lng": -9.064302332566433,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27937590400979,
+"lng": -9.064338702048252,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27946009869161,
+"lng": -9.064375071530069,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27954429337343,
+"lng": -9.064411441011888,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.279628488055245,
+"lng": -9.064447810493705,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27971268273706,
+"lng": -9.064484179975524,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27979687741888,
+"lng": -9.064520549457342,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.2798810721007,
+"lng": -9.06455691893916,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27996526678252,
+"lng": -9.064593288420978,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.28004946146434,
+"lng": -9.064629657902797,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.280133656146155,
+"lng": -9.064666027384614,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.28016632909231,
+"lng": -9.06445445366923,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.28008213441049,
+"lng": -9.064418084187412,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27999793972867,
+"lng": -9.064381714705593,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.279913745046855,
+"lng": -9.064345345223776,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27982955036504,
+"lng": -9.064308975741957,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27974535568322,
+"lng": -9.06427260626014,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.2796611610014,
+"lng": -9.06423623677832,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27957696631958,
+"lng": -9.064199867296503,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27949277163776,
+"lng": -9.064163497814684,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.279408576955944,
+"lng": -9.064127128332867,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.279324382274126,
+"lng": -9.064090758851048,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27924018759231,
+"lng": -9.06405438936923,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27927286053846,
+"lng": -9.063842815653846,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27935705522028,
+"lng": -9.063879185135663,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.2794412499021,
+"lng": -9.063915554617482,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27952544458392,
+"lng": -9.0639519240993,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.279609639265736,
+"lng": -9.063988293581119,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.279693833947555,
+"lng": -9.064024663062936,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27977802862937,
+"lng": -9.064061032544755,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27986222331119,
+"lng": -9.064097402026572,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27994641799301,
+"lng": -9.064133771508391,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.28003061267483,
+"lng": -9.064170140990209,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.28011480735665,
+"lng": -9.064206510472028,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.280199002038465,
+"lng": -9.064242879953845,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.28023167498461,
+"lng": -9.06403130623846,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.280147480302794,
+"lng": -9.063994936756643,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.280063285620976,
+"lng": -9.063958567274824,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27997909093916,
+"lng": -9.063922197793007,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27989489625734,
+"lng": -9.063885828311188,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27981070157552,
+"lng": -9.06384945882937,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.2797265068937,
+"lng": -9.063813089347551,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],"name": "Default Name",
+"gps": {
+"lat": 53.27947392284825,
+"lng": -9.063703980902098,
+"alt": 30.0
+},
+"params": {
+,
+"commands": [
+],
+}
