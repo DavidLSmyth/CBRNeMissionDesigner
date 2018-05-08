@@ -199,6 +199,7 @@ public class RegularTraversalGridQuad extends TraversalGrid{
 			this.altitude = altitude;
 		}
 
+		//The grid has an ordering...
 		public GPSCoordinate getLatPointLngPoint(int latPoint, int longPoint) {
 			// test this
 			return points.get(longPoint * getNoLatPoints() + latPoint);

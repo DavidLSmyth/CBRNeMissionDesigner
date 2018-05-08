@@ -325,16 +325,24 @@ public class MapMissionAnalyserAgentNo {
 		return distanceCost;
 	}
 	
+	//private 
+	
 	public double getMinimumDistanceEstimateSingleAgent() {
 		//gives an idea of how far a single agent would have to travel
 		//to map the environment
 		//need to have traversalGrid here, throw exception if not present
-		//held-karp lower bound should be suitable!
+		//Christofides lower bound should be suitable!
+ 
+		if(traversalGrid!=null) {
+			ArrayList<GPSCoordinate> minSpanningTree = new ArrayList<GPSCoordinate>();
+		}
+		else {
+			//if a grid isn't provided, can't analyse...
+		}
 		return 0;
 	}
 	
 	public SimpleEntry<Double, Integer> getMinimumDistanceEstimateAndCorrespondingAgent() throws Exception {
-	
 		double minDistance = getDistanceEstimateForAgent(0);
 		double currentDistance;
 		int agentWhichTakesMinDistance = 0;
