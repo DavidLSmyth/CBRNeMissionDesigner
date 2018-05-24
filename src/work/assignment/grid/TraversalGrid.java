@@ -2,6 +2,7 @@ package work.assignment.grid;
 
 import java.util.ArrayList;
 
+import GPSUtils.GPSCoordinate;
 import work.assignment.AgentType;
 
 public class TraversalGrid {

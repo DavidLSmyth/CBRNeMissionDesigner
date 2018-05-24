@@ -3,8 +3,8 @@ package work.assignment.grid.rectangle;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import work.assignment.grid.GPSCoordinate;
-import work.assignment.grid.GPSCoordinateUtils;
+import GPSUtils.GPSCoordinate;
+import GPSUtils.GPSCoordinateUtils;
 import work.assignment.grid.TraversalGrid;
 
 public class RegularTraversalGrid extends TraversalGrid{

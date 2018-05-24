@@ -2,8 +2,8 @@ package mission.resolver.map;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import GPSUtils.GPSCoordinate;
 import work.assignment.environmentalfactors.WindFactor;
-import work.assignment.grid.GPSCoordinate;
 import agent.Agent;
 
 public interface MapMissionStrategy {

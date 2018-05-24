@@ -1,10 +1,11 @@
 package work.assignment.grid.rectangle;
 
 import java.util.ArrayList;
-import work.assignment.grid.GPSCoordinate;
-import work.assignment.grid.GPSCoordinateRotator;
-import work.assignment.grid.GPSCoordinateTranslator;
-import work.assignment.grid.GPSCoordinateUtils;
+
+import GPSUtils.GPSCoordinate;
+import GPSUtils.GPSCoordinateRotator;
+import GPSUtils.GPSCoordinateTranslator;
+import GPSUtils.GPSCoordinateUtils;
 import work.assignment.grid.quadrilateral.GPSGridQuadrilateral;
 
 //Should this extend from GPS GridQuadrilateral?

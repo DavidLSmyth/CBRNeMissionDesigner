@@ -1,4 +1,4 @@
-package mission.resolver.map.utils;
+package mission.resolver.map.utils.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,7 +18,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import work.assignment.grid.GPSCoordinate;
+import GPSUtils.GPSCoordinate;
+import mission.resolver.map.utils.Christofides;
 import work.assignment.grid.quadrilateral.GPSGridQuadrilateral;
 import work.assignment.grid.quadrilateral.RegularTraversalGridQuad;
 
@@ -70,10 +71,10 @@ class ChristofidesTest {
 	void testTSPChristofidesCreateGraphFromGPSTraversalGrid() {
 		Christofides christofides = new Christofides(nuigGrid);
 		SimpleGraph<GPSCoordinate, DefaultWeightedEdge> graph = (SimpleGraph<GPSCoordinate, DefaultWeightedEdge>) christofides.createCompleteGraphFromGPSGrid(nuigGrid.getGridPoints());
-		Set traversalGridSet = new HashSet<>(nuigGrid.getGridPoints());
+		Set<GPSCoordinate> traversalGridSet = new HashSet<GPSCoordinate>(nuigGrid.getGridPoints());
 		ArrayList<GPSCoordinate> traversalGridList = nuigGrid.getGridPoints();
 		int traversalGridSetSize = traversalGridSet.size();
-		Set vertexSet = new HashSet<>(graph.vertexSet());
+		Set<GPSCoordinate> vertexSet = new HashSet<GPSCoordinate>(graph.vertexSet());
 		int vertexSetSize = vertexSet.size();
 		assertEquals(traversalGridSet, vertexSet);
 		assertEquals(traversalGridSet.size() - 1, graph.degreeOf(traversalGridList.get(0)));

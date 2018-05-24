@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import GPSUtils.GPSCoordinate;
 import work.assignment.CostType;
 import work.assignment.environmentalfactors.WindFactor;
-import work.assignment.grid.GPSCoordinate;
 import work.assignment.grid.quadrilateral.GPSGridQuadrilateral;
 import work.assignment.grid.quadrilateral.RegularTraversalGridQuad;
 

@@ -5,8 +5,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import work.assignment.grid.GPSCoordinate;
-import work.assignment.grid.GPSCoordinateTranslator;
+import GPSUtils.GPSCoordinate;
+import GPSUtils.GPSCoordinateTranslator;
 
 class GPSCoordinateTranslatorTest {
 	GPSCoordinate coord0;

@@ -3,9 +3,9 @@ package mission.resolver;
 import java.util.ArrayList;
 import java.util.Map;
 
+import GPSUtils.GPSCoordinate;
 import mission.resolver.RAV.RAVMissionPointCommand;
 import mission.resolver.RAV.RAVMissionPointParam;
-import work.assignment.grid.GPSCoordinate;
 
 public class AeorumMissionJSONHelper {
 

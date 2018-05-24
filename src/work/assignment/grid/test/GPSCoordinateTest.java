@@ -8,10 +8,10 @@ import org.junit.AfterClass;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import work.assignment.grid.GPSCoordinate;
-import work.assignment.grid.GPSCoordinateRotator;
-import work.assignment.grid.GPSCoordinateTranslator;
-import work.assignment.grid.GPSCoordinateUtils;
+import GPSUtils.GPSCoordinate;
+import GPSUtils.GPSCoordinateRotator;
+import GPSUtils.GPSCoordinateTranslator;
+import GPSUtils.GPSCoordinateUtils;
 
 class GPSCoordinateTest {
 	

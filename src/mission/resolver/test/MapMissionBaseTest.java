@@ -9,6 +9,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import GPSUtils.GPSCoordinate;
 import agent.Agent;
 import agent.AgentImpl;
 import agent.vehicle.uav.AeorumUAV;
@@ -16,7 +17,6 @@ import mission.resolver.map.MapMissionBase;
 import mission.resolver.map.MapMissionStrategyGreedy;
 import work.assignment.CostType;
 import work.assignment.environmentalfactors.WindFactor;
-import work.assignment.grid.GPSCoordinate;
 
 class MapMissionBaseTest {
 

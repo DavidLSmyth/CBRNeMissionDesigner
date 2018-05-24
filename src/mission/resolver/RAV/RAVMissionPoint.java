@@ -3,8 +3,8 @@ package mission.resolver.RAV;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import GPSUtils.GPSCoordinate;
 import mission.resolver.MissionPoint;
-import work.assignment.grid.GPSCoordinate;
 
 public class RAVMissionPoint extends MissionPoint {
 	//add functionality here for things like a gimbal, 

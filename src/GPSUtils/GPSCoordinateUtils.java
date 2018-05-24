@@ -1,4 +1,6 @@
-package work.assignment.grid;
+package GPSUtils;
+
+import java.util.ArrayList;
 
 //https://msi.nga.mil/msisitecontent/staticfiles/calculators/degree.html
 //inspect degree.html
@@ -96,6 +98,11 @@ public class GPSCoordinateUtils {
 		double returnAngle = p1.getAngleRelativeToOriginXAxis() - p3.getAngleRelativeToOriginXAxis();
 		if(returnAngle > 180) return (360 - returnAngle);
 		else return returnAngle;
+	}
+	
+	ArrayList<Integer> que = new ArrayList<Integer>(); 
+	
+	private void breadthfirstTraverse(Integer node)  {    
 	}
 
 }

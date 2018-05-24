@@ -3,10 +3,10 @@ package mission.resolver.map;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import GPSUtils.GPSCoordinate;
 import agent.Agent;
 import work.assignment.CostType;
 import work.assignment.environmentalfactors.WindFactor;
-import work.assignment.grid.GPSCoordinate;
 
 public class MapMissionStrategyInsertion extends MapMissionBase {
 

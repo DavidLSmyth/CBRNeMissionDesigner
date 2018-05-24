@@ -1,8 +1,8 @@
 package mission.resolver.map.utils;
 
-public abstract class Graph {
+public class GraphGenerator {
 
-	public Graph() {
+	public GraphGenerator() {
 		// TODO Auto-generated constructor stub
 	}
 

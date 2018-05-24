@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import GPSUtils.GPSCoordinate;
 import agent.Agent;
 import agent.vehicle.VehicleType;
 import mission.resolver.map.MapMissionBase;
@@ -12,7 +13,6 @@ import mission.resolver.map.MapMissionStrategyGreedy;
 import work.assignment.CostType;
 import work.assignment.WorkType;
 import work.assignment.environmentalfactors.WindFactor;
-import work.assignment.grid.GPSCoordinate;
 import work.assignment.grid.quadrilateral.RegularTraversalGridQuad;
 
 public class MissionResolver {

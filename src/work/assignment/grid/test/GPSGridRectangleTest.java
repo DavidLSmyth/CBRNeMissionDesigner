@@ -8,7 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import work.assignment.grid.GPSCoordinate;
+import GPSUtils.GPSCoordinate;
 import work.assignment.grid.rectangle.GPSGridRectangle;
 
 class GPSGridRectangleTest {

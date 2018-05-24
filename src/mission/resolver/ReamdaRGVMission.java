@@ -2,9 +2,9 @@ package mission.resolver;
 
 import java.util.ArrayList;
 
+import GPSUtils.GPSCoordinate;
 import agent.Agent;
 import mission.resolver.RGV.RGVMission;
-import work.assignment.grid.GPSCoordinate;
 
 public class ReamdaRGVMission extends RGVMission {
 

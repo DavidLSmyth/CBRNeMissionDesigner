@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import GPSUtils.GPSCoordinate;
 import mission.resolver.Mission;
 import mission.resolver.MissionResolver;
-import work.assignment.grid.GPSCoordinate;
 
 public class WorkResolver {
 	/*

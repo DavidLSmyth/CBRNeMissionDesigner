@@ -4,10 +4,10 @@ package mission.resolver;
 
 import java.util.ArrayList;
 
+import GPSUtils.GPSCoordinate;
 import agent.Agent;
 import agent.vehicle.VehicleType;
 import mission.resolver.RAV.RAVMissionPoint;
-import work.assignment.grid.GPSCoordinate;
 
 public abstract class Mission {
 	

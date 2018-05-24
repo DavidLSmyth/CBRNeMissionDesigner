@@ -6,9 +6,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import GPSUtils.GPSCoordinate;
+import GPSUtils.GPSCoordinateCosts;
 import work.assignment.environmentalfactors.WindFactor;
-import work.assignment.grid.GPSCoordinate;
-import work.assignment.grid.GPSCoordinateCosts;
 
 class GPSCoordinateCostsTest {
 	GPSCoordinate c1; 

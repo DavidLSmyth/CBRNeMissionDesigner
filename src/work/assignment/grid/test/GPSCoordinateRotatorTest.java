@@ -6,9 +6,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import work.assignment.grid.GPSCoordinate;
-import work.assignment.grid.GPSCoordinateRotator;
-import work.assignment.grid.GPSCoordinateUtils;
+import GPSUtils.GPSCoordinate;
+import GPSUtils.GPSCoordinateRotator;
+import GPSUtils.GPSCoordinateUtils;
 
 class GPSCoordinateRotatorTest {
 	GPSCoordinate coord0;

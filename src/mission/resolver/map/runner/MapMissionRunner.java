@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import GPSUtils.GPSCoordinate;
 import agent.Agent;
 import agent.AgentImpl;
 import agent.vehicle.uav.AeorumUAV;
@@ -18,7 +19,6 @@ import work.assignment.CostType;
 import work.assignment.WorkResolver;
 import work.assignment.WorkType;
 import work.assignment.environmentalfactors.WindFactor;
-import work.assignment.grid.GPSCoordinate;
 
 public class MapMissionRunner {
 	

@@ -8,9 +8,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import GPSUtils.GPSCoordinate;
+import GPSUtils.GPSCoordinateUtils;
 import work.assignment.AgentType;
-import work.assignment.grid.GPSCoordinate;
-import work.assignment.grid.GPSCoordinateUtils;
 import work.assignment.grid.quadrilateral.GPSGridQuadrilateral;
 import work.assignment.grid.quadrilateral.RegularTraversalGridQuad;
 import work.assignment.grid.rectangle.GPSGridRectangle;

@@ -14,6 +14,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import GPSUtils.GPSCoordinate;
 import agent.Agent;
 import agent.AgentImpl;
 //import agent.vehicle.RAV;
@@ -28,7 +29,7 @@ import mission.resolver.MissionPoint;
 import work.assignment.WorkResolver;
 import work.assignment.WorkType;
 import work.assignment.environmentalfactors.WindFactor;
-import work.assignment.grid.GPSCoordinate;
+
 import java.util.Date;
 
 class WorkResolverTest {

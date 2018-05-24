@@ -12,6 +12,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import GPSUtils.GPSCoordinate;
 import mission.resolver.AeorumMissionJSONHelper;
 import mission.resolver.AeorumRAVMission;
 import mission.resolver.FinalAction;
@@ -20,7 +21,6 @@ import mission.resolver.RAV.RAVMissionPoint;
 import mission.resolver.RAV.RAVMissionPointCommand;
 import mission.resolver.RAV.RAVMissionPointParam;
 import mission.resolver.RAV.RAVParamType;
-import work.assignment.grid.GPSCoordinate;
 
 class JSONHelperTest {
 	GPSCoordinate coorda;

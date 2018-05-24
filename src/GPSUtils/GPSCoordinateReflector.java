@@ -1,4 +1,4 @@
-package work.assignment.grid;
+package GPSUtils;
 
 public class GPSCoordinateReflector {
 	

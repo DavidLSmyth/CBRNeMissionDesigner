@@ -1,12 +1,45 @@
-package work.assignment.grid;
+package GPSUtils;
 
+//import org.osgeo.proj4j.;
+/**
+ * A class which implements the GPSCoordinate interface.
+ * Written according to the EPSG:4326 projected coordinate system.
+ * Google maps uses the (EPSG:4326) WGS84 projection system.
+ * 
+ * References: 
+ * 1). http://lyzidiamond.com/posts/4326-vs-3857
+ * The World Geodetic System of 1984 is the geographic coordinate system (the three-dimensional one)
+ * used by GPS to express locations on the earth. WGS84 is the defined coordinate system for GeoJSON,
+ * as longitude and latitude in decimal degrees. For the most part, when you describe a lon/lat 
+ * coordinate location, it’s based on the EPSG:4326 coordinate system.
+ * There is no way to visualize the WGS84 coordinate system on a two-dimensional plane (map), 
+ * so most software programs project these coordinates using an equirectangular projection (Plate-Carrée)
+ * 
+ * The projected Pseudo-Mercator coordinate system takes the WGS84 coordinate system and projects it onto a square. 
+ * (This projection is also called Spherical Mercator or Web Mercator.) 
+ * But not all of it – the bounds of Pseudo-Mercator are limited to approximately 85.06º North and South latitude. 
+ * This projection was first introduced by Google and is used in almost 100% of web maps, but it’s a strange one:
+ * the projection uses the WGS84 coordinate system, which uses the WGS84 ellipsoid, but projects the coordinates onto a sphere.
+ * 
+ * For the most part, web maps rely on data stored with WGS84 coordinates (in some programs this is called “unprojected” data)
+ * and then visualize the data using Pseudo-Mercator. 
+ * 
+ * 
+ * 2).http://earth-info.nga.mil/GandG/wgs84/web_mercator/index.html
+ * 
+ * 3). When generating points along a line of the grid, incrementing the difference between p1 and pn
+ * is what occurs in pyproj: 
+ * https://github.com/jswhit/pyproj/blob/c5a4df3d2f716a2960af30c0ce865ac52c2372cb/_proj.pyx
+*/
 public class GPSCoordinate {
+	
+	
 	double lat;
 	double lng;
 	Double alt;
 	
-	private static double lowerLatBound = -85;
-	private static double upperLatBound = 85;
+	private static double lowerLatBound = -85.06;
+	private static double upperLatBound = 85.06;
 	private static double lowerLngBound = -180;
 	private static double upperLngBound = 180;
 	//m above sea level

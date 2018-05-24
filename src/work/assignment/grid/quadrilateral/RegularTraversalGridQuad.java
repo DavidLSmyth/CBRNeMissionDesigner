@@ -1,8 +1,9 @@
 package work.assignment.grid.quadrilateral;
 
 import java.util.ArrayList;
-import work.assignment.grid.GPSCoordinate;
-import work.assignment.grid.GPSCoordinateUtils;
+
+import GPSUtils.GPSCoordinate;
+import GPSUtils.GPSCoordinateUtils;
 import work.assignment.grid.TraversalGrid;
 import work.assignment.grid.rectangle.GPSGridRectangle;
 

@@ -2,8 +2,8 @@ package work.assignment.grid.rectangle;
 
 import java.util.ArrayList;
 
-import work.assignment.grid.GPSCoordinate;
-import work.assignment.grid.GPSCoordinateUtils;
+import GPSUtils.GPSCoordinate;
+import GPSUtils.GPSCoordinateUtils;
 
 public class StandardGPSGridRectangle extends GPSGridRectangle {
 	

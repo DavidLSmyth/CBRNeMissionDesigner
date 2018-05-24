@@ -1,9 +1,9 @@
 package mission.resolver.RAV;
 import java.util.ArrayList;
 
+import GPSUtils.GPSCoordinate;
 import agent.Agent;
 import mission.resolver.Mission;
-import work.assignment.grid.GPSCoordinate;
 
 
 public class RAVMission extends Mission {

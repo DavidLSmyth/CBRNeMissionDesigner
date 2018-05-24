@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import GPSUtils.GPSCoordinate;
+import GPSUtils.GPSCoordinateCosts;
 import agent.Agent;
 import mission.resolver.Mission;
 import work.assignment.environmentalfactors.WindFactor;
-import work.assignment.grid.GPSCoordinate;
-import work.assignment.grid.GPSCoordinateCosts;
 import work.assignment.grid.quadrilateral.RegularTraversalGridQuad;
 
 public class MapMissionAnalyserAgentNo {

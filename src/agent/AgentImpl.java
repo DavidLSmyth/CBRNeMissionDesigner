@@ -3,12 +3,12 @@ package agent;
 import java.util.ArrayList;
 import java.util.Map;
 
+import GPSUtils.GPSCoordinate;
 import agent.component.Component;
 import agent.component.ComponentManager;
 import agent.component.ComponentManagerImpl;
 import agent.component.ComponentType;
 import agent.vehicle.Vehicle;
-import work.assignment.grid.GPSCoordinate;
 
 public class AgentImpl implements Agent {
 	private AgentState currentState;

@@ -3,9 +3,9 @@ package mission.resolver.map;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import GPSUtils.GPSCoordinate;
 import agent.Agent;
 import mission.resolver.Mission;
-import work.assignment.grid.GPSCoordinate;
 import work.assignment.grid.quadrilateral.RegularTraversalGridQuad;
 
 public class MapMissionAnalyserMapMission extends MapMissionAnalyserAgent{

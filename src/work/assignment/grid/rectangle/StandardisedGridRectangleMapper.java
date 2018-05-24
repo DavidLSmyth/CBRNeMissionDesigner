@@ -1,8 +1,8 @@
 package work.assignment.grid.rectangle;
 
-import work.assignment.grid.GPSCoordinate;
-import work.assignment.grid.GPSCoordinateRotator;
-import work.assignment.grid.GPSCoordinateTranslator;
+import GPSUtils.GPSCoordinate;
+import GPSUtils.GPSCoordinateRotator;
+import GPSUtils.GPSCoordinateTranslator;
 
 public class StandardisedGridRectangleMapper {
 	//A class representing a grid rectangle with one point at the origin (0,0)

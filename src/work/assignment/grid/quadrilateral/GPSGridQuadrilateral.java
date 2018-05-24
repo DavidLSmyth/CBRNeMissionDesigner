@@ -3,7 +3,7 @@ package work.assignment.grid.quadrilateral;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import work.assignment.grid.GPSCoordinate;
+import GPSUtils.GPSCoordinate;
 
 public class GPSGridQuadrilateral {
 	GPSCoordinate p1;
