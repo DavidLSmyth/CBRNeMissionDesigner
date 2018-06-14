@@ -27,20 +27,21 @@ class GPSCoordinateCostsTest {
 	}
 
 	@Test
-	void testGetDistanceCost() {
-		assertEquals(400, GPSCoordinateCosts.getDistanceCost(c1, c2), 50);
+	void testGetDistanceCost() throws Exception {
+		//424m according to vincenty
+		assertEquals(424, GPSCoordinateCosts.getDistanceCost(c1, c2), 10);
 		
 	}
 
 	@Test
-	void testGetLatDistanceCost() {
-		assertEquals(370, GPSCoordinateCosts.getLatDistanceCost(c1, c2), 50);
+	void testGetLatDistanceCost() throws Exception {
+		assertEquals(372.15, GPSCoordinateCosts.getLatDistanceCost(c1, c2), 1);
 		
 	}
 
 	@Test
-	void testGetLongDistanceCost() {
-		assertEquals(200, GPSCoordinateCosts.getLongDistanceCost(c1, c2), 50);
+	void testGetLongDistanceCost() throws Exception {
+		assertEquals(204.55, GPSCoordinateCosts.getLongDistanceCost(c1, c2), 1);
 	}
 
 	@Test
@@ -50,7 +51,21 @@ class GPSCoordinateCostsTest {
 
 	@Test
 	void testGetTimeCostDoubleWindFactorGPSCoordinateGPSCoordinate() throws Exception {
-		assertEquals(54.58, GPSCoordinateCosts.getTimeCost(10, windfactor, c1, c2), 0.5);
+		//-2,1
+		//55 comes from:
+		//       /|
+		//  424 /_|  372
+		//      204
+		
+		//       /|
+		//   10 /_|  8.77
+		//      4.82
+		
+		
+		//  8.77 - 2 = 6.77
+		//  4.82 + 1 = 5.82
+		//sqrt(6.77**2 + 5.82**2) is effective velocity
+		assertEquals(55, GPSCoordinateCosts.getTimeCost(10, windfactor, c1, c2), 1);
 		assertEquals(42.4, GPSCoordinateCosts.getTimeCost(10, new WindFactor(0,0), c1, c2), 0.5);
 	}
 

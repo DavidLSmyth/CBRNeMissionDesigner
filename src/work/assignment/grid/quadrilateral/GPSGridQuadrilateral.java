@@ -1,9 +1,11 @@
 package work.assignment.grid.quadrilateral;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import GPSUtils.GPSCoordinate;
+import GPSUtils.GPSCoordinateUtils;
 
 public class GPSGridQuadrilateral {
 	GPSCoordinate p1;
@@ -14,6 +16,13 @@ public class GPSGridQuadrilateral {
 	
 	ArrayList<ArrayList<GPSCoordinate>> corners;
 	
+	/**
+	 * 
+	 * @param p1 bottomLeft 
+	 * @param p2 bottomRight
+	 * @param p3 topRight
+	 * @param p4 topLeft
+	 */
 	public GPSGridQuadrilateral(GPSCoordinate p1, GPSCoordinate p2, GPSCoordinate p3, GPSCoordinate p4) {
 		//Assuming p1 has edge to p2 has edge to p3 has edge to p4 has edge to p1
 		points = new ArrayList<GPSCoordinate>(Arrays.asList(p1,p2,p3,p4));
@@ -61,45 +70,48 @@ public class GPSGridQuadrilateral {
 //		corners.add(corner4);		
 	}
 	
-	public GPSCoordinate getLowestLong() {
+
+	
+	public BigDecimal getLowestLong() {
 		GPSCoordinate lowestLong = p1;
 		for(GPSCoordinate p:points) {
-			if(p.getLng() < lowestLong.getLng()){
+			if(p.getLng().compareTo(lowestLong.getLng())<0) {
+					//< lowestLong.getLng()){
 				lowestLong = p;
 			}
 		}
-		return lowestLong;
+		return lowestLong.getLng();
 	}
 
-	public GPSCoordinate getHighestLong() {
+	public BigDecimal getHighestLong() {
 		GPSCoordinate highestLong = p1;
 		for(GPSCoordinate p:points) {
-			if(p.getLng() > highestLong.getLng()){
+			if(p.getLng().compareTo(highestLong.getLng())>0){
 				highestLong = p;
 			}
 		}
-		return highestLong;
+		return highestLong.getLng();
 	}
-	public GPSCoordinate getHighestLat() {
+	public BigDecimal getHighestLat() {
 		//return highestLat;
 		GPSCoordinate highestLat = p1;
 		for(GPSCoordinate p:points) {
-			if(p.getLat() > highestLat.getLat()){
+			if(p.getLat().compareTo(highestLat.getLat())<0){
 				highestLat = p;
 			}
 		}
-		return highestLat;
+		return highestLat.getLat();
 	}
 
-	public GPSCoordinate getLowestLat() {
+	public BigDecimal getLowestLat() {
 		//return lowestLat;
 		GPSCoordinate lowestLat = p1;
 		for(GPSCoordinate p:points) {
-			if(p.getLat() < lowestLat.getLat()){
+			if(p.getLat().compareTo(lowestLat.getLat())<0){
 				lowestLat = p;
 			}
 		}
-		return lowestLat;
+		return lowestLat.getLat();
 	}
 	
 	@Override

@@ -126,7 +126,7 @@ public abstract class Mission {
 		}
 	}
 	
-	public double getMissionCostEstimateDistance() {
+	public double getMissionCostEstimateDistance() throws Exception {
 		//returns an estimate of the distance cost in metres of an instance of a mission given a cost type
 		double distanceCost = 0;
 		for(int counter = 0; counter < getMissionPoints().size()-1; counter++) {
@@ -134,7 +134,7 @@ public abstract class Mission {
 		}
 		return distanceCost;
 	}
-	public double getMissionCostEstimateTime() {
+	public double getMissionCostEstimateTime() throws Exception {
 		//returns an estimate of the distance cost of an instance of a mission given a cost type
 		double distanceCost = 0;
 		for(int counter = 0; counter < getMissionPoints().size()-1; counter++) {

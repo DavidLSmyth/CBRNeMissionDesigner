@@ -59,10 +59,10 @@ public class AeorumMissionJSONHelper {
 	public static String wrapGPS(GPSCoordinate coord) {
 		StringBuilder b = new StringBuilder();
 		b.append("\"gps\": {\n");
-		b.append(wrapDouble("lat", coord.getLat()));
-		b.append(wrapDouble("lng", coord.getLng()));
+		b.append(wrapDouble("lat", coord.getLat().doubleValue()));
+		b.append(wrapDouble("lng", coord.getLng().doubleValue()));
 		try {
-			b.append(wrapDoubleLastTerm("alt", coord.getAlt()));
+			b.append(wrapDoubleLastTerm("alt", coord.getAlt().doubleValue()));
 		}
 		catch(Exception e) {
 			b.append(wrapDoubleLastTerm("alt", 30));

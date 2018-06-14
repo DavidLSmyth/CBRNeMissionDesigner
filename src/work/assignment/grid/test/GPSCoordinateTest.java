@@ -50,10 +50,10 @@ class GPSCoordinateTest {
 		NUIGcoord3 = new GPSCoordinate(53.2781415894, -9.0570618034);
 		
 		coord0 = new GPSCoordinate(0, 0);
-		coord1 = new GPSCoordinate(1, 2, 20.20);
-		coord2 = new GPSCoordinate(1,-1, 30.90);
-		coord3 = new GPSCoordinate(-2,-2, 40.1233);
-		coord4 = new GPSCoordinate(-1,2, 30.5);
+		coord1 = new GPSCoordinate(1.0, 2.0, 20.20);
+		coord2 = new GPSCoordinate(1.0,-1.0, 30.90);
+		coord3 = new GPSCoordinate(-2.0,-2.0, 40.1233);
+		coord4 = new GPSCoordinate(-1.0,2.0, 30.5);
 		
 		//lowestLong
 		NUIGcoord01 = new GPSCoordinate(53.2815, -9.06215);
@@ -84,13 +84,13 @@ class GPSCoordinateTest {
 	@Test
 	void testGPSCoordinateDoubleDouble() {
 		try {
-			new GPSCoordinate(500, 1000, 10.1); 
+			new GPSCoordinate(500.0, 1000.0, 10.1); 
 		}
 		catch (Exception e){
 			assertEquals("Latitude must lie in the range (-85.0, 85.0)", e.getMessage());
 		}
 		try {
-			new GPSCoordinate(50, 1000, 10.1); 
+			new GPSCoordinate(50.0, 1000.0, 10.1); 
 		}
 		catch (Exception e){
 			assertEquals("Longitude must lie in the range (-180.0, 180.0)", e.getMessage());
@@ -115,14 +115,14 @@ class GPSCoordinateTest {
 	}
 
 	@Test
-	void testGetLatMetresToOther() {
+	void testGetLatMetresToOther() throws Exception {
 		assertEquals(111000, coord0.getLatMetresToOther(coord1), 111000 * 0.01);
 		assertEquals(300, NUIGcoord0.getLatMetresToOther(NUIGcoord1), 100);
 		assertEquals(70, NUIGcoord01.getLatMetresToOther(NUIGcoord11), 10);
 	}
 
 	@Test
-	void testGetLngMetresToOther() {
+	void testGetLngMetresToOther() throws Exception {
 		assertEquals(85000 * 2, coord0.getLngMetresToOther(coord1), 85000 * 0.01);
 		assertEquals(500, NUIGcoord0.getLngMetresToOther(NUIGcoord3), 200);
 		assertEquals(180, NUIGcoord01.getLngMetresToOther(NUIGcoord11), 30);
@@ -130,7 +130,7 @@ class GPSCoordinateTest {
 	}
 
 	@Test
-	void testGetMetresToOther() {
+	void testGetMetresToOther() throws Exception {
 		assertEquals(250, NUIGcoord11.getMetresToOther(NUIGcoord01), 20);
 	}
 	

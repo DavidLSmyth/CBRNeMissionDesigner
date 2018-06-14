@@ -68,7 +68,7 @@ class ChristofidesTest {
 		fail("Not yet implemented");
 	}
 	@Test
-	void testTSPChristofidesCreateGraphFromGPSTraversalGrid() {
+	void testTSPChristofidesCreateGraphFromGPSTraversalGrid() throws Exception {
 		Christofides christofides = new Christofides(nuigGrid);
 		SimpleGraph<GPSCoordinate, DefaultWeightedEdge> graph = (SimpleGraph<GPSCoordinate, DefaultWeightedEdge>) christofides.createCompleteGraphFromGPSGrid(nuigGrid.getGridPoints());
 		Set<GPSCoordinate> traversalGridSet = new HashSet<GPSCoordinate>(nuigGrid.getGridPoints());

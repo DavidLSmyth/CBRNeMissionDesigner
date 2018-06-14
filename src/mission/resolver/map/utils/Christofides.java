@@ -64,7 +64,7 @@ public class Christofides {
 	}
 	
 	//should be private
-	public Graph<GPSCoordinate,DefaultWeightedEdge> createCompleteGraphFromGPSGrid(Iterable<GPSCoordinate> coordinates) {
+	public Graph<GPSCoordinate,DefaultWeightedEdge> createCompleteGraphFromGPSGrid(Iterable<GPSCoordinate> coordinates) throws Exception {
 		//ArrayList<GPSCoordinate> coordinates = traversalGrid.getGridPoints();
 		Graph<GPSCoordinate,DefaultWeightedEdge> simpleGraph = new SimpleWeightedGraph<GPSCoordinate,DefaultWeightedEdge>(DefaultWeightedEdge.class);
 		for(GPSCoordinate coord: coordinates) {
@@ -103,19 +103,19 @@ public class Christofides {
 		return returnSet;
 	}
 	
-	public double getTPSChristofidesSolutionCost() {
+	public double getTPSChristofidesSolutionCost() throws Exception {
 		return TSPChristofidesSolution().getWeight();
 	}
-	public double getTPSChristofidesSolutionLength() {
+	public double getTPSChristofidesSolutionLength() throws Exception {
 		//Verifies that the christofides solution uses all nodes!
 		return TSPChristofidesSolution().getLength();
 	}
 	
-	public List<GPSCoordinate> getTPSChristofidesSolutionVertices() {
+	public List<GPSCoordinate> getTPSChristofidesSolutionVertices() throws Exception {
 		return TSPChristofidesSolution().getVertexList();
 	}
 	
-	private GraphPath<GPSCoordinate, DefaultWeightedEdge> TSPChristofidesSolution(){
+	private GraphPath<GPSCoordinate, DefaultWeightedEdge> TSPChristofidesSolution() throws Exception{
 		/*
 		 * The Christofides algorithm is an algorithm for finding approximate solutions
 		 *  to the travelling salesman problem, on instances where the distances form a 

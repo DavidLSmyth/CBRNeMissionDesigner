@@ -123,9 +123,10 @@ public abstract class MapMissionBase implements MapMissionStrategy{
 		this.windFactor = windFactor;
 	}
 	
-	/***************************************** Cost Generating Methods ******************************/
+	/***************************************** Cost Generating Methods 
+	 * @throws Exception ******************************/
 	
-	protected ArrayList<Double> generateDistanceCosts(ArrayList<GPSCoordinate> availablesgpsCoordinates, GPSCoordinate agentLocation){
+	protected ArrayList<Double> generateDistanceCosts(ArrayList<GPSCoordinate> availablesgpsCoordinates, GPSCoordinate agentLocation) throws Exception{
 		ArrayList<Double> distanceCosts = new ArrayList<Double>();
 		for(GPSCoordinate coord: availablesgpsCoordinates) {
 			distanceCosts.add(GPSCoordinateCosts.getDistanceCost(agentLocation, coord));

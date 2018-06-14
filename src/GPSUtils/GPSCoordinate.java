@@ -1,5 +1,11 @@
 package GPSUtils;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
+import org.junit.jupiter.params.shadow.com.univocity.parsers.common.processor.BeanWriterProcessor;
+
+
 //import org.osgeo.proj4j.;
 /**
  * A class which implements the GPSCoordinate interface.
@@ -30,32 +36,51 @@ package GPSUtils;
  * 3). When generating points along a line of the grid, incrementing the difference between p1 and pn
  * is what occurs in pyproj: 
  * https://github.com/jswhit/pyproj/blob/c5a4df3d2f716a2960af30c0ce865ac52c2372cb/_proj.pyx
+ * 
+ * 11/06/2018
+ * Cannot figure out how to convert from UTM to WGS84 back to UTM without loss, come back to it!
 */
-public class GPSCoordinate {
+public class GPSCoordinate extends GPSCoordinateBase implements CartesianCoordinate{
 	
+	//convert everything to BigDecimal to ensure that operations give 
+	//accurate results
+	BigDecimal lat;
+	BigDecimal lng;
+	BigDecimal alt;
 	
-	double lat;
-	double lng;
-	Double alt;
-	
-	private static double lowerLatBound = -85.06;
-	private static double upperLatBound = 85.06;
-	private static double lowerLngBound = -180;
-	private static double upperLngBound = 180;
+	public static BigDecimal LOWER_LAT_BOUND = new BigDecimal(-90);
+	public static BigDecimal UPPER_LAT_BOUND = new BigDecimal(90);
+	public static BigDecimal LOWER_LNG_BOUND = new BigDecimal(-180);
+	public static BigDecimal UPPER_LNG_BOUND = new BigDecimal(180);
 	//m above sea level
-	private static double lowerAltBound = 0;
-	private static double upperAltBound = 20000;
+	public static BigDecimal lowerAltBound = new BigDecimal(0);
+	//Assuming that the RAV won't be flying above 20Km...
+	public static BigDecimal upperAltBound = new BigDecimal(20000);
+	
+	public GPSCoordinate() throws Exception {
+		this(0, 0);
+	}
 		
 	public GPSCoordinate(double lat, double lng) throws Exception {
-		this(lat,lng,null);
+		//default altitude of 100
+		this(lat,lng,100.0);
+	}
+	public GPSCoordinate(BigDecimal lat, BigDecimal lng) throws Exception {
+		this(lat,lng, new BigDecimal(100.0));
 	}
 	
 	
-	public GPSCoordinate(double lat, double lng, Double alt) throws Exception {
+	public GPSCoordinate(Double lat, Double lng, Double alt) throws Exception {
+			this(new BigDecimal(lat), new BigDecimal(lng), new BigDecimal(alt));
+	}
+	
+	public GPSCoordinate(BigDecimal lat, BigDecimal lng, BigDecimal alt) throws Exception {
+		super(lat, lng, alt);
 		setLat(lat);
 		setLng(lng);
 		setAlt(alt);
 	}
+	
 	
 	
 	@Override
@@ -73,10 +98,10 @@ public class GPSCoordinate {
 				return false;
 			}
 			if(getAlt() == null && otherCoord.getAlt() == null) {
-				return (Math.abs(otherCoord.getLat() - this.getLat()) < Math.pow(10, -5)) && (Math.abs(otherCoord.getLng() - this.getLng()) < Math.pow(10, -4));
+				return (otherCoord.getLat().subtract(this.getLat())).abs().compareTo(new BigDecimal(Math.pow(10, -5)))<0 && (otherCoord.getLng().subtract(this.getLng()).abs().compareTo(new BigDecimal(Math.pow(10, -4)))<0);
 			}
 			else{
-				return (Math.abs(otherCoord.getAlt() - this.getAlt()) < Math.pow(10, -4)) && (Math.abs(otherCoord.getLat() - this.getLat()) < Math.pow(10, -5)) && (Math.abs(otherCoord.getLng() - this.getLng()) < Math.pow(10, -4));
+				return ((otherCoord.getAlt().subtract(this.getAlt())).abs().compareTo(new BigDecimal(Math.pow(10, -4)))<0 && (otherCoord.getLat().subtract(this.getLat()).abs().compareTo(new BigDecimal(Math.pow(10, -5)))<0) && (otherCoord.getLng().subtract(this.getLng()).compareTo(new BigDecimal(Math.pow(10, -4)))<0));
 			}
 		}
 	}
@@ -100,52 +125,56 @@ public class GPSCoordinate {
 	}
 	
 	
-	public double getLatMetresToOther(GPSCoordinate otherCoord) {
-		GPSCoordinateTranslator t = getTranslatorFromThisTo(otherCoord);
-		return t.getLatDeltaMetres();
+	public double getLatMetresToOther(GPSCoordinate otherCoord) throws Exception {
+		return GPSCoordinateUtils.getDistanceMetresLatToOther(this, otherCoord);
+//		GPSCoordinateTranslator t = getTranslatorFromThisTo(otherCoord);
+//		return t.getLatDeltaMetres();
 	}
 	
-	public double getLngMetresToOther(GPSCoordinate otherCoord) {
-		GPSCoordinateTranslator t = getTranslatorFromThisTo(otherCoord);
-		return t.getLngDeltaMetres();
+	public double getLngMetresToOther(GPSCoordinate otherCoord) throws Exception {
+		//gets the distance in metres to another coordinate that has the same longitude as this
+		return GPSCoordinateUtils.getDistanceMetresLngToOther(this, otherCoord);
+//		GPSCoordinateTranslator t = getTranslatorFromThisTo(otherCoord);
+//		return t.getLngDeltaMetres();
 	}
 	
 	public Exception throwRangeException(String type, double lowerBound, double upperBound) {
 		return new Exception(type + " must lie in the range (" + lowerBound + ", " + upperBound + ")");
 	}
 	
-	public int getQuadrant() {
-		if(lat >= 0) {
-			if(lng >= 0) return 0;
-			else return 1;
-		}
-		else {
-			if(lng <= 0) return 2;
-			else return 3;
-		}
-	}
+//	public int getQuadrant() {
+//		if(lat >= 0) {
+//			if(lng >= 0) return 0;
+//			else return 1;
+//		}
+//		else {
+//			if(lng <= 0) return 2;
+//			else return 3;
+//		}
+//	}
 	
-	public double getMetresToOther(GPSCoordinate otherCoord) {
-		return Math.sqrt(Math.pow(getLatMetresToOther(otherCoord), 2) + Math.pow(getLngMetresToOther(otherCoord), 2));
+	public double getMetresToOther(GPSCoordinate otherCoord) throws Exception {
+		return GPSCoordinateUtils.getDistanceMetresBetweenWGS84(this, otherCoord);
+		//return Math.sqrt(Math.pow(getLatMetresToOther(otherCoord), 2) + Math.pow(getLngMetresToOther(otherCoord), 2));
 	}
 	
 	//https://stackoverflow.com/questions/11849636/maximum-lat-and-long-bounds-for-the-world-google-maps-api-latlngbounds
 	
-	public static boolean verifyLat(double lat) {
-		return(lowerLatBound <= lat && lat <= upperLatBound);
+	public static boolean verifyLat(BigDecimal lat2) {
+		return(LOWER_LAT_BOUND.compareTo(lat2)<0 && lat2.compareTo(UPPER_LAT_BOUND)<0);
 	}
 	
-	public static boolean verifyLng(double lng) {
-		return(lowerLngBound <= lng && lng <= upperLngBound);
+	public static boolean verifyLng(BigDecimal lng) {
+		return(LOWER_LNG_BOUND.compareTo(lng)<0 && lng.compareTo(UPPER_LNG_BOUND)<0);
 	}
 	
-	public static boolean verifyAlt(Double altitude) {
-		if(altitude == null) {
+	public static boolean verifyAlt(BigDecimal alt2) {
+		if(alt2 == null) {
 			//null is valid for alt
 			return true;
 		}
 		else {
-			return(lowerAltBound <= altitude && altitude <= upperAltBound);
+			return(lowerAltBound.compareTo(alt2)<0 && alt2.compareTo(upperAltBound)<0);
 		}
 	}
 	
@@ -155,62 +184,62 @@ public class GPSCoordinate {
 			return true;
 		}
 		else {
-			return verifyAlt(Double.valueOf(altitude.doubleValue()));
+			return verifyAlt(new BigDecimal(altitude));
 		}
 	}
 	
 
-	public double getLat() {
+	public BigDecimal getLat() {
 		return lat;
 	}
 
 
-	public void setLat(double lat) throws Exception {
-		if(verifyLat(lat)) {
-			this.lat = lat;
+	public void setLat(BigDecimal lat2) throws Exception {
+		if(verifyLat(lat2)) {
+			this.lat = lat2;
 		}
 		else {
-			throw throwRangeException("Latitude", lowerLatBound, upperLatBound);
+			throw throwRangeException("Latitude", LOWER_LAT_BOUND.doubleValue(), UPPER_LAT_BOUND.doubleValue());
 		}
 	}
 
 
-	public double getLng() {
+	public BigDecimal getLng() {
 		return lng;
 	}
 
 
-	public void setLng(double lng) throws Exception {
-		if(verifyLng(lng)) {
-			this.lng = lng;
+	public void setLng(BigDecimal lng2) throws Exception {
+		if(verifyLng(lng2)) {
+			this.lng = lng2;
 		}
 		else {
-			throw throwRangeException("Longitude", lowerLngBound, upperLngBound);
+			throw throwRangeException("Longitude", LOWER_LNG_BOUND.doubleValue(), UPPER_LNG_BOUND.doubleValue());
 		}
 	}
 
 
-	public Double getAlt() {
+	public BigDecimal getAlt() {
 		return alt;
 	}
 
 
-	public void setAlt(Double newAlt) throws Exception {
-		if(newAlt == null || verifyAlt(newAlt)) {
-			this.alt = newAlt;
+	public void setAlt(BigDecimal alt2) throws Exception {
+		if(alt2 == null || verifyAlt(alt2)) {
+			this.alt = alt2;
 		}
 		else {
-			throw throwRangeException("Altitude", lowerAltBound, upperAltBound);
+			throw throwRangeException("Altitude", lowerAltBound.doubleValue(), upperAltBound.doubleValue());
 		}
 	}
 	
 	public void setAlt(Integer newAlt) throws NumberFormatException, Exception {
 		if(newAlt != null) {
-			setAlt(Double.valueOf(newAlt.toString()));
+			setAlt(new BigDecimal(newAlt));
 		}
 		else {
-			Double nullDouble = null;
-			setAlt(nullDouble);
+			BigDecimal nullBigDecimal = null;
+			setAlt(nullBigDecimal);
 		}
 	}
 	
@@ -231,51 +260,64 @@ public class GPSCoordinate {
 	public GPSCoordinate add(GPSCoordinate otherCoord) throws Exception {
 		GPSCoordinate returnCoord;
 		if(getAlt()!=null && otherCoord.getAlt()!=null) {
-			returnCoord = new GPSCoordinate(0, 0, 0.0);
-			returnCoord.setAlt(getAlt() + otherCoord.getAlt());
+			returnCoord = new GPSCoordinate(new BigDecimal(0), new BigDecimal(0), new BigDecimal(0.0));
+			returnCoord.setAlt(getAlt().add(otherCoord.getAlt()));
 		}
 		else {
 			returnCoord = new GPSCoordinate(0, 0);
 		}
-		returnCoord.setLat(getLat() + otherCoord.getLat());
-		returnCoord.setLng(getLng() + otherCoord.getLng());
+		returnCoord.setLat(getLat().add(otherCoord.getLat()));
+		returnCoord.setLng(getLng().add(otherCoord.getLng()));
 		return returnCoord;
 	}
 	
-	public GPSCoordinate multiply(double number) throws Exception {
-		if(number == 0) {
+	public GPSCoordinate multiply(BigDecimal number) throws Exception {
+		if(number.equals(BigDecimal.ZERO)) {
 			return new GPSCoordinate(0,0);
 		}
 		GPSCoordinate returnCoord = clone();
-		returnCoord.setLat(getLat() * number);
-		returnCoord.setLng(getLng() * number);
+		returnCoord.setLat(getLat().multiply(number));
+		returnCoord.setLng(getLng().multiply(number));
 //		for(int counter = 1; counter < number; counter++) {
 //			returnCoord = returnCoord.add(this);
 //		}
 		return returnCoord;
 	}
 	
-	public GPSCoordinate divide(int number) throws Exception {
+	public GPSCoordinate multiply(int number) throws Exception {
 		if(number == 0) {
 			return new GPSCoordinate(0,0);
 		}
 		GPSCoordinate returnCoord = clone();
-		returnCoord.setLat(getLat() / number);
-		returnCoord.setLng(getLng() / number);
+		returnCoord.setLat(getLat().multiply(new BigDecimal(number)));
+		returnCoord.setLng(getLng().multiply(new BigDecimal(number)));
+//		for(int counter = 1; counter < number; counter++) {
+//			returnCoord = returnCoord.add(this);
+//		}
+		return returnCoord;
+	}
+	
+	public GPSCoordinate divide(int divisor) throws Exception {
+		if(divisor == 0) {
+			return new GPSCoordinate(0,0);
+		}
+		GPSCoordinate returnCoord = clone();
+		returnCoord.setLat(getLat().divide(new BigDecimal(divisor)));
+		returnCoord.setLng(getLng().divide(new BigDecimal(divisor)));
 		return returnCoord;
 	}
 
 	public GPSCoordinate subtract(GPSCoordinate otherCoord) throws Exception {
 		GPSCoordinate returnCoord;
 		if(getAlt()!=null && otherCoord.getAlt()!=null) {
-			returnCoord = new GPSCoordinate(0, 0, 0.0);
-			returnCoord.setAlt(getAlt() - otherCoord.getAlt());
+			returnCoord = new GPSCoordinate();
+			returnCoord.setAlt(getAlt().subtract(otherCoord.getAlt()));
 		}	
 		else {
 			returnCoord = new GPSCoordinate(0, 0);
 		}
-		returnCoord.setLat(getLat() - otherCoord.getLat());
-		returnCoord.setLng(getLng() - otherCoord.getLng());
+		returnCoord.setLat(getLat().subtract(otherCoord.getLat()));
+		returnCoord.setLng(getLng().subtract(otherCoord.getLng()));
 			
 		return returnCoord;
 	}
@@ -283,7 +325,7 @@ public class GPSCoordinate {
 	public void reflectLat() {
 		// reflects latitude
 		try {
-			setLat(-getLat());
+			setLat(getLat().negate());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			//do nothing; lat is symmetric negative and 
@@ -295,7 +337,7 @@ public class GPSCoordinate {
 	public void reflectLng() {
 		// reflects latitude
 		try {
-			setLng(-getLng());
+			setLng(getLng().negate());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			// TODO Auto-generated catch block
@@ -305,47 +347,106 @@ public class GPSCoordinate {
 		}
 	}
 	
-	public double getAngleRelativeToOriginXAxis() {
-		//returns the angle between the vector defined by current coordinate and 
-		//the positive x-axis, moving clockwise from the coordinate
-		if(getQuadrant() == 0 || getQuadrant() == 2) {
-			return 90 * getQuadrant() + Math.toDegrees(Math.atan(Math.abs(getLat() / getLng())));
-		}
-		else {
-//			System.out.println(Math.abs(getLat()) / Math.abs(getLng()));
-//			System.out.println(Math.toDegrees(Math.atan(Math.abs(getLat()) / Math.abs(getLng()))));
-			return 90 * (getQuadrant() + 1) - Math.toDegrees(Math.atan(Math.abs(getLat()) / Math.abs(getLng())));   
-		}
-	}
+//	public double getAngleRelativeToOriginXAxis() {
+//		//returns the angle between the vector defined by current coordinate and 
+//		//the positive x-axis, moving clockwise from the coordinate
+//		if(getQuadrant() == 0 || getQuadrant() == 2) {
+//			return 90 * getQuadrant() + Math.toDegrees(Math.atan(Math.abs(getLat() / getLng())));
+//		}
+//		else {
+////			System.out.println(Math.abs(getLat()) / Math.abs(getLng()));
+////			System.out.println(Math.toDegrees(Math.atan(Math.abs(getLat()) / Math.abs(getLng()))));
+//			return 90 * (getQuadrant() + 1) - Math.toDegrees(Math.atan(Math.abs(getLat()) / Math.abs(getLng())));   
+//		}
+//	}
 	
-	public static double getLowerLatBound() {
-		return lowerLatBound;
+	public static BigDecimal getLowerLatBound() {
+		return LOWER_LAT_BOUND;
 	}
 
 
-	public static double getUpperLatBound() {
-		return upperLatBound;
+	public static BigDecimal getUpperLatBound() {
+		return UPPER_LAT_BOUND;
 	}
 
 
-	public static double getLowerLngBound() {
-		return lowerLngBound;
+	public static BigDecimal getLowerLngBound() {
+		return LOWER_LNG_BOUND;
 	}
 
 
-	public static double getUpperLngBound() {
-		return upperLngBound;
+	public static BigDecimal getUpperLngBound() {
+		return UPPER_LNG_BOUND;
 	}
 
 
-	public static double getLowerAltBound() {
+	public static BigDecimal getLowerAltBound() {
 		return lowerAltBound;
 	}
 
 
-	public static double getUpperAltBound() {
+	public static BigDecimal getUpperAltBound() {
 		return upperAltBound;
 	}
+
+	@Override
+	public BigDecimal getX() {
+		// TODO Auto-generated method stub
+		return getLng();
+	}
+
+	@Override
+	public BigDecimal getY() {
+		// TODO Auto-generated method stub
+		return getLat();
+	}
+
+	@Override
+	public BigDecimal getZ() {
+		// TODO Auto-generated method stub
+		return getAlt();
+	}
+
+	@Override
+	public BigDecimal getMetresToOther(CartesianCoordinate other) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public CartesianCoordinate add(CartesianCoordinate other) {
+		// TODO Auto-generated method stub
+		return this.add(other);
+	}
+
+	@Override
+	public CartesianCoordinate addX(BigDecimal x) throws Exception {
+		// TODO Auto-generated method stub
+		return new GPSCoordinate(getLat(), getLng().add(x), getAlt());
+	}
+			
+	@Override
+	public CartesianCoordinate subtractY(BigDecimal y) throws Exception {
+		// TODO Auto-generated method stub
+		return new GPSCoordinate(getLat().subtract(y), getLng(), getAlt());
+	}
+			
+	@Override
+	public CartesianCoordinate subtractX(BigDecimal x) throws Exception {
+		// TODO Auto-generated method stub
+		return new GPSCoordinate(getLat(), getLng().subtract(x), getAlt());
+	}
 	
-	
+	@Override
+	public CartesianCoordinate subtract(CartesianCoordinate other) {
+		// TODO Auto-generated method stub
+		return this.add(other);
+	}
+
+	@Override
+	public CartesianCoordinate addY(BigDecimal y) throws Exception {
+		// TODO Auto-generated method stub
+		return new GPSCoordinate(getLat().add(y), getLng(), getAlt());
+	}
+			
 }
