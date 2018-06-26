@@ -131,9 +131,9 @@ public class GPSCoordinateUtils {
 		
 
 		double Lambda = L, LambdaPrime, iterations = 0;
-		System.out.println("Lambda: " + L);
+		//System.out.println("Lambda: " + L);
 		boolean antimeridian = Math.abs(L) > Math.PI;
-		System.out.println("anitmeridian: " + antimeridian);
+		//System.out.println("anitmeridian: " + antimeridian);
 	    do {
 	        sinLambda = Math.sin(Lambda);
 	        cosLambda = Math.cos(Lambda);
@@ -149,7 +149,7 @@ public class GPSCoordinateUtils {
 	        LambdaPrime = Lambda;
 	        Lambda = L + (1-C) * f * sinAlpha * (Sigma + C*sinSigma*(cos2SigmaM+C*cosSigma*(-1+2*cos2SigmaM*cos2SigmaM)));
 	        double iterationCheck = antimeridian ? Math.abs(Lambda)-Math.PI : Math.abs(Lambda);
-	        System.out.println("iterationCheck: " + iterationCheck);
+	        //System.out.println("iterationCheck: " + iterationCheck);
 	        if (iterationCheck > Math.PI) throw new Exception("Lambda > pi after " + iterations + " iterations.");
 	    } while (Math.abs(Lambda-LambdaPrime) > 1e-12 && ++iterations<1000);
 	    

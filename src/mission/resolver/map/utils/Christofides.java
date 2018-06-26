@@ -26,6 +26,7 @@ import org.jgrapht.graph.SimpleWeightedGraph;
 import org.jgrapht.graph.WeightedMultigraph;
 
 import GPSUtils.GPSCoordinate;
+import GPSUtils.grid.GPSPolygonGrid;
 
 import org.jgrapht.Graph;
 import org.jgrapht.alg.spanning.KruskalMinimumSpanningTree;
@@ -40,19 +41,19 @@ import work.assignment.grid.quadrilateral.RegularTraversalGridQuad;
 
 public class Christofides {
 	
-	RegularTraversalGridQuad traversalGrid;
+	GPSPolygonGrid traversalGrid;
 	
-	public Christofides(RegularTraversalGridQuad traversalGrid) {
-		setTraversalGrid(traversalGrid);
+	public Christofides(GPSPolygonGrid nuigGrid) {
+		setTraversalGrid(nuigGrid);
 	}
 
-	public RegularTraversalGridQuad getTraversalGrid() {
+	public GPSPolygonGrid getTraversalGrid() {
 		return traversalGrid;
 	}
 
 
-	public void setTraversalGrid(RegularTraversalGridQuad traversalGrid) {
-		this.traversalGrid = traversalGrid;
+	public void setTraversalGrid(GPSPolygonGrid grid) {
+		this.traversalGrid = grid;
 	}
 	
 	public double TSPChristofidesUpperBoundCost() {
@@ -137,14 +138,15 @@ public class Christofides {
 			5). Form an Eulerian circuit in H.
 			6). Make the circuit found in previous step into a Hamiltonian circuit by skipping repeated vertices (shortcutting).
 		 */
-		ArrayList<GPSCoordinate> coordinates = traversalGrid.getGridPoints();
+		List<GPSCoordinate> coordinates = traversalGrid.generateContainedGPSCoordinates();
 		/*
 		* A simple graph. A simple graph is an undirected graph for which at most one edge connects any two
 		 * vertices, and loops are not permitted
 		 * 
 		 */
 		
-		Graph<GPSCoordinate, DefaultWeightedEdge> completeGraph = createCompleteGraphFromGPSGrid(traversalGrid.getGridPoints());
+		//generate grid points should be quick because of cache :)
+		Graph<GPSCoordinate, DefaultWeightedEdge> completeGraph = createCompleteGraphFromGPSGrid(traversalGrid.generateContainedGPSCoordinates());
 		
 		//1) Create a minimum spanning tree T of G.
 		//KruskalMinimumSpanningTree does not expose the graph or vertices/edges in the graph, so just take
@@ -459,8 +461,13 @@ public class Christofides {
 			DefaultWeightedEdge newEdge = new DefaultWeightedEdge();
 			//newEdge.setWeight(edge.getWeight());
 			returnGraph.setEdgeWeight(newEdge, graph.getEdgeWeight(edge));
-			returnGraph.addEdge(graph.getEdgeSource(edge), graph.getEdgeTarget(edge),
-					newEdge);
+			System.out.println("here");
+			try {
+				returnGraph.addEdge(graph.getEdgeSource(edge), graph.getEdgeTarget(edge), newEdge);
+			}
+			catch (NullPointerException e){
+				System.out.println(e.getMessage());
+			}
 //			returnGraph.addEdge((GPSCoordinate) edge.getSourceVertex(), (GPSCoordinate) edge.getTargetVertex(),
 //					newEdge);
 		}

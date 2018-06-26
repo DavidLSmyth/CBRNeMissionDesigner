@@ -2,6 +2,8 @@ package GPSUtils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.MathContext;
+import java.math.RoundingMode;
 
 import org.junit.jupiter.params.shadow.com.univocity.parsers.common.processor.BeanWriterProcessor;
 
@@ -163,9 +165,16 @@ public class GPSCoordinate extends GPSCoordinateBase implements CartesianCoordin
 	public static boolean verifyLat(BigDecimal lat2) {
 		return(LOWER_LAT_BOUND.compareTo(lat2)<0 && lat2.compareTo(UPPER_LAT_BOUND)<0);
 	}
+	public static boolean verifyLat(Double lat2) {
+		return(LOWER_LAT_BOUND.compareTo(new BigDecimal(lat2))<0 && new BigDecimal(lat2).compareTo(UPPER_LAT_BOUND)<0);
+	}
 	
 	public static boolean verifyLng(BigDecimal lng) {
 		return(LOWER_LNG_BOUND.compareTo(lng)<0 && lng.compareTo(UPPER_LNG_BOUND)<0);
+	}
+	
+	public static boolean verifyLng(double lng) {
+		return(LOWER_LNG_BOUND.compareTo(new BigDecimal(lng))<0 && new BigDecimal(lng).compareTo(UPPER_LNG_BOUND)<0);
 	}
 	
 	public static boolean verifyAlt(BigDecimal alt2) {
@@ -175,6 +184,15 @@ public class GPSCoordinate extends GPSCoordinateBase implements CartesianCoordin
 		}
 		else {
 			return(lowerAltBound.compareTo(alt2)<0 && alt2.compareTo(upperAltBound)<0);
+		}
+	}
+	public static boolean verifyAlt(Double alt2) {
+		if(alt2 == null) {
+			//null is valid for alt
+			return true;
+		}
+		else {
+			return(lowerAltBound.compareTo(new BigDecimal(alt2))<0 && new BigDecimal(alt2).compareTo(upperAltBound)<0);
 		}
 	}
 	
@@ -232,6 +250,14 @@ public class GPSCoordinate extends GPSCoordinateBase implements CartesianCoordin
 			throw throwRangeException("Altitude", lowerAltBound.doubleValue(), upperAltBound.doubleValue());
 		}
 	}
+	public void setAlt(Double alt2) throws Exception {
+		if(alt2 == null || verifyAlt(alt2)) {
+			this.alt = new BigDecimal(alt2);
+		}
+		else {
+			throw throwRangeException("Altitude", lowerAltBound.doubleValue(), upperAltBound.doubleValue());
+		}
+	}
 	
 	public void setAlt(Integer newAlt) throws NumberFormatException, Exception {
 		if(newAlt != null) {
@@ -259,13 +285,13 @@ public class GPSCoordinate extends GPSCoordinateBase implements CartesianCoordin
 	
 	public GPSCoordinate add(GPSCoordinate otherCoord) throws Exception {
 		GPSCoordinate returnCoord;
-		if(getAlt()!=null && otherCoord.getAlt()!=null) {
-			returnCoord = new GPSCoordinate(new BigDecimal(0), new BigDecimal(0), new BigDecimal(0.0));
-			returnCoord.setAlt(getAlt().add(otherCoord.getAlt()));
-		}
-		else {
+//		if(getAlt()!=null && otherCoord.getAlt()!=null) {
+//			returnCoord = new GPSCoordinate(new BigDecimal(0), new BigDecimal(0), new BigDecimal(0.0));
+//			returnCoord.setAlt(getAlt().add(otherCoord.getAlt()));
+//		}
+//		else {
 			returnCoord = new GPSCoordinate(0, 0);
-		}
+//		}
 		returnCoord.setLat(getLat().add(otherCoord.getLat()));
 		returnCoord.setLng(getLng().add(otherCoord.getLng()));
 		return returnCoord;
@@ -302,20 +328,20 @@ public class GPSCoordinate extends GPSCoordinateBase implements CartesianCoordin
 			return new GPSCoordinate(0,0);
 		}
 		GPSCoordinate returnCoord = clone();
-		returnCoord.setLat(getLat().divide(new BigDecimal(divisor)));
-		returnCoord.setLng(getLng().divide(new BigDecimal(divisor)));
+		returnCoord.setLat(getLat().divide(new BigDecimal(divisor), MathContext.DECIMAL32));
+		returnCoord.setLng(getLng().divide(new BigDecimal(divisor), MathContext.DECIMAL32));
 		return returnCoord;
 	}
 
 	public GPSCoordinate subtract(GPSCoordinate otherCoord) throws Exception {
 		GPSCoordinate returnCoord;
-		if(getAlt()!=null && otherCoord.getAlt()!=null) {
-			returnCoord = new GPSCoordinate();
-			returnCoord.setAlt(getAlt().subtract(otherCoord.getAlt()));
-		}	
-		else {
+//		if(getAlt()!=null && otherCoord.getAlt()!=null) {
+//			returnCoord = new GPSCoordinate();
+//			returnCoord.setAlt(getAlt().subtract(otherCoord.getAlt()));
+//		}	
+//		else {
 			returnCoord = new GPSCoordinate(0, 0);
-		}
+//		}
 		returnCoord.setLat(getLat().subtract(otherCoord.getLat()));
 		returnCoord.setLng(getLng().subtract(otherCoord.getLng()));
 			

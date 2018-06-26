@@ -3,6 +3,7 @@ package work.assignment.grid.quadrilateral;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import GPSUtils.GPSCoordinate;
 import GPSUtils.GPSCoordinateUtils;
@@ -32,6 +33,31 @@ public class GPSGridQuadrilateral {
 		this.p4 = p4;
 		
 		generateCorners();
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null) {
+			return false;
+		}
+		if(!(obj instanceof GPSGridQuadrilateral)) {
+			return false;
+		}
+		GPSGridQuadrilateral otherGridQuad = (GPSGridQuadrilateral) obj;
+		boolean returnValEachCoord;
+		for(GPSCoordinate thisCoord: getCornerPoints()) {
+			returnValEachCoord = false;
+			for(GPSCoordinate otherCoord: otherGridQuad.getCornerPoints()) {
+				if(thisCoord.equals(otherCoord)) {
+					returnValEachCoord = true;
+					break;
+				}
+			}
+			if(!returnValEachCoord) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	private void generateCorners() {
@@ -70,9 +96,12 @@ public class GPSGridQuadrilateral {
 //		corners.add(corner4);		
 	}
 	
-
+	public List<GPSCoordinate> getCornerPoints() {
+		return Arrays.asList(getLowestLatCoord(), getLowestLongCoord(),
+				getHighestLatCoord(), getHighestLongCoord());
+	}
 	
-	public BigDecimal getLowestLong() {
+	public GPSCoordinate getLowestLongCoord() {
 		GPSCoordinate lowestLong = p1;
 		for(GPSCoordinate p:points) {
 			if(p.getLng().compareTo(lowestLong.getLng())<0) {
@@ -80,30 +109,10 @@ public class GPSGridQuadrilateral {
 				lowestLong = p;
 			}
 		}
-		return lowestLong.getLng();
+		return lowestLong;
 	}
-
-	public BigDecimal getHighestLong() {
-		GPSCoordinate highestLong = p1;
-		for(GPSCoordinate p:points) {
-			if(p.getLng().compareTo(highestLong.getLng())>0){
-				highestLong = p;
-			}
-		}
-		return highestLong.getLng();
-	}
-	public BigDecimal getHighestLat() {
-		//return highestLat;
-		GPSCoordinate highestLat = p1;
-		for(GPSCoordinate p:points) {
-			if(p.getLat().compareTo(highestLat.getLat())<0){
-				highestLat = p;
-			}
-		}
-		return highestLat.getLat();
-	}
-
-	public BigDecimal getLowestLat() {
+	
+	public GPSCoordinate getLowestLatCoord() {
 		//return lowestLat;
 		GPSCoordinate lowestLat = p1;
 		for(GPSCoordinate p:points) {
@@ -111,7 +120,43 @@ public class GPSGridQuadrilateral {
 				lowestLat = p;
 			}
 		}
-		return lowestLat.getLat();
+		return lowestLat;
+	}
+	
+	public GPSCoordinate getHighestLatCoord() {
+		GPSCoordinate highestLat = p1;
+		for(GPSCoordinate p:points) {
+			if(p.getLat().compareTo(highestLat.getLat())>0){
+				highestLat = p;
+			}
+		}
+		return highestLat;
+	}
+	
+	public GPSCoordinate getHighestLongCoord() {
+		GPSCoordinate highestLong = p1;
+		for(GPSCoordinate p:points) {
+			if(p.getLng().compareTo(highestLong.getLng())>0){
+				highestLong = p;
+			}
+		}
+		return highestLong;
+	}
+
+	
+	public BigDecimal getLowestLong() {
+		return getLowestLongCoord().getLng();
+	}
+
+	public BigDecimal getHighestLong() {
+		return getHighestLongCoord().getLng();
+	}
+	public BigDecimal getHighestLat() {
+		return getHighestLatCoord().getLat();
+	}
+
+	public BigDecimal getLowestLat() {
+		return getLowestLatCoord().getLat();
 	}
 	
 	@Override
