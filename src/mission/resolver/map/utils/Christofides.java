@@ -163,7 +163,7 @@ public class Christofides {
 		
 		//4). Combine the edges of M and T to form a connected multigraph H in which each vertex has even degree.
 		WeightedMultigraph<GPSCoordinate, DefaultWeightedEdge> combinedGraph = combineGraphs(mst, minWeightMatching);
-//		assert Graphs.addGraph(minWeightMatching, mst);
+		//assert Graphs.addGraph(minWeightMatching, mst);
 		
 		//5). Form an Eulerian circuit in H.
 		HierholzerEulerianCycle<GPSCoordinate, DefaultWeightedEdge> cycle = new HierholzerEulerianCycle<GPSCoordinate, DefaultWeightedEdge>();
@@ -462,12 +462,12 @@ public class Christofides {
 			//newEdge.setWeight(edge.getWeight());
 			returnGraph.setEdgeWeight(newEdge, graph.getEdgeWeight(edge));
 			System.out.println("here");
-			try {
+			//try {
 				returnGraph.addEdge(graph.getEdgeSource(edge), graph.getEdgeTarget(edge), newEdge);
-			}
-			catch (NullPointerException e){
-				System.out.println(e.getMessage());
-			}
+//			}
+//			catch (NullPointerException e){
+//				System.out.println(e.getMessage());
+//			}
 //			returnGraph.addEdge((GPSCoordinate) edge.getSourceVertex(), (GPSCoordinate) edge.getTargetVertex(),
 //					newEdge);
 		}
