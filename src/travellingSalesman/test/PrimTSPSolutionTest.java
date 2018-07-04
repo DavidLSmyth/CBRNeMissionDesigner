@@ -22,7 +22,7 @@ class PrimTSPSolutionTest {
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		testUtils = new TestUtils(500, 500);
+		testUtils = new TestUtils(2000, 2000);
 		poly = testUtils.getNUIGPoly();
 		polyGrid = testUtils.getNUIGGrid();
 		soln = new PrimTSPSolution(polyGrid);
@@ -39,7 +39,7 @@ class PrimTSPSolutionTest {
 
 	@Test
 	void testGetPrimTSPSolutionCost() throws Exception {
-		System.out.println(soln.getKruskalTSPSolutionCost());
+		System.out.println(soln.getMSTHamiltonianTour(polyGrid.generateContainedGPSCoordinates()));
 	}
 
 	@Test

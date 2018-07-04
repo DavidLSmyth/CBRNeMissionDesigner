@@ -1,8 +1,10 @@
 package GPSUtils.grid;
 
+import java.awt.print.Printable;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import GPSUtils.GPSCoordinate;
@@ -14,6 +16,7 @@ public class GPSPolygonGrid {
 	GPSPolygon polygon;
 	double latSpacing;
 	double lngSpacing;
+	double altitude;
 	
 	private int noGridPointsInBoundingRect;
 	private int noGridPointsInPolygon;
@@ -33,6 +36,15 @@ public class GPSPolygonGrid {
 		setLngSpacing(lngSpacing);
 		canReturnCachedGridPoints = false;
 	}
+	public GPSPolygonGrid(GPSPolygon polygon, double latSpacing, double lngSpacing, double altitude) {
+		setPolygon(polygon);
+		setLatSpacing(latSpacing);
+		setLngSpacing(lngSpacing);
+		canReturnCachedGridPoints = false;
+	}
+	public GPSPolygonGrid(List<GPSCoordinate> boundary, double latSpacing, double lngSpacing) throws Exception {
+		this(new GPSPolygon(boundary), latSpacing, lngSpacing);
+	}
 	
 	public double getHeight() throws Exception {
 		GPSGridQuadrilateral quad = polygon.getBoundingQuadrilateral();
@@ -44,6 +56,18 @@ public class GPSPolygonGrid {
 		GPSGridQuadrilateral quad = polygon.getBoundingQuadrilateral();
 		return GPSCoordinateUtils.getDistanceMetresBetweenWGS84(new GPSCoordinate(quad.getLowestLat(), quad.getLowestLong())
 		, new GPSCoordinate(quad.getHighestLat(), quad.getHighestLong()));
+	}
+	
+	public String toString() {
+		try {
+			String returnString = "Polygon width: " + getWidth() + ", polygon height: " + getHeight()+ " lat spacing: " + 
+		getLatSpacing() + " long spacing: " + getLngSpacing() + " bounding points " + getPolygon();
+			return returnString;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "Can't get polygon string representation";
+		}
 	}
 	
 	/**
@@ -114,8 +138,15 @@ public class GPSPolygonGrid {
 	    	exp2 = test.getLat().subtract(boundaryPoints.get(i).getLat());
 	    	exp3 = boundaryPoints.get(j).getLat().subtract(boundaryPoints.get(i).getLat());
 	    	exp4 = boundaryPoints.get(i).getLng();
-	    	
-	    	exp5 = exp2.divide(exp3, MathContext.DECIMAL32);
+	    	try {
+	    		exp5 = exp2.divide(exp3, MathContext.DECIMAL32);
+	    	}
+	    	catch(ArithmeticException e) {
+	    		System.out.println("Couldn't test if point in boundary because can't divide " + exp2 + " by " + exp3);
+	    		System.out.println(e);
+	    		//exp5 = new BigDecimal(exp2.doubleValue() / exp3.doubleValue());
+	    		return false;
+	    	}
 	    	exp6 = exp1.multiply(exp5);
 	    	exp7 = exp4.add(exp6);
 	    	

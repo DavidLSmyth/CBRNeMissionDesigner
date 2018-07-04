@@ -3,6 +3,7 @@ package mission.resolver;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import GPSUtils.GPSCoordinate;
 import agent.Agent;
@@ -97,15 +98,15 @@ public abstract class Mission {
 	}
 
 
-	public static Mission makeMission(Agent agent, ArrayList<GPSCoordinate> missionPoints) throws Exception {
+	public static Mission makeMission(Agent agent, List<GPSCoordinate> list) throws Exception {
 		//Given an agent an a list of GPS coordinates, creates a mission for that agent
 		//assume carry out mission at 2 m/s on average if mission speed is not specified
-		return makeMission(agent, missionPoints, defaultMissionSpeed);
+		return makeMission(agent, list, defaultMissionSpeed);
 	}
 	
 	
 	
-	public static Mission makeMission(Agent agent, ArrayList<GPSCoordinate> missionPoints, double missionSpeed) throws Exception {
+	public static Mission makeMission(Agent agent, List<GPSCoordinate> missionPoints, double missionSpeed) throws Exception {
 		//Given an agent an a list of GPS coordinates, creates a mission for that agent
 		if (agent.getVehicle().getVehicleType().equals(VehicleType.AIR_VEHICLE)){
 			ArrayList<RAVMissionPoint> missionPointsCopy = new ArrayList<RAVMissionPoint>();

@@ -57,7 +57,7 @@ public class GPSCoordinateCosts {
 //				Math.abs(GPSCoordinateUtils.convertLatDegreeDifferenceToMetresSigned(to.getLat(), from.getLat()))) * 
 //				agentVelocity * Math.sin(theta)) + windFactor.getNorthComponent();
 	
-		System.out.println("effectiveVelocityLat: " + effectiveVelocityLat);
+		//System.out.println("effectiveVelocityLat: " + effectiveVelocityLat);
 		
 //		double effectiveVelocityLong = (GPSCoordinateUtils.convertLongDegreeDifferenceToMetresSigned(to.getLng(), from.getLng(), from.getLat())/
 //				Math.abs(GPSCoordinateUtils.convertLongDegreeDifferenceToMetresSigned(to.getLng(), from.getLng(), from.getLat()))) * 
@@ -65,11 +65,11 @@ public class GPSCoordinateCosts {
 		
 		double effectiveVelocityLong = (cosTheta * agentVelocity * ((to.getLng().compareTo(from.getLng()) > 0) ? 1.0: -1.0)) + windFactor.getEastComponent();
 		
-		System.out.println("effectiveVelocityLong: " + effectiveVelocityLong);
+		//System.out.println("effectiveVelocityLong: " + effectiveVelocityLong);
 		
 		//Magnitude of effective velocity
 		double effectiveVelocity = Math.sqrt(Math.pow(effectiveVelocityLat, 2) + Math.pow(effectiveVelocityLong, 2));
-		System.out.println("effective velocity: " + effectiveVelocity);
+		//System.out.println("effective velocity: " + effectiveVelocity);
 		
 		if(effectiveVelocity == 0) {
 			throw new Exception("The RAV effective velocity is zero; it will take inifinitely long to reach destination");

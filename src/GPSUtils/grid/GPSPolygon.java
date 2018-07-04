@@ -93,4 +93,12 @@ public class GPSPolygon {
 	protected void setBoundary(List<GPSCoordinate> boundary) {
 		this.boundary = boundary;
 	}
+	
+	public String toString() {
+		String returnString = "";
+		for(GPSCoordinate coord: getBoundary()) {
+			returnString += coord.toString();
+		}
+		return returnString;
+	}
 }

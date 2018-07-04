@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 import GPSUtils.GPSCoordinate;
 import GPSUtils.GPSCoordinateCosts;
+import GPSUtils.grid.GPSPolygonGrid;
 import agent.Agent;
 import mission.resolver.Mission;
 import work.assignment.environmentalfactors.WindFactor;
@@ -24,20 +25,20 @@ public class MapMissionAnalyserAgentNo {
 	//agent velocities are passed in explicitly because it may be the case
 	//that we want to analyse a mission that does not yet have an associated agent
 	
-	RegularTraversalGridQuad traversalGrid; 
+	GPSPolygonGrid polyGrid;
 	//ArrayList<Agent> agents;
 	//HashMap<Agent, ArrayList<GPSCoordinate>> agentPaths;
 	ArrayList<ArrayList<GPSCoordinate>> agentPaths;
 	//HashMap<Agent, Double> velocities;
 	
 	//need the grid to traverse, agents involved, routes planned for agents
-	public MapMissionAnalyserAgentNo(RegularTraversalGridQuad traversalGrid, 
+	public MapMissionAnalyserAgentNo(GPSPolygonGrid polyGrid, 
 			//ArrayList<Agent> agents, 
 			//HashMap<Agent, ArrayList<GPSCoordinate>> agentPaths,
 			ArrayList<ArrayList<GPSCoordinate>> agentPaths
 			//HashMap<Agent, Double> velocities) {
 			) {
-		setTraversalGrid(traversalGrid);
+		setTraversalGrid(polyGrid);
 		//setAgents(agents);
 		setAgentPaths(agentPaths);
 		//setVelocities(velocities);
@@ -333,7 +334,7 @@ public class MapMissionAnalyserAgentNo {
 		//need to have traversalGrid here, throw exception if not present
 		//Christofides lower bound should be suitable!
  
-		if(traversalGrid!=null) {
+		if(polyGrid!=null) {
 			ArrayList<GPSCoordinate> minSpanningTree = new ArrayList<GPSCoordinate>();
 		}
 		else {
@@ -511,12 +512,12 @@ public class MapMissionAnalyserAgentNo {
 	}
 	
 
-	public RegularTraversalGridQuad getTraversalGrid() {
-		return traversalGrid;
+	public GPSPolygonGrid getTraversalGrid() {
+		return polyGrid;
 	}
 
-	public void setTraversalGrid(RegularTraversalGridQuad traversalGrid) {
-		this.traversalGrid = traversalGrid;
+	public void setTraversalGrid(GPSPolygonGrid polyGrid) {
+		this.polyGrid= polyGrid;
 	}
 
 //	public ArrayList<Agent> getAgents() {

@@ -59,7 +59,7 @@ class MapMissionBaseTest {
         NUIGcoord2 = new GPSCoordinate(53.2805257224, -9.0621271428);
         NUIGcoord3 = new GPSCoordinate(53.27959959, -9.0617270785);
         
-        windFactor = new WindFactor(-10, 0);
+        windFactor = new WindFactor(-4, 0);
         
         costType = CostType.TOTALDISTANCE;
         
@@ -123,19 +123,10 @@ class MapMissionBaseTest {
 	}
 
 	@Test
-	void testSetAgents() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	void testGetGrid() {
 		fail("Not yet implemented");
 	}
 
-	@Test
-	void testSetGrid() {
-		fail("Not yet implemented");
-	}
 
 	@Test
 	void testGetAgentRoutesForMapping() {

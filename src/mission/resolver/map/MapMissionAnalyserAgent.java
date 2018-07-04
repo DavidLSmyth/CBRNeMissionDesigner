@@ -6,6 +6,7 @@ import java.util.AbstractMap.SimpleEntry;
 
 import GPSUtils.GPSCoordinate;
 import GPSUtils.GPSCoordinateCosts;
+import GPSUtils.grid.GPSPolygonGrid;
 import agent.Agent;
 import work.assignment.environmentalfactors.WindFactor;
 import work.assignment.grid.quadrilateral.RegularTraversalGridQuad;
@@ -16,11 +17,11 @@ public class MapMissionAnalyserAgent{
 	HashMap<Agent, ArrayList<GPSCoordinate>> agentPathsMap;
 	//ArrayList<ArrayList<GPSCoordinate>> agentPaths;
 	HashMap<Agent, Double> velocities;
-	RegularTraversalGridQuad traversalGrid; 
+	GPSPolygonGrid polyGrid;
 	protected MapMissionAnalyserAgentNo analyser;
 	
 	
-	public MapMissionAnalyserAgent(RegularTraversalGridQuad traversalGrid, 
+	public MapMissionAnalyserAgent(GPSPolygonGrid polyGrid, 
 			ArrayList<Agent> agents, 
 			HashMap<Agent, ArrayList<GPSCoordinate>> agentPathsMap,
 			//ArrayList<ArrayList<GPSCoordinate>> agentPaths
@@ -29,17 +30,17 @@ public class MapMissionAnalyserAgent{
 		for(Agent agent: agentPathsMap.keySet()) {
 			agentPathsList.add(agentPathsMap.get(agent));
 		}
-		analyser = new MapMissionAnalyserAgentNo(traversalGrid, agentPathsList);
+		analyser = new MapMissionAnalyserAgentNo(polyGrid, agentPathsList);
 		setVelocities(velocities);
 		setAgentPathsMap(agentPathsMap);
 		setAgents(agents);
-		setTraversalGrid(traversalGrid);
+		setTraversalGrid(polyGrid);
 	}
 	
-	public MapMissionAnalyserAgent(RegularTraversalGridQuad traversalGrid, 
+	public MapMissionAnalyserAgent(GPSPolygonGrid polyGrid, 
 			ArrayList<Agent> agents, 
 			HashMap<Agent, ArrayList<GPSCoordinate>> agentPathsMap) {
-		this(traversalGrid, agents, agentPathsMap, new HashMap<Agent, Double>());
+		this(polyGrid, agents, agentPathsMap, new HashMap<Agent, Double>());
 		//update velocities
 		velocities = new HashMap<Agent, Double>();
 		for(Agent agent: agents) {
@@ -295,13 +296,13 @@ public class MapMissionAnalyserAgent{
 	****************************************************************************************/
 	
 	
-	public RegularTraversalGridQuad getTraversalGrid() {
-		return traversalGrid;
+	public GPSPolygonGrid getTraversalGrid() {
+		return polyGrid;
 	}
 	
 	
-	public void setTraversalGrid(RegularTraversalGridQuad traversalGrid) {
-		this.traversalGrid = traversalGrid;
+	public void setTraversalGrid(GPSPolygonGrid polyGrid) {
+		this.polyGrid = polyGrid;
 	}
 	
 	

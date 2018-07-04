@@ -14,7 +14,7 @@ import work.assignment.grid.quadrilateral.RegularTraversalGridQuad;
 
 public class MapMissionStrategyBranchBound extends MapMissionBase implements MapMissionStrategy{
 	
-	public MapMissionStrategyBranchBound(ArrayList<Agent> agents, ArrayList<GPSCoordinate> missionBoundingCoordinates, CostType costType) throws Exception {
+	public MapMissionStrategyBranchBound(List<Agent> agents, List<GPSCoordinate> missionBoundingCoordinates, CostType costType) throws Exception {
 		// TODO Auto-generated constructor stub
 		super(agents, missionBoundingCoordinates, costType);
 		agentPaths = calculateMapEnvironmentPaths(agents);
@@ -51,7 +51,7 @@ public class MapMissionStrategyBranchBound extends MapMissionBase implements Map
 //	}
 
 	@Override
-	protected HashMap<Agent, ArrayList<GPSCoordinate>> calculateMapEnvironmentPaths(ArrayList<Agent> agents)
+	protected Map<Agent, List<GPSCoordinate>> calculateMapEnvironmentPaths(List<Agent> agents)
 			throws Exception {
 		// TODO Auto-generated method stub
 		return null;
