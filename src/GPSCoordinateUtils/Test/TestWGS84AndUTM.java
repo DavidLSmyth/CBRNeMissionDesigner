@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.osgeo.proj4j.*;
+//import org.osgeo.proj4j.*;
 
 import GPSUtils.CartesianCoordinate;
 import GPSUtils.UTMCoordinate;

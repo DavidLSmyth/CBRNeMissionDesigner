@@ -1,7 +1,5 @@
 package mission.resolver.map.utils;
 
-
-import java.nio.channels.NonWritableChannelException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;

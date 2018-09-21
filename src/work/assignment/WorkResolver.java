@@ -108,7 +108,7 @@ public class WorkResolver {
 
 	protected void calculateMissions() throws Exception {
 		//sets the missions of each agent for the provided data
-		System.out.println("Calculating the missions each agent needs to carry out");
+//		System.out.println("Calculating the missions each agent needs to carry out");
 		MissionResolver resolver;
 		if(getOptionalParams()!= null) {
 			System.out.println("Using mission resolver with wind");
@@ -122,10 +122,10 @@ public class WorkResolver {
 	
 	protected void calculateMissions(double latSpacing, double lngSpacing) throws Exception {
 		//sets the missions of each agent for the provided data
-		System.out.println("Calculating the missions each agent needs to carry out");
+//		System.out.println("Calculating the missions each agent needs to carry out");
 		MissionResolver resolver;
 		if(getOptionalParams()!= null) {
-			System.out.println("Using mission resolver with wind");
+//			System.out.println("Using mission resolver with wind");
 			resolver = new MissionResolver(getAgents(), getWorkType(), getMissionBoundingBox(), getOptionalParams());
 		}
 		else {

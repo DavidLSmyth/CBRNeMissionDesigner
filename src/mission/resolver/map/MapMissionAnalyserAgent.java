@@ -2,6 +2,9 @@ package mission.resolver.map;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.AbstractMap.SimpleEntry;
 
 import GPSUtils.GPSCoordinate;
@@ -13,20 +16,20 @@ import work.assignment.grid.quadrilateral.RegularTraversalGridQuad;
 
 public class MapMissionAnalyserAgent{
 	
-	ArrayList<Agent> agents;
-	HashMap<Agent, ArrayList<GPSCoordinate>> agentPathsMap;
+	List<Agent> agents;
+	Map<Agent, List<GPSCoordinate>> agentPathsMap;
 	//ArrayList<ArrayList<GPSCoordinate>> agentPaths;
-	HashMap<Agent, Double> velocities;
+	Map<Agent, Double> velocities;
 	GPSPolygonGrid polyGrid;
 	protected MapMissionAnalyserAgentNo analyser;
 	
 	
 	public MapMissionAnalyserAgent(GPSPolygonGrid polyGrid, 
-			ArrayList<Agent> agents, 
-			HashMap<Agent, ArrayList<GPSCoordinate>> agentPathsMap,
+			List<Agent> agents, 
+			Map<Agent, List<GPSCoordinate>> agentPathsMap,
 			//ArrayList<ArrayList<GPSCoordinate>> agentPaths
 			HashMap<Agent, Double> velocities) {
-		ArrayList<ArrayList<GPSCoordinate>> agentPathsList = new ArrayList<ArrayList<GPSCoordinate>>();
+		List<List<GPSCoordinate>> agentPathsList = new ArrayList<List<GPSCoordinate>>();
 		for(Agent agent: agentPathsMap.keySet()) {
 			agentPathsList.add(agentPathsMap.get(agent));
 		}
@@ -38,8 +41,8 @@ public class MapMissionAnalyserAgent{
 	}
 	
 	public MapMissionAnalyserAgent(GPSPolygonGrid polyGrid, 
-			ArrayList<Agent> agents, 
-			HashMap<Agent, ArrayList<GPSCoordinate>> agentPathsMap) {
+			List<Agent> agents, 
+			Map<Agent, List<GPSCoordinate>> agentPathsMap) {
 		this(polyGrid, agents, agentPathsMap, new HashMap<Agent, Double>());
 		//update velocities
 		velocities = new HashMap<Agent, Double>();
@@ -49,8 +52,8 @@ public class MapMissionAnalyserAgent{
 		setVelocities(velocities);
 	}
 	
-	public MapMissionAnalyserAgent(	ArrayList<Agent> agents, 
-			HashMap<Agent, ArrayList<GPSCoordinate>> agentPathsMap) {
+	public MapMissionAnalyserAgent(List<Agent> agents, 
+			Map<Agent, List<GPSCoordinate>> agentPathsMap) {
 		this(null, agents, agentPathsMap, new HashMap<Agent, Double>());
 		//update velocities
 		velocities = new HashMap<Agent, Double>();
@@ -65,15 +68,15 @@ public class MapMissionAnalyserAgent{
 		else throw new Exception("Agent " + agent + " does not have a path calculated yet");
 	}
 	
-	protected HashMap<Integer, Double> getVelocitiesIndexMap(){
-		HashMap<Integer, Double> baseVelocities = new HashMap<Integer, Double>();
+	protected Map<Integer, Double> getVelocitiesIndexMap(){
+		Map<Integer, Double> baseVelocities = new HashMap<Integer, Double>();
 		for(Agent agent: velocities.keySet()) {
 			baseVelocities.put(getAgents().indexOf(agent), velocities.get(agent));
 		}
 		return baseVelocities;
 	}
-	protected HashMap<Integer, Double> getVelocitiesIndexMap(HashMap<Agent, Double> userVelocities){
-		HashMap<Integer, Double> baseVelocities = new HashMap<Integer, Double>();
+	protected Map<Integer, Double> getVelocitiesIndexMap(Map<Agent, Double> userVelocities){
+		Map<Integer, Double> baseVelocities = new HashMap<Integer, Double>();
 		for(Agent agent: userVelocities.keySet()) {
 			baseVelocities.put(getAgents().indexOf(agent), baseVelocities.get(agent));
 		}
@@ -106,11 +109,11 @@ public class MapMissionAnalyserAgent{
 	}
 	
 	//HashMap agentnumber, corresponding velocity
-	public double getTotalTimeEstimate(HashMap<Agent, Double> userVelocities) throws Exception {
+	public double getTotalTimeEstimate(Map<Agent, Double> userVelocities) throws Exception {
 		return analyser.getTotalTimeEstimate(getVelocitiesIndexMap(userVelocities));
 	}
 
-	public double getTotalTimeEstimate(HashMap<Agent, Double> userVelocities, WindFactor windFactor) throws Exception {
+	public double getTotalTimeEstimate(Map<Agent, Double> userVelocities, WindFactor windFactor) throws Exception {
 		return analyser.getTotalTimeEstimate(getVelocitiesIndexMap(userVelocities), windFactor);
 	}
 	
@@ -122,11 +125,11 @@ public class MapMissionAnalyserAgent{
 		return getTotalTimeEstimate(getVelocities(), windFactor);
 	}
 	
-	public double getAverageTimeEstimate(HashMap<Agent, Double> userVelocities) throws Exception {
+	public double getAverageTimeEstimate(Map<Agent, Double> userVelocities) throws Exception {
 		return analyser.getTotalTimeEstimate(getVelocitiesIndexMap(userVelocities)) / getAgentPathsMap().size();
 	}
 
-	public double getAverageTimeEstimate(HashMap<Agent, Double> userVelocities, WindFactor windFactor) throws Exception {
+	public double getAverageTimeEstimate(Map<Agent, Double> userVelocities, WindFactor windFactor) throws Exception {
 		return analyser.getTotalTimeEstimate(getVelocitiesIndexMap(userVelocities), windFactor) / getAgentPathsMap().size();
 	}
 	
@@ -138,21 +141,21 @@ public class MapMissionAnalyserAgent{
 		return getTotalTimeEstimate(getVelocities(), windFactor);
 	}
 	
-	public SimpleEntry<Double, Integer> getMaximumTimeEstimate(HashMap<Agent, Double> userVelocities) throws Exception {
+	public Entry<Double, Integer> getMaximumTimeEstimate(Map<Agent, Double> userVelocities) throws Exception {
 		return analyser.getMaximumTimeEstimateAndCorrespondingAgent(getVelocitiesIndexMap(userVelocities));
 	}
-	public SimpleEntry<Double, Integer> getMaximumTimeEstimate(HashMap<Agent, Double> userVelocities, WindFactor windFactor) throws Exception {
+	public Entry<Double, Integer> getMaximumTimeEstimate(Map<Agent, Double> userVelocities, WindFactor windFactor) throws Exception {
 		return analyser.getMaximumTimeEstimateAndCorrespondingAgent(getVelocitiesIndexMap(userVelocities), windFactor);
 	}	
 	
-	public SimpleEntry<Double, Integer> getMinimumTimeEstimateAndCorrespondingAgent(HashMap<Agent, Double> userVelocities) throws Exception {
+	public Entry<Double, Integer> getMinimumTimeEstimateAndCorrespondingAgent(Map<Agent, Double> userVelocities) throws Exception {
 		return analyser.getMinimumTimeEstimateAndCorrespondingAgent(getVelocitiesIndexMap(userVelocities));
 	}
-	public SimpleEntry<Double, Integer> getMinimumTimeEstimateAndCorrespondingAgent(HashMap<Agent, Double> userVelocities, WindFactor windFactor) throws Exception {
+	public Entry<Double, Integer> getMinimumTimeEstimateAndCorrespondingAgent(Map<Agent, Double> userVelocities, WindFactor windFactor) throws Exception {
 		return analyser.getMinimumTimeEstimateAndCorrespondingAgent(getVelocitiesIndexMap(userVelocities), windFactor);
 	}
 	
-	public String getTimeReport(HashMap<Agent, Double> userVelocities) {
+	public String getTimeReport(Map<Agent, Double> userVelocities) {
 		//String returnString = "";
 		try {
 			return analyser.getTimeReport(getVelocitiesIndexMap(userVelocities));
@@ -173,7 +176,7 @@ public class MapMissionAnalyserAgent{
 		}
 	}
 	
-	public String getTimeReport(HashMap<Agent, Double> userVelocities, WindFactor windFactor) {
+	public String getTimeReport(Map<Agent, Double> userVelocities, WindFactor windFactor) {
 		//String returnString = "";
 		try {
 			return analyser.getTimeReport(getVelocitiesIndexMap(userVelocities), windFactor);
@@ -231,7 +234,7 @@ public class MapMissionAnalyserAgent{
 		return 0;
 	}
 	
-	public SimpleEntry<Double, Integer> getMinimumDistanceEstimate() throws Exception {
+	public Entry<Double, Integer> getMinimumDistanceEstimate() throws Exception {
 		return analyser.getMinimumDistanceEstimateAndCorrespondingAgent();
 //		double minDistance = getDistanceEstimateForAgent(0);
 //		for(Agent agent = 0; agentNumber < getAgentPathsMap().size(); agentNumber++) {
@@ -243,7 +246,7 @@ public class MapMissionAnalyserAgent{
 //		return minDistance;
 	}
 	
-	public SimpleEntry<Double, Integer> getMaximumDistanceEstimate() throws Exception {
+	public Entry<Double, Integer> getMaximumDistanceEstimate() throws Exception {
 		return analyser.getMaximumDistanceEstimateAndCorrespondingAgent();
 //		double maxDistance = getDistanceEstimateForAgent(0);
 //		for(Agent agent = 0; agentNumber < getAgentPathsMap().size(); agentNumber++) {
@@ -287,8 +290,9 @@ public class MapMissionAnalyserAgent{
 //			return returnString;
 		}
 		catch(Exception e) {
+			System.out.println("Error encountered when analysing distance travelled during mission");
 			e.printStackTrace();
-			return("Error encountered when analysing distance travelled during mission");
+			return("");
 		}
 	}
 	/***************************************************************************************
@@ -306,32 +310,32 @@ public class MapMissionAnalyserAgent{
 	}
 	
 	
-	public ArrayList<Agent> getAgents() {
+	public List<Agent> getAgents() {
 		return agents;
 	}
 	
 	
-	public void setAgents(ArrayList<Agent> agents) {
+	public void setAgents(List<Agent> agents) {
 		this.agents = agents;
 	}
 	
 	
-	public HashMap<Agent, ArrayList<GPSCoordinate>> getAgentPathsMap() {
+	public Map<Agent, List<GPSCoordinate>> getAgentPathsMap() {
 		return agentPathsMap;
 	}
 	
 	
-	public void setAgentPathsMap(HashMap<Agent, ArrayList<GPSCoordinate>> agentPathsMap) {
+	public void setAgentPathsMap(Map<Agent, List<GPSCoordinate>> agentPathsMap) {
 		this.agentPathsMap = agentPathsMap;
 	}
 	
 	
-	public HashMap<Agent, Double> getVelocities() {
+	public Map<Agent, Double> getVelocities() {
 		return velocities;
 	}
 	
 	
-	public void setVelocities(HashMap<Agent, Double> velocities) {
+	public void setVelocities(Map<Agent, Double> velocities) {
 		this.velocities = velocities;
 	}
 	

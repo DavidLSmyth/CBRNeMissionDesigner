@@ -61,7 +61,7 @@ public abstract class MapMissionBase implements MapMissionStrategy{
 //				+ " but got " + missionBoundingCoordinates.size());
 			GPSPolygon poly = new GPSPolygon(missionBoundingCoordinates); 
 			
-			System.out.println("performing exploration mission without lat/long spacing ");
+//			System.out.println("performing exploration mission without lat/long spacing ");
 			//need to determine the longspacing metres, latspacing metres and 
 			//altitude autonomously
 			//double lngSpacingMetres, double latSpacingMetres, double altitude
@@ -92,7 +92,7 @@ public abstract class MapMissionBase implements MapMissionStrategy{
 			double latSpacing,
 			double lngSpacing) throws Exception {
 		
-			System.out.println("performing exploration mission with lat spacing " + latSpacing + " and long spacing " + lngSpacing);
+//			System.out.println("performing exploration mission with lat spacing " + latSpacing + " and long spacing " + lngSpacing);
 			setAgents(agents);
 //		if(missionBoundingCoordinates.size() != 4) throw new UnsupportedOperationException("Expected 4 coordinates to map environment"
 //				+ " but got " + missionBoundingCoordinates.size());
@@ -276,8 +276,8 @@ public abstract class MapMissionBase implements MapMissionStrategy{
 				windFactor,
 				agentVelocity, 
 				costType);
-		System.out.println("Cost of reaching coords: " + availableGPSCoordinates.toString());
-		System.out.println(costs.toString());
+//		System.out.println("Cost of reaching coords: " + availableGPSCoordinates.toString());
+//		System.out.println(costs.toString());
 		return availableGPSCoordinates.get(getMinIndexOfCostArray(costs));
 	}
 	
@@ -290,6 +290,16 @@ public abstract class MapMissionBase implements MapMissionStrategy{
 				costType);
 		
 		return availableGPSCoordinates.get(getMinIndexOfCostArray(costs));
+	}
+	public int getAvailableCoordIndexOfLeastCost(List<GPSCoordinate> availableGPSCoordinates, GPSCoordinate agentLocation,
+			CostType costType,
+			Double agentVelocity) throws Exception {
+		
+		List<Double> costs = getCosts(availableGPSCoordinates, agentLocation,
+				agentVelocity, 
+				costType);
+		
+		return getMinIndexOfCostArray(costs);
 	}
 	
 	public GPSCoordinate getAvailableCoordOfLeastCost(List<GPSCoordinate> availableGPSCoordinates, GPSCoordinate agentLocation,

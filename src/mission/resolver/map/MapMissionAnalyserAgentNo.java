@@ -1,21 +1,16 @@
 package mission.resolver.map;
 
-import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import GPSUtils.GPSCoordinate;
 import GPSUtils.GPSCoordinateCosts;
 import GPSUtils.grid.GPSPolygonGrid;
-import agent.Agent;
 import mission.resolver.Mission;
 import work.assignment.environmentalfactors.WindFactor;
-import work.assignment.grid.quadrilateral.RegularTraversalGridQuad;
 
 public class MapMissionAnalyserAgentNo {
 	//A class which analyses the result of the mission mapping code
@@ -28,24 +23,24 @@ public class MapMissionAnalyserAgentNo {
 	GPSPolygonGrid polyGrid;
 	//ArrayList<Agent> agents;
 	//HashMap<Agent, ArrayList<GPSCoordinate>> agentPaths;
-	ArrayList<ArrayList<GPSCoordinate>> agentPaths;
+	List<List<GPSCoordinate>> agentPaths;
 	//HashMap<Agent, Double> velocities;
 	
 	//need the grid to traverse, agents involved, routes planned for agents
 	public MapMissionAnalyserAgentNo(GPSPolygonGrid polyGrid, 
 			//ArrayList<Agent> agents, 
 			//HashMap<Agent, ArrayList<GPSCoordinate>> agentPaths,
-			ArrayList<ArrayList<GPSCoordinate>> agentPaths
+			List<List<GPSCoordinate>> agentPathsList
 			//HashMap<Agent, Double> velocities) {
 			) {
 		setTraversalGrid(polyGrid);
 		//setAgents(agents);
-		setAgentPaths(agentPaths);
+		setAgentPaths(agentPathsList);
 		//setVelocities(velocities);
 	}
 	
-	public MapMissionAnalyserAgentNo(ArrayList<Mission> agentMissions) {
-		ArrayList<ArrayList<GPSCoordinate>> agentPaths = new ArrayList<ArrayList<GPSCoordinate>>();
+	public MapMissionAnalyserAgentNo(List<Mission> agentMissions) {
+		List<List<GPSCoordinate>> agentPaths = new ArrayList<List<GPSCoordinate>>();
 		setTraversalGrid(null);
 		for(Mission m: agentMissions) {
 			agentPaths.add(m.getMissionGPSCoordinates());
@@ -53,7 +48,7 @@ public class MapMissionAnalyserAgentNo {
 		setAgentPaths(agentPaths);
 	}
 	
-	public MapMissionAnalyserAgentNo(ArrayList<ArrayList<GPSCoordinate>> agentPaths, Object junk) {
+	public MapMissionAnalyserAgentNo(List<List<GPSCoordinate>> agentPaths, Object junk) {
 		setAgentPaths(agentPaths);
 	}
 	
@@ -75,12 +70,12 @@ public class MapMissionAnalyserAgentNo {
 //		this.velocities = velocities;
 //	}
 	
-	public ArrayList<ArrayList<GPSCoordinate>> getAgentPaths() {
+	public List<List<GPSCoordinate>> getAgentPaths() {
 		return agentPaths;
 	}
 
-	public void setAgentPaths(ArrayList<ArrayList<GPSCoordinate>> agentPaths) {
-		this.agentPaths = agentPaths;
+	public void setAgentPaths(List<List<GPSCoordinate>> agentPathsList) {
+		this.agentPaths = agentPathsList;
 	}
 	
 	public int numberOfGridPointsVisitedByAgent(int agentNumber) {
@@ -131,27 +126,27 @@ public class MapMissionAnalyserAgentNo {
 	
 	
 	//HashMap agentnumber, corresponding velocity
-	public double getTotalTimeEstimate(HashMap<Integer, Double> velocities) throws Exception {
-		return getTotalTimeEstimate(velocities, new WindFactor(0, 0));
+	public double getTotalTimeEstimate(Map<Integer, Double> map) throws Exception {
+		return getTotalTimeEstimate(map, new WindFactor(0, 0));
 	}
 
-	public double getTotalTimeEstimate(HashMap<Integer, Double> velocities, WindFactor windFactor) throws Exception {
+	public double getTotalTimeEstimate(Map<Integer, Double> map, WindFactor windFactor) throws Exception {
 		double totalTimeEstimate = 0;
 		for(int agentNumber = 0; agentNumber < getAgentPaths().size(); agentNumber++) {
-			totalTimeEstimate += getTimeEstimateForAgent(agentNumber, windFactor, velocities.get(agentNumber));
+			totalTimeEstimate += getTimeEstimateForAgent(agentNumber, windFactor, map.get(agentNumber));
 		}
 		return totalTimeEstimate;
 	}
 	
-	public double getAverageTimeEstimate(HashMap<Integer, Double> velocities) throws Exception {
-		return getAverageTimeEstimate(velocities, new WindFactor(0, 0));
+	public double getAverageTimeEstimate(Map<Integer, Double> map) throws Exception {
+		return getAverageTimeEstimate(map, new WindFactor(0, 0));
 		//return getTotalTimeEstimate(velocities, ) / getAgentPaths().size();
 	}
-	public double getAverageTimeEstimate(HashMap<Integer, Double> velocities, WindFactor windFactor) throws Exception {
-		return getTotalTimeEstimate(velocities, windFactor) / getAgentPaths().size();
+	public double getAverageTimeEstimate(Map<Integer, Double> map, WindFactor windFactor) throws Exception {
+		return getTotalTimeEstimate(map, windFactor) / getAgentPaths().size();
 	}
 	
-	public SimpleEntry<Double, Integer> getMaximumTimeEstimateAndCorrespondingAgent(HashMap<Integer, Double> velocities) throws Exception {
+	public SimpleEntry<Double, Integer> getMaximumTimeEstimateAndCorrespondingAgent(Map<Integer, Double> map) throws Exception {
 		
 //		double maxTime = getTimeEstimateForAgent(0, velocities.get(0));
 //		int agentWhichTakesMaxTime = 0;
@@ -166,18 +161,18 @@ public class MapMissionAnalyserAgentNo {
 //		}
 //		
 //		return new SimpleEntry<Double, Integer>(maxTime, agentWhichTakesMaxTime);
-		return getMaximumTimeEstimateAndCorrespondingAgent(velocities, new WindFactor(0, 0));
+		return getMaximumTimeEstimateAndCorrespondingAgent(map, new WindFactor(0, 0));
 	}
 	
 	public SimpleEntry<Double, Integer> getMaximumTimeEstimateAndCorrespondingAgent(
-			HashMap<Integer, Double> velocities, WindFactor windFactor) throws Exception {
+			Map<Integer, Double> map, WindFactor windFactor) throws Exception {
 		// TODO Auto-generated method stub
-		double maxTime = getTimeEstimateForAgent(0, windFactor, velocities.get(0));
+		double maxTime = getTimeEstimateForAgent(0, windFactor, map.get(0));
 		int agentWhichTakesMaxTime = 0;
 		double currentTime;
 		
 		for(int agentNumber = 0; agentNumber < getAgentPaths().size(); agentNumber++) {
-			currentTime = getTimeEstimateForAgent(agentNumber, windFactor, velocities.get(agentNumber));
+			currentTime = getTimeEstimateForAgent(agentNumber, windFactor, map.get(agentNumber));
 			if(currentTime > maxTime) {
 				maxTime = currentTime;
 				agentWhichTakesMaxTime = agentNumber;
@@ -187,14 +182,14 @@ public class MapMissionAnalyserAgentNo {
 		return new SimpleEntry<Double, Integer>(maxTime, agentWhichTakesMaxTime);
 	}
 	
-	public SimpleEntry<Double, Integer> getMinimumTimeEstimateAndCorrespondingAgent(HashMap<Integer, Double> velocities) throws Exception {
+	public SimpleEntry<Double, Integer> getMinimumTimeEstimateAndCorrespondingAgent(Map<Integer, Double> map) throws Exception {
 		
-		double minTime = getTimeEstimateForAgent(0, velocities.get(0));
+		double minTime = getTimeEstimateForAgent(0, map.get(0));
 		int agentWhichTakesMinTime = 0;
 		double currentTime;
 		
 		for(int agentNumber = 0; agentNumber < getAgentPaths().size(); agentNumber++) {
-			currentTime = getTimeEstimateForAgent(agentNumber, velocities.get(agentNumber));
+			currentTime = getTimeEstimateForAgent(agentNumber, map.get(agentNumber));
 			if(currentTime < minTime) {
 				minTime = currentTime;
 				agentWhichTakesMinTime = agentNumber;
@@ -203,14 +198,14 @@ public class MapMissionAnalyserAgentNo {
 		
 		return new SimpleEntry(minTime, agentWhichTakesMinTime);
 	}
-	public SimpleEntry<Double, Integer> getMinimumTimeEstimateAndCorrespondingAgent(HashMap<Integer, Double> velocities, WindFactor windFactor) throws Exception {
+	public SimpleEntry<Double, Integer> getMinimumTimeEstimateAndCorrespondingAgent(Map<Integer, Double> map, WindFactor windFactor) throws Exception {
 		
-		double minTime = getTimeEstimateForAgent(0, windFactor, velocities.get(0));
+		double minTime = getTimeEstimateForAgent(0, windFactor, map.get(0));
 		int agentWhichTakesMinTime = 0;
 		double currentTime;
 		
 		for(int agentNumber = 0; agentNumber < getAgentPaths().size(); agentNumber++) {
-			currentTime = getTimeEstimateForAgent(agentNumber, windFactor, velocities.get(agentNumber));
+			currentTime = getTimeEstimateForAgent(agentNumber, windFactor, map.get(agentNumber));
 			if(currentTime < minTime) {
 				minTime = currentTime;
 				agentWhichTakesMinTime = agentNumber;
@@ -231,21 +226,21 @@ public class MapMissionAnalyserAgentNo {
 		return returnString;
 	}
 	
-	protected String getBaseTimeReport(HashMap<Integer, Double> velocities) {
+	protected String getBaseTimeReport(Map<Integer, Double> map) {
 		String returnString = "";
 		try {
 			//returnString +="*********************** Time Report ***********************\n";
-			returnString += wrapReportLine(String.format("Total time taken by agents:            %.3fs", getTotalTimeEstimate(velocities)));
-			returnString += wrapReportLine(String.format("Average time taken by agents:          %.3fs", getAverageTimeEstimate(velocities)));
+			returnString += wrapReportLine(String.format("Total time taken by agents:            %.3fs", getTotalTimeEstimate(map)));
+			returnString += wrapReportLine(String.format("Average time taken by agents:          %.3fs", getAverageTimeEstimate(map)));
 			
 			//report back which RAV takes the max/min time
-			SimpleEntry<Double, Integer> minTime = getMinimumTimeEstimateAndCorrespondingAgent(velocities);
+			SimpleEntry<Double, Integer> minTime = getMinimumTimeEstimateAndCorrespondingAgent(map);
 			returnString += wrapReportLine(String.format("Min time taken by any agent(%02d):       %.3fs", minTime.getValue(), minTime.getKey()));
 			
-			SimpleEntry<Double, Integer> maxTime = getMaximumTimeEstimateAndCorrespondingAgent(velocities);
+			SimpleEntry<Double, Integer> maxTime = getMaximumTimeEstimateAndCorrespondingAgent(map);
 			returnString += wrapReportLine(String.format("Max time taken by any agent(%02d):       %.3fs", maxTime.getValue(), maxTime.getKey()));
 			for(int agentCounter = 0; agentCounter < getAgentPaths().size(); agentCounter++) {
-				returnString += wrapReportLine(String.format("Time taken by agent(%02d):               %.3fs", agentCounter, getTimeEstimateForAgent(agentCounter, velocities.get(agentCounter))));
+				returnString += wrapReportLine(String.format("Time taken by agent(%02d):               %.3fs", agentCounter, getTimeEstimateForAgent(agentCounter, map.get(agentCounter))));
 			}
 			//returnString +="*********************** Time Report ***********************\n";
 			return returnString;
@@ -256,21 +251,21 @@ public class MapMissionAnalyserAgentNo {
 		}
 	}
 
-	protected String getBaseTimeReport(HashMap<Integer, Double> velocities, WindFactor windFactor) {
+	protected String getBaseTimeReport(Map<Integer, Double> map, WindFactor windFactor) {
 		String returnString = "";
 		try {
 			//returnString +="*********************** Time Report ***********************\n";
-			returnString += wrapReportLine(String.format("Total time taken by agents:            %.3fs", getTotalTimeEstimate(velocities, windFactor)));
-			returnString += wrapReportLine(String.format("Average time taken by agents:          %.3fs", getAverageTimeEstimate(velocities, windFactor)));
+			returnString += wrapReportLine(String.format("Total time taken by agents:            %.3fs", getTotalTimeEstimate(map, windFactor)));
+			returnString += wrapReportLine(String.format("Average time taken by agents:          %.3fs", getAverageTimeEstimate(map, windFactor)));
 			
 			//report back which RAV takes the max/min time
-			SimpleEntry<Double, Integer> minTime = getMinimumTimeEstimateAndCorrespondingAgent(velocities, windFactor);
+			SimpleEntry<Double, Integer> minTime = getMinimumTimeEstimateAndCorrespondingAgent(map, windFactor);
 			returnString += wrapReportLine(String.format("Min time taken by any agent(%02d):       %.3fs", minTime.getValue(), minTime.getKey()));
 			
-			SimpleEntry<Double, Integer> maxTime = getMaximumTimeEstimateAndCorrespondingAgent(velocities, windFactor);
+			SimpleEntry<Double, Integer> maxTime = getMaximumTimeEstimateAndCorrespondingAgent(map, windFactor);
 			returnString += wrapReportLine(String.format("Max time taken by any agent(%02d):       %.3fs", maxTime.getValue(), maxTime.getKey()));
 			for(int agentCounter = 0; agentCounter < getAgentPaths().size(); agentCounter++) {
-				returnString += wrapReportLine(String.format("Time taken by agent(%02d):               %.3fs", agentCounter, getTimeEstimateForAgent(agentCounter, windFactor, velocities.get(agentCounter))));
+				returnString += wrapReportLine(String.format("Time taken by agent(%02d):               %.3fs", agentCounter, getTimeEstimateForAgent(agentCounter, windFactor, map.get(agentCounter))));
 			}
 			//returnString +="*********************** Time Report ***********************\n";
 			return returnString;
@@ -281,11 +276,11 @@ public class MapMissionAnalyserAgentNo {
 		}
 	}
 
-	public String getTimeReport(HashMap<Integer, Double> velocities) {
+	public String getTimeReport(Map<Integer, Double> map) {
 		try {
 			String returnString ="*********************** Time Report ***********************\n";
 			returnString += getGridPointReport();
-			returnString += getBaseTimeReport(velocities);
+			returnString += getBaseTimeReport(map);
 			returnString +="*********************** Time Report ***********************\n";
 			return returnString;
 		}
@@ -294,11 +289,11 @@ public class MapMissionAnalyserAgentNo {
 			return("Error encountered when analysing distance travelled during mission");
 		}
 	}
-	public String getTimeReport(HashMap<Integer, Double> velocities, WindFactor windFactor) {
+	public String getTimeReport(Map<Integer, Double> map, WindFactor windFactor) {
 		try {
 			String returnString ="*********************** Time Report ***********************\n";
 			returnString += getGridPointReport(windFactor);
-			returnString += getBaseTimeReport(velocities, windFactor);
+			returnString += getBaseTimeReport(map, windFactor);
 			returnString +="*********************** Time Report ***********************\n";
 			return returnString;
 		}

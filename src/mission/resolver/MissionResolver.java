@@ -57,7 +57,7 @@ public class MissionResolver {
 			//need to create a mission with mission points, params, commands relative to GPS coordinate
 			//List<Agent> agents, List<GPSCoordinate> missionBoundingCoordinates
 			try {
-				System.out.println("Resolving missions for " + getMissionAgents().size() + " agents.");
+//				System.out.println("Resolving missions for " + getMissionAgents().size() + " agents.");
 						// " + getMissionAgents().get(0).getId() + getMissionAgents().get(1).getId());
 				MapMissionBase strategy;
 					
@@ -141,7 +141,7 @@ public class MissionResolver {
 			//need to create a mission with mission points, params, commands relative to GPS coordinate
 			//List<Agent> agents, List<GPSCoordinate> missionBoundingCoordinates
 			try {
-				System.out.println("Resolving missions for " + getMissionAgents().size() + " agents.");
+//				System.out.println("Resolving missions for " + getMissionAgents().size() + " agents.");
 						// " + getMissionAgents().get(0).getId() + getMissionAgents().get(1).getId());
 				MapMissionBase strategy;
 					

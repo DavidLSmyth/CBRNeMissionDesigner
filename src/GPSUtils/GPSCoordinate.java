@@ -95,15 +95,28 @@ public class GPSCoordinate extends GPSCoordinateBase implements CartesianCoordin
 		}
 		else {
 			GPSCoordinate otherCoord = (GPSCoordinate) other;
+			
 			//return true if the difference is less than ~ 1m
+//			if((getAlt() != null && otherCoord.getAlt() == null) || getAlt() == null && otherCoord.getAlt() != null) {
+//				return false;
+//			}
+//			if(getAlt() == null && otherCoord.getAlt() == null) {
+//				return (otherCoord.getLat().subtract(this.getLat())).abs().compareTo(new BigDecimal(Math.pow(10, -8)))<0 && (otherCoord.getLng().subtract(this.getLng()).abs().compareTo(new BigDecimal(Math.pow(10, -8)))<0);
+//			}
+//			else{
+//				return ((otherCoord.getAlt().subtract(this.getAlt())).abs().compareTo(new BigDecimal(Math.pow(10, -8)))<0 && (otherCoord.getLat().subtract(this.getLat()).abs().compareTo(new BigDecimal(Math.pow(10, -8)))<0) && (otherCoord.getLng().subtract(this.getLng()).compareTo(new BigDecimal(Math.pow(10, -8)))<0));
+//			}
 			if((getAlt() != null && otherCoord.getAlt() == null) || getAlt() == null && otherCoord.getAlt() != null) {
 				return false;
 			}
 			if(getAlt() == null && otherCoord.getAlt() == null) {
-				return (otherCoord.getLat().subtract(this.getLat())).abs().compareTo(new BigDecimal(Math.pow(10, -5)))<0 && (otherCoord.getLng().subtract(this.getLng()).abs().compareTo(new BigDecimal(Math.pow(10, -4)))<0);
+				return (getLat().equals(otherCoord.getLat()) && 
+						getLng().equals(otherCoord.getLng()));
 			}
 			else{
-				return ((otherCoord.getAlt().subtract(this.getAlt())).abs().compareTo(new BigDecimal(Math.pow(10, -4)))<0 && (otherCoord.getLat().subtract(this.getLat()).abs().compareTo(new BigDecimal(Math.pow(10, -5)))<0) && (otherCoord.getLng().subtract(this.getLng()).compareTo(new BigDecimal(Math.pow(10, -4)))<0));
+				return (getAlt().equals(otherCoord.getAlt()) && 
+						getLat().equals(otherCoord.getLat()) && 
+						getLng().equals(otherCoord.getLng()));
 			}
 		}
 	}

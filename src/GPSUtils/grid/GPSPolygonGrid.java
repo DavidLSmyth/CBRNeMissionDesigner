@@ -1,10 +1,8 @@
 package GPSUtils.grid;
 
-import java.awt.print.Printable;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import GPSUtils.GPSCoordinate;
@@ -143,7 +141,7 @@ public class GPSPolygonGrid {
 	    	}
 	    	catch(ArithmeticException e) {
 	    		System.out.println("Couldn't test if point in boundary because can't divide " + exp2 + " by " + exp3);
-	    		System.out.println(e);
+	    		e.printStackTrace();
 	    		//exp5 = new BigDecimal(exp2.doubleValue() / exp3.doubleValue());
 	    		return false;
 	    	}
@@ -186,10 +184,10 @@ public class GPSPolygonGrid {
 		setNoGridPointsInBoundingRect(boundingRectCoords.size());
 		setNoGridPointsInPolygon(pointsInPolygonCounter);
 		
-
-		System.out.println("Number of generated points in rect: " + getNoGridPointsInBoundingRect());
-		System.out.println("Number of generated points in poly: " + getNoGridPointsInPolygon());
-		System.out.println("Ratio of generated points in bounding rect vs. generated points in poly: " + Double.toString(getRatioOfPolyToRectGridPoints()));
+//uncomment this
+//		System.out.println("Number of generated points in rect: " + getNoGridPointsInBoundingRect());
+//		System.out.println("Number of generated points in poly: " + getNoGridPointsInPolygon());
+//		System.out.println("Ratio of generated points in bounding rect vs. generated points in poly: " + Double.toString(getRatioOfPolyToRectGridPoints()));
 		cachedPolygonGridPoints = gridPoints;
 		canReturnCachedGridPoints = true;
 		return gridPoints;
@@ -200,7 +198,7 @@ public class GPSPolygonGrid {
 			return ((double) getNoGridPointsInPolygon()) / ((double)getNoGridPointsInBoundingRect());
 		}
 		else {
-			System.out.println("Warning: no points found in bounding rect - perhaps change the grid spacing.");
+//			System.out.println("Warning: no points found in bounding rect - perhaps change the grid spacing.");
 			return -1;
 		}
 	}

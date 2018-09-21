@@ -1,6 +1,9 @@
 package mission.resolver.map;
 
 import agent.Agent;
+
+import static org.hamcrest.CoreMatchers.not;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -39,6 +42,7 @@ public class MapMissionStrategyGreedy extends MapMissionBase {
 			double lngSpacing) throws Exception {
 		super(agents, missionBoundingCoordinates, new HashMap<Agent, Double>(), new WindFactor(0,0), costType, latSpacing, lngSpacing);
 		setAgentPaths(calculateMapEnvironmentPaths(agents));
+		//setAgentPaths(calculateMapEnvironmentPaths(agents));
 	}
 	
 	public MapMissionStrategyGreedy(List<Agent> agents, 
@@ -65,7 +69,7 @@ public class MapMissionStrategyGreedy extends MapMissionBase {
 		//each agent adds to their list of points to explore greedily
 		List<GPSCoordinate> exploredPoints = new ArrayList<GPSCoordinate>();
 		List<GPSCoordinate> pointsToExplore = grid.generateContainedGPSCoordinates();
-		System.out.println("pointsToExplore: " + pointsToExplore);
+		//System.out.println("pointsToExplore: " + pointsToExplore);
 		//System.out.println("Working with wind factor: " + windFactor);
 //		exploredPoints = 
 //		pointsToExplore 
@@ -77,7 +81,7 @@ public class MapMissionStrategyGreedy extends MapMissionBase {
 		//System.out.println("Caulculating paths for " + agents.size() + " agents");
 		//System.out.println("Size of returnMap set as: " + returnMap.size());
 		for(Agent agent: agents) {
-			System.out.println("Agent: " + agent.getId() + " initial path " + (returnMap.get(agent)));
+//			System.out.println("Agent: " + agent.getId() + " initial path " + (returnMap.get(agent)));
 		}
 		
 		//denotes the agent who currently can choose next GPS coordinate to explore
@@ -85,9 +89,9 @@ public class MapMissionStrategyGreedy extends MapMissionBase {
 		int noAgents = agents.size();
 		Agent currentAgent;
 		List<GPSCoordinate> agentPath;
-		System.out.println(pointsToExplore.size() + " points to explore");
+//		System.out.println(pointsToExplore.size() + " points to explore");
 		//While there are still points left to explore
-		System.out.println("Greedy algorithm using cost type: " + getCostType());
+//		System.out.println("Greedy algorithm using cost type: " + getCostType());
 		while(!(pointsToExplore.size() == 0)) {
 			currentAgent = agents.get(agentNo % noAgents);
 			agentNo++;
@@ -98,23 +102,42 @@ public class MapMissionStrategyGreedy extends MapMissionBase {
 //			WindFactor windFactor,
 //			Double agentVelocity
 			
-			System.out.println("Points left to explore: " + pointsToExplore);
-			GPSCoordinate nearestCoord = getAvailableCoordOfLeastCost(pointsToExplore, 
+//			System.out.println("Points left to explore: " + pointsToExplore);
+//			GPSCoordinate nearestCoord = getAvailableCoordOfLeastCost(pointsToExplore, 
+//					agentPath.get(agentPath.size()-1), 
+//					//getCostType(),
+//					costType.MAXDISTANCE,
+//					//getWindFactor(),
+//					currentAgent.getVehicle().getOperationalVelocity());
+			
+			int nearestCoordIndex  = getAvailableCoordIndexOfLeastCost(pointsToExplore, 
 					agentPath.get(agentPath.size()-1), 
-					//getCostType(),
-					costType.MAXDISTANCE,
-					getWindFactor(),
+					getCostType(),
+					//costType.MAXDISTANCE,
+					//getWindFactor(),
 					currentAgent.getVehicle().getOperationalVelocity());
-			System.out.println("Found least cost coord for agent " + currentAgent + " to be " + nearestCoord);
+			
+			GPSCoordinate nearestCoord = pointsToExplore.get(nearestCoordIndex);
+//			System.out.println("index of nearest coord from " + agentPath.get(agentPath.size() - 1) + " to be "+ nearestCoordIndex);
+//			System.out.println("Found least cost coord for agent " + currentAgent + " to be " + nearestCoord);
 			agentPath.add(nearestCoord);
-			System.out.println("Updated the path of agent " + currentAgent.getId() + " to " + agentPath);
+//			System.out.println("Updated the path of agent " + currentAgent.getId() + " to " + agentPath);
 			//update the returnMap
 			returnMap.put(currentAgent, agentPath);
 			//append the current coordinate to the explored points map
-			exploredPoints.add(nearestCoord);
-			System.out.println("Points to explore: " + pointsToExplore);
+			if(!exploredPoints.add(nearestCoord)) {
+				//System.out.println("couldn't add nearestCoord: " + nearestCoord);
+			}
+//			System.out.println("Found nearest coord index: " + pointsToExplore.indexOf(nearestCoord));
+//			System.out.println("Found nearest coord index last: " + pointsToExplore.lastIndexOf(nearestCoord));
+			//System.out.println(pointsToExplore.get(pointsToExplore.indexOf(nearestCoord)));
 			//remove the coordinate from the points to explore map
-			pointsToExplore.remove(nearestCoord);
+			//System.out.println("removing " + nearestCoord + " from pointsToExplore");
+			GPSCoordinate removedPoint = pointsToExplore.remove(nearestCoordIndex);
+//			if (removedPoint != nearestCoord) {
+//				System.out.println("error remove nearestCoord: " + nearestCoord + " expected " + removedPoint);
+//			}
+			//System.out.println("Points to explore: " + pointsToExplore);
 		}
 		//System.out.println("Returning returnMap: " + returnMap.toString());
 		return returnMap;

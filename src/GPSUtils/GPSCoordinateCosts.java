@@ -39,9 +39,9 @@ public class GPSCoordinateCosts {
 		
 		//double theta = Math.abs(Math.atan(GPSCoordinateUtils.convertLatDegreeDifferenceToMetresSigned(from.getLat(), to.getLat()) / GPSCoordinateUtils.convertLongDegreeDifferenceToMetresSigned(from.getLng(), to.getLng(), from.getLat())));
 		
-		double hyp = GPSCoordinateUtils.getDistanceMetresBetweenWGS84(from, to);
-		double sinTheta = GPSCoordinateUtils.getDistanceMetresLatToOther(from, to) / hyp;
-		double cosTheta = GPSCoordinateUtils.getDistanceMetresLngToOther(from, to) / hyp;
+		double hyp = from.getMetresToOther(to);
+		double sinTheta = from.getLatMetresToOther(to) / hyp;
+		double cosTheta = from.getLngMetresToOther(to) / hyp;
 				
 //		System.out.println("theta: " + theta);
 //		System.out.println("Theta degrees: " + Math.toDegrees(theta));

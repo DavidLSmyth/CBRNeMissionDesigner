@@ -48,7 +48,7 @@ public class MapMissionStrategyGreedyRunner {
 			missionAgents.add(agents.get(counter));
 		}
 		
-		greedyMission = new MapMissionStrategyGreedy(agents, grid.getPolygon().getBoundary(), CostType.TOTALTIME, latSpacing, lngSpacing);
+		greedyMission = new MapMissionStrategyGreedy(missionAgents, grid.getPolygon().getBoundary(), CostType.TOTALDISTANCE, latSpacing, lngSpacing);
 		
 
 	}
@@ -74,6 +74,7 @@ public class MapMissionStrategyGreedyRunner {
 	}
 	
 	void writeGeneratedGPSGridCoordinates(GPSPolygonGrid grid, String fileDirectory) throws Exception {
+		System.out.println("writing generated grid of GPS coordinates to " + fileDirectory + "gridPoints.csv");
 		BufferedWriter outputFile = new BufferedWriter(new FileWriter(fileDirectory + "gridPoints.csv"));
 		outputFile.write("lat, long, alt\n");
 		for(GPSCoordinate coord: grid.generateContainedGPSCoordinates()) {
@@ -92,10 +93,11 @@ public class MapMissionStrategyGreedyRunner {
 			//outputFile.write(a.toString() + "\n");
 			System.out.println("File location: " + fileDirectory + a.toString().replaceAll("\\s+", "").replaceAll(":",  "") + ".csv");
 			BufferedWriter outputFile = new BufferedWriter(new FileWriter(fileDirectory + a.toString().replaceAll("\\s+", "").replaceAll(":",  "") + ".csv"));
+			System.out.println("Writing mission for agent " + a);
 			System.out.println("Number of mission points to write: " + agentMissions.get(a).size());
 			outputFile.write("lat, long, alt\n");
 			for(GPSCoordinate p :  agentMissions.get(a)) {
-				//System.out.println("Next mission point: " + p + "\n");
+				System.out.println("Next mission point: " + p + "\n");
 				outputFile.write(p.toString()+"\n");
 			}
 			outputFile.write("\n");
@@ -114,7 +116,7 @@ public class MapMissionStrategyGreedyRunner {
 		MapMissionStrategyGreedyRunner runner = new MapMissionStrategyGreedyRunner(grid, latSpacing, lngSpacing, noRavs);
 		String writeDirectory = "D:\\IJCAIDemoCodeAll\\RCode\\ShinyApp\\Data\\";
 		runner.writeGeneratedGPSGridCoordinates(grid, writeDirectory);
-		Map<Agent, List<GPSCoordinate>> agentMissions = runner.greedyMission.calculateMapEnvironmentPaths(runner.missionAgents);
+		Map<Agent, List<GPSCoordinate>> agentMissions = runner.greedyMission.getAgentPaths();
 		runner.writeAgentMissions(agentMissions, writeDirectory);
 	}
 

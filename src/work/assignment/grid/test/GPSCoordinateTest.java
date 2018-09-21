@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
+import java.nio.channels.NonWritableChannelException;
 
 import org.junit.AfterClass;
 import org.junit.jupiter.api.BeforeEach;
@@ -284,6 +285,12 @@ class GPSCoordinateTest {
 		GPSCoordinate c5 = new GPSCoordinate(3.123458, -5.98765439, 3.11223344556);
 		GPSCoordinate c6 = new GPSCoordinate(-3.123458, -5.98765439, 3.112233445);
 		GPSCoordinate c7 = new GPSCoordinate(-3.1234582, -5.9876544, 3.11223344);
+		
+		GPSCoordinate test1 = new GPSCoordinate(new BigDecimal("53.283106236323503014034940861165523529052734375"), new BigDecimal("-9.06437669400830078125000000000000000000000000000"));
+		GPSCoordinate test2 = new GPSCoordinate(new BigDecimal("53.283106236323503014034940861165523529052734375"), new BigDecimal("-9.060146466008300781250000000000000000000000000000"));
+		
+		assertNotEquals(test1, test2);
+		
 		assertEquals(c1, c2);
 		assertEquals(c2, c3);
 		assertEquals(c4, c5);
