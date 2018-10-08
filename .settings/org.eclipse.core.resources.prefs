@@ -1,3 +1,5 @@
 eclipse.preferences.version=1
+encoding//src/GPSUtils/UTMToWGS84.java=UTF-8
+encoding//src/mission/resolver/map/utils/Christofides.java=UTF-8
 encoding//src/work/assignment/grid/quadrilateral/GPSGridQuadrilateral.java=UTF-8
 encoding//src/work/assignment/grid/rectangle/GPSGridRectangle.java=UTF-8

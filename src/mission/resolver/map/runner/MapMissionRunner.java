@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.PrimitiveIterator.OfDouble;
 
+import org.omg.CosNaming._BindingIteratorImplBase;
+
 import GPSUtils.GPSCoordinate;
 import GPSUtils.grid.GPSPolygon;
 import GPSUtils.grid.GPSPolygonGrid;
@@ -59,9 +61,9 @@ public class MapMissionRunner {
 		agent3 = new AgentImpl("3");
 		agent4 = new AgentImpl("4");	
 		
-		
-		agent1.setLocation(new ArrayList<Double>(Arrays.asList(53.28, -9.07, 20.0)));
-		agent2.setLocation(new ArrayList<Double>(Arrays.asList(53.286, -9.0588, 20.0)));
+		//agent1.setLocation(new ArrayList<Double>(Arrays.asList(53.28, -9.07, 20.0)));
+		agent1.setLocation(new ArrayList<Double>(Arrays.asList(53.2793, -9.0638, 20.0)));
+		agent2.setLocation(new ArrayList<Double>(Arrays.asList(53.2793, -9.0638, 20.0)));
 		agent3.setLocation(new ArrayList<Double>(Arrays.asList(53.2798, -9.0565, 20.0)));
 		agent4.setLocation(new ArrayList<Double>(Arrays.asList(53.277, -9.0576, 20.0)));
 
@@ -164,7 +166,7 @@ public class MapMissionRunner {
 	}
 	
 	public static void main(String[] args) throws Exception {
-		System.out.println("Running...");
+		//System.out.println("Running...");
 		//first argument is number of RAVS
 		//all other arguments are bounding box of GPSCoordinates
 //		System.out.println();
@@ -173,17 +175,19 @@ public class MapMissionRunner {
 		if(args.length < 7) {
 			printUsageMessage(usageString);
 			System.out.println("Please provide at least 7 command line arguments to run this jar");
+			System.exit(0);
 		}
-		System.exit(0);
 		
-		String workingDir = args[0];
+		int ArgsCounter = 0;
+		String workingDir = args[ArgsCounter++];
+		String writeDirectory = workingDir+args[ArgsCounter++];
 //		System.out.println("parsed working dir as: " + workingDir);
-		int noRavs = Integer.parseInt(args[1]);
-		double latSpacing = Double.parseDouble(args[2]);
-		double lngSpacing = Double.parseDouble(args[3]);
+		int noRavs = Integer.parseInt(args[ArgsCounter++]);
+		double latSpacing = Double.parseDouble(args[ArgsCounter++]);
+		double lngSpacing = Double.parseDouble(args[ArgsCounter++]);
 		
 //		System.out.println("noRavs: " + noRavs);
-		List<GPSCoordinate> polyCoords = coordinateParser(Arrays.copyOfRange(args, 4, args.length));
+		List<GPSCoordinate> polyCoords = coordinateParser(Arrays.copyOfRange(args, ArgsCounter++, args.length));
 		//System.out.println("Polygon coordinates: " + polyCoords);
 		GPSPolygonGrid grid = new GPSPolygonGrid(new GPSPolygon(polyCoords), latSpacing, lngSpacing);
 //		System.out.println("Polygon grid: " + grid);
@@ -202,7 +206,7 @@ public class MapMissionRunner {
 //		System.out.println(runner.agentAnalyser.getTimeReport(runner.windFactor));
 //		
 		//BufferedWriter writer = new BufferedWriter(new FileWriter("D:\\IJCAIDemoCodeAll\\\\RCode\\\\ShinyApp\\\\Data\\\\"));
-		String writeDirectory = workingDir + "\\RCode\\ShinyApp\\Data\\"; 
+		//String writeDirectory = workingDir + "\\RCode\\ShinyApp\\Data\\"; 
 				//"D:\\IJCAIDemoCodeAll\\RCode\\ShinyApp\\Data\\";
 //		System.out.println("writing to directory " + writeDirectory);
 		//System.out.println(runner.workResolvers.get(noRavs - 1).getNoAgents());
@@ -214,7 +218,7 @@ public class MapMissionRunner {
 	}
 	
 	void writeGeneratedGPSGridCoordinates(GPSPolygonGrid grid, String fileDirectory) throws Exception {
-		BufferedWriter outputFile = new BufferedWriter(new FileWriter(fileDirectory + "gridPoints.csv"));
+		BufferedWriter outputFile = new BufferedWriter(new FileWriter(fileDirectory + "/gridPoints.csv"));
 		outputFile.write("lat, long, alt\n");
 		for(GPSCoordinate coord: grid.generateContainedGPSCoordinates()) {
 			outputFile.write(coord.toString()+'\n');
@@ -233,7 +237,8 @@ public class MapMissionRunner {
 		for(Agent a: workRes.getAgentMissions().keySet()) {
 			//outputFile.write(a.toString() + "\n");
 //			System.out.println("File location: " + fileDirectory + a.toString().replaceAll("\\s+", "").replaceAll(":",  "") + ".csv");
-			BufferedWriter outputFile = new BufferedWriter(new FileWriter(fileDirectory + a.toString().replaceAll("\\s+", "").replaceAll(":",  "") + ".csv"));
+			//System.out.println("Writing agent route to directory: " + fileDirectory + "/" + a.toString().replaceAll("\\s+", "").replaceAll(":",  "") + ".csv");
+			BufferedWriter outputFile = new BufferedWriter(new FileWriter(fileDirectory + "/" + a.toString().replaceAll("\\s+", "").replaceAll(":",  "") + ".csv"));
 //			System.out.println("Number of mission points to write: " + workRes.getAgentMissions().get(a).getMissionPoints().size());
 			outputFile.write("lat, long, alt\n");
 			for(MissionPoint p :  workRes.getAgentMissions().get(a).getMissionPoints()) {
