@@ -11,7 +11,7 @@ import work.assignment.grid.quadrilateral.GPSGridQuadrilateral;
  * A class which records a polygon made up of GPSCoordinates
  * Assumption is made that GPSCoordinates are close to each 
  * other which allows Cartesian geometry to be applied
- * @author 13383861
+ * @author David Smyth
  */
 
 public class GPSPolygon {
@@ -23,7 +23,7 @@ public class GPSPolygon {
 	public GPSPolygon(List<GPSCoordinate> boundary) throws Exception {
 		//other checks for valid polygon?
 		if(boundary.size() <= 2) {
-			throw new Exception("Cannot create a polygon with less than 3 vertices");
+			throw new Exception("Cannot create a polygon with less than 3 vertices: "+boundary.size()+ " provided.");
 		}
 		setBoundary(boundary);
 	}

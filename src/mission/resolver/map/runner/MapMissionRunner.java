@@ -31,11 +31,14 @@ import work.assignment.environmentalfactors.WindFactor;
 public class MapMissionRunner {
 	
 	static final String usageString = "This jar can be run in the following format:\n"+
-		 "java -jar jarName working_directory number_of_ravs latitude_spacing longitude_spacing PolygonBoundingGPSCoodinate1 PolygonBoundingGPSCoodinate2 ... PolygonBoundingGPSCoodinateN";
+		 "java -jar jarName working_directory number_of_ravs latitude_spacing longitude_spacing RAV1LocationLat, RAV1LocationLong, RAV2LocationLat, ..., RAVNLocationLong, PolygonBoundingGPSCoodinate1Lat PolygonBoundingGPSCoodinate1Long PolygonBoundingGPSCoodinate2Lat ... PolygonBoundingGPSCoodinateNLong";
+	/*
 	Agent agent1;
 	Agent agent2;
 	Agent agent3; 
 	Agent agent4;
+	List<Agent> agents;
+	*/
 	
 	GPSCoordinate NUIGcoord0;
 	GPSCoordinate NUIGcoord1;
@@ -55,24 +58,11 @@ public class MapMissionRunner {
 	
 	CostType costType;
 	
-	public MapMissionRunner(GPSPolygonGrid grid, double latSpacing, double lngSpacing, int noRavs) throws Exception {
-		agent1 = new AgentImpl("1");
-		agent2 = new AgentImpl("2");
-		agent3 = new AgentImpl("3");
-		agent4 = new AgentImpl("4");	
+	public MapMissionRunner(GPSPolygonGrid grid, double latSpacing, double lngSpacing, int noRavs, List<Agent> agents) throws Exception {
 		
-		//agent1.setLocation(new ArrayList<Double>(Arrays.asList(53.28, -9.07, 20.0)));
-		agent1.setLocation(new ArrayList<Double>(Arrays.asList(53.2793, -9.0638, 20.0)));
-		agent2.setLocation(new ArrayList<Double>(Arrays.asList(53.2793, -9.0638, 20.0)));
-		agent3.setLocation(new ArrayList<Double>(Arrays.asList(53.2798, -9.0565, 20.0)));
-		agent4.setLocation(new ArrayList<Double>(Arrays.asList(53.277, -9.0576, 20.0)));
-
-		agent1.setVehicle(new AeorumUAV("1", "127.0.0.1", "41451"));
-		agent2.setVehicle(new AeorumUAV("2", "127.0.0.1", "41452"));
-		agent3.setVehicle(new AeorumUAV("3", "127.0.0.1", "41453"));
-		agent4.setVehicle(new AeorumUAV("4", "127.0.0.1", "41454"));
 		
-		List<Agent> agents = Arrays.asList(agent1, agent2, agent3, agent4);
+				
+		//agents = Arrays.asList(agent1, agent2, agent3, agent4);
 //		NUIGcoord0 = new GPSCoordinate(53.2791748417, -9.0644775368);
 //        NUIGcoord1 = new GPSCoordinate(53.2801009832, -9.0648776011);
 //        NUIGcoord2 = new GPSCoordinate(53.2805257224, -9.0621271428);
@@ -174,17 +164,47 @@ public class MapMissionRunner {
 		//i.e. shouldn't need to say 4 below
 		if(args.length < 7) {
 			printUsageMessage(usageString);
-			System.out.println("Please provide at least 7 command line arguments to run this jar");
+			System.out.println("Please provide at least 9 command line arguments to run this jar");
 			System.exit(0);
 		}
 		
 		int ArgsCounter = 0;
-		String workingDir = args[ArgsCounter++];
-		String writeDirectory = workingDir+args[ArgsCounter++];
+		
+		//String workingDir = args[ArgsCounter++];
+		//String writeDirectory = workingDir+args[ArgsCounter++];
+		
+		//String workingDir = args[ArgsCounter++];
+		String writeDirectory = args[ArgsCounter++];
+		
+		
 //		System.out.println("parsed working dir as: " + workingDir);
 		int noRavs = Integer.parseInt(args[ArgsCounter++]);
 		double latSpacing = Double.parseDouble(args[ArgsCounter++]);
 		double lngSpacing = Double.parseDouble(args[ArgsCounter++]);
+		
+		//This is really messy, clean up in future
+		Agent agent1 = new AgentImpl("1");
+		Agent agent2 = new AgentImpl("2");
+		Agent agent3 = new AgentImpl("3");
+		Agent agent4 = new AgentImpl("4");	
+		
+		//agent1.setLocation(new ArrayList<Double>(Arrays.asList(53.28, -9.07, 20.0)));
+		
+		/*
+		agent1.setLocation(new ArrayList<Double>(Arrays.asList(53.2793, -9.0638, 20.0)));
+		agent2.setLocation(new ArrayList<Double>(Arrays.asList(53.2793, -9.0638, 20.0)));
+		agent3.setLocation(new ArrayList<Double>(Arrays.asList(53.2798, -9.0565, 20.0)));
+		agent4.setLocation(new ArrayList<Double>(Arrays.asList(53.277, -9.0576, 20.0)));
+		*/
+		
+		agent1.setVehicle(new AeorumUAV("1", "127.0.0.1", "41451"));
+		agent2.setVehicle(new AeorumUAV("2", "127.0.0.1", "41452"));
+		agent3.setVehicle(new AeorumUAV("3", "127.0.0.1", "41453"));
+		agent4.setVehicle(new AeorumUAV("4", "127.0.0.1", "41454"));
+		List<Agent> agents = Arrays.asList(agent1, agent2, agent3, agent4);
+		for(int ravNumber = 0; ravNumber < noRavs; ravNumber++) {
+			agents.get(ravNumber).setLocation(new ArrayList<Double>(Arrays.asList(Double.parseDouble(args[ArgsCounter++]), Double.parseDouble(args[ArgsCounter++]), 20.0)));
+		}
 		
 //		System.out.println("noRavs: " + noRavs);
 		List<GPSCoordinate> polyCoords = coordinateParser(Arrays.copyOfRange(args, ArgsCounter++, args.length));
@@ -192,7 +212,7 @@ public class MapMissionRunner {
 		GPSPolygonGrid grid = new GPSPolygonGrid(new GPSPolygon(polyCoords), latSpacing, lngSpacing);
 //		System.out.println("Polygon grid: " + grid);
 //		System.out.println(grid.generateContainedGPSCoordinates());
-		MapMissionRunner runner = new MapMissionRunner(grid, latSpacing, lngSpacing, noRavs);
+		MapMissionRunner runner = new MapMissionRunner(grid, latSpacing, lngSpacing, noRavs, agents);
 		//System.out.println("number of agents involved: " + runner.workResolvers.get(noRavs - 1));
 		//System.out.println("agent1 mission: " + runner.workResolvers.get(noRavs - 1).getAgentMissions().get(runner.agent1));
 //		runner.workResolver.getNoAgents();

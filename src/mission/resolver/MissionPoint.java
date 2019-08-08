@@ -10,7 +10,7 @@ import mission.resolver.RAV.RAVMissionPointParam;
 
 public class MissionPoint {
 	
-	static int IDCounter = 0;
+	static private int IDCounter = 0;
 	int ID;
 	GPSCoordinate gpsCoord;
 	String name;
