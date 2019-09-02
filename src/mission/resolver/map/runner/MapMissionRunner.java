@@ -174,7 +174,7 @@ public class MapMissionRunner {
 		//String writeDirectory = workingDir+args[ArgsCounter++];
 		
 		//String workingDir = args[ArgsCounter++];
-		String writeDirectory = args[ArgsCounter++];
+		String workingDir = args[ArgsCounter++];
 		
 		
 //		System.out.println("parsed working dir as: " + workingDir);
@@ -226,7 +226,7 @@ public class MapMissionRunner {
 //		System.out.println(runner.agentAnalyser.getTimeReport(runner.windFactor));
 //		
 		//BufferedWriter writer = new BufferedWriter(new FileWriter("D:\\IJCAIDemoCodeAll\\\\RCode\\\\ShinyApp\\\\Data\\\\"));
-		//String writeDirectory = workingDir + "\\RCode\\ShinyApp\\Data\\"; 
+		String writeDirectory = workingDir + "\\RCode\\ShinyApp\\Data\\"; 
 				//"D:\\IJCAIDemoCodeAll\\RCode\\ShinyApp\\Data\\";
 //		System.out.println("writing to directory " + writeDirectory);
 		//System.out.println(runner.workResolvers.get(noRavs - 1).getNoAgents());
